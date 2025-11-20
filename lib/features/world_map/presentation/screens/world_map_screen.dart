@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../shared/models/zone.dart';
+import '../../providers/world_map_provider.dart';
+import '../widgets/animated_zone_card.dart';
 
 /// World Map Screen - Main navigation hub for BrainLand
 ///
 /// Displays all four zones with their unlock status and progress
-class WorldMapScreen extends StatelessWidget {
+class WorldMapScreen extends ConsumerWidget {
   const WorldMapScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final zonesAsync = ref.watch(worldMapProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppConstants.appName),
@@ -37,73 +43,81 @@ class WorldMapScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              // Header with player info
-              _buildHeader(context),
+          child: zonesAsync.when(
+            data: (zones) => Column(
+              children: [
+                // Header with player info
+                _buildHeader(context),
 
-              // Zone grid
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    children: [
-                      _buildZoneCard(
-                        context: context,
-                        emoji: '🌳',
-                        title: 'Math Forest',
-                        subtitle: 'Numbers & Operations',
-                        color: AppColors.mathForestGreen,
-                        isUnlocked: true,
-                        progress: 0.0,
-                        onTap: () => context.push(AppRoutes.mathForestLevels),
-                      ),
-                      _buildZoneCard(
-                        context: context,
-                        emoji: '⛰️',
-                        title: 'Logic Mountain',
-                        subtitle: 'Patterns & Sequences',
-                        color: AppColors.logicMountainBlue,
-                        isUnlocked: false,
-                        progress: 0.0,
-                        onTap: () =>
-                            context.push(AppRoutes.logicMountainLevels),
-                      ),
-                      _buildZoneCard(
-                        context: context,
-                        emoji: '🌊',
-                        title: 'Memory River',
-                        subtitle: 'Matching & Recall',
-                        color: AppColors.memoryRiverPurple,
-                        isUnlocked: false,
-                        progress: 0.0,
-                        onTap: () => context.push(AppRoutes.memoryRiverLevels),
-                      ),
-                      _buildZoneCard(
-                        context: context,
-                        emoji: '🔷',
-                        title: 'Shape Valley',
-                        subtitle: 'Shapes & Sorting',
-                        color: AppColors.shapeValleyOrange,
-                        isUnlocked: false,
-                        progress: 0.0,
-                        onTap: () => context.push(AppRoutes.shapeValleyLevels),
-                      ),
-                    ],
+                // Zone grid
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 0.85,
+                          ),
+                      itemCount: zones.length,
+                      itemBuilder: (context, index) {
+                        final zone = zones[index];
+                        return AnimatedZoneCard(
+                          zone: zone,
+                          onTap: () => _navigateToZone(context, zone),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
 
-              // Bottom navigation
-              _buildBottomNav(context),
-            ],
+                // Bottom navigation
+                _buildBottomNav(context),
+              ],
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: AppColors.errorRed,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Oops! Something went wrong',
+                    style: AppTextStyles.heading3,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(error.toString(), style: AppTextStyles.bodyMedium),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _navigateToZone(BuildContext context, Zone zone) {
+    switch (zone.type) {
+      case ZoneType.mathForest:
+        context.push(AppRoutes.mathForestLevels);
+        break;
+      case ZoneType.logicMountain:
+        context.push(AppRoutes.logicMountainLevels);
+        break;
+      case ZoneType.memoryRiver:
+        context.push(AppRoutes.memoryRiverLevels);
+        break;
+      case ZoneType.shapeValley:
+        context.push(AppRoutes.shapeValleyLevels);
+        break;
+    }
   }
 
   Widget _buildHeader(BuildContext context) {
@@ -169,93 +183,6 @@ class WorldMapScreen extends StatelessWidget {
             tooltip: 'View Progress',
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildZoneCard({
-    required BuildContext context,
-    required String emoji,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required bool isUnlocked,
-    required double progress,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: isUnlocked ? onTap : null,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Zone content
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Emoji icon
-                  Text(emoji, style: const TextStyle(fontSize: 48)),
-                  const Spacer(),
-
-                  // Title
-                  Text(
-                    title,
-                    style: AppTextStyles.heading3.copyWith(color: color),
-                  ),
-                  const SizedBox(height: 4),
-
-                  // Subtitle
-                  Text(
-                    subtitle,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Progress bar
-                  if (isUnlocked)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: progress,
-                        backgroundColor: color.withValues(alpha: 0.2),
-                        valueColor: AlwaysStoppedAnimation<Color>(color),
-                        minHeight: 6,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
-            // Lock overlay
-            if (!isUnlocked)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.lock, size: 48, color: Colors.white),
-                  ),
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }
