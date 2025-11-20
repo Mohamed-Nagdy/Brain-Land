@@ -1,6 +1,9 @@
+import 'package:brain_land/features/math_forest/presentation/screens/level_complete_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/math_forest/presentation/screens/level_selection_screen.dart';
+import '../../features/math_forest/presentation/screens/math_game_screen.dart';
 import '../../features/world_map/presentation/screens/world_map_screen.dart';
 
 /// Route names for type-safe navigation
@@ -16,7 +19,7 @@ class AppRoutes {
   // Math Forest routes
   static const String mathForestLevels = '/math-forest';
   static const String mathGame = '/math-forest/game/:levelId';
-  static const String mathLevelComplete = '/math-forest/complete';
+  static const String mathLevelComplete = '/math-forest/complete/:levelId';
 
   // Logic Mountain routes
   static const String logicMountainLevels = '/logic-mountain';
@@ -104,7 +107,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Math Forest Levels'),
+            child: const LevelSelectionScreen(),
           ),
           redirect: (context, state) =>
               _checkZoneUnlock(context, 'math_forest'),
@@ -117,18 +120,21 @@ class AppRouter {
             return _buildPageWithTransition(
               context: context,
               state: state,
-              child: PlaceholderScreen(title: 'Math Game - Level $levelId'),
+              child: MathGameScreen(levelId: levelId),
             );
           },
         ),
         GoRoute(
           path: AppRoutes.mathLevelComplete,
           name: 'mathLevelComplete',
-          pageBuilder: (context, state) => _buildPageWithTransition(
-            context: context,
-            state: state,
-            child: const PlaceholderScreen(title: 'Level Complete'),
-          ),
+          pageBuilder: (context, state) {
+            final levelId = state.pathParameters['levelId'] ?? '';
+            return _buildPageWithTransition(
+              context: context,
+              state: state,
+              child: LevelCompleteScreen(levelId: levelId),
+            );
+          },
         ),
 
         // Logic Mountain Zone

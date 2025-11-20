@@ -29,10 +29,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -46,37 +43,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'placeholder-api-key',
-    appId: '1:placeholder:web:placeholder',
-    messagingSenderId: 'placeholder',
-    projectId: 'brainland-placeholder',
-    authDomain: 'brainland-placeholder.firebaseapp.com',
-    storageBucket: 'brainland-placeholder.appspot.com',
+    apiKey: 'AIzaSyB2kplNyXOlK7xvhOREUuyTxUEW8rJbJMY',
+    appId: '1:31249678994:web:69c930e6ff9a08e9ef9c4b',
+    messagingSenderId: '31249678994',
+    projectId: 'brain-land',
+    authDomain: 'brain-land.firebaseapp.com',
+    storageBucket: 'brain-land.firebasestorage.app',
+    measurementId: 'G-VQ6NP8WJPX',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'placeholder-api-key',
-    appId: '1:placeholder:android:placeholder',
-    messagingSenderId: 'placeholder',
-    projectId: 'brainland-placeholder',
-    storageBucket: 'brainland-placeholder.appspot.com',
+    apiKey: 'AIzaSyBgz2VZQk-IO7c7Z0DR5VtUHPgWH2JDl9s',
+    appId: '1:31249678994:android:2877e0210c582263ef9c4b',
+    messagingSenderId: '31249678994',
+    projectId: 'brain-land',
+    storageBucket: 'brain-land.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'placeholder-api-key',
-    appId: '1:placeholder:ios:placeholder',
-    messagingSenderId: 'placeholder',
-    projectId: 'brainland-placeholder',
-    storageBucket: 'brainland-placeholder.appspot.com',
+    apiKey: 'AIzaSyDJzjWiia10KvCIIqfBz2zjraiZWfIl7JI',
+    appId: '1:31249678994:ios:50219bd982e4356fef9c4b',
+    messagingSenderId: '31249678994',
+    projectId: 'brain-land',
+    storageBucket: 'brain-land.firebasestorage.app',
     iosBundleId: 'com.mohamednagdy.brainLand',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'placeholder-api-key',
-    appId: '1:placeholder:macos:placeholder',
-    messagingSenderId: 'placeholder',
-    projectId: 'brainland-placeholder',
-    storageBucket: 'brainland-placeholder.appspot.com',
+    apiKey: 'AIzaSyDJzjWiia10KvCIIqfBz2zjraiZWfIl7JI',
+    appId: '1:31249678994:ios:50219bd982e4356fef9c4b',
+    messagingSenderId: '31249678994',
+    projectId: 'brain-land',
+    storageBucket: 'brain-land.firebasestorage.app',
     iosBundleId: 'com.mohamednagdy.brainLand',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyB2kplNyXOlK7xvhOREUuyTxUEW8rJbJMY',
+    appId: '1:31249678994:web:87b8533480b9081fef9c4b',
+    messagingSenderId: '31249678994',
+    projectId: 'brain-land',
+    authDomain: 'brain-land.firebaseapp.com',
+    storageBucket: 'brain-land.firebasestorage.app',
+    measurementId: 'G-7ZQ2CW0Q30',
+  );
+
 }

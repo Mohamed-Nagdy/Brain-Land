@@ -210,15 +210,15 @@ This implementation plan breaks down the BrainLand game development into discret
     - **Property 35: Success triggers particle effects**
     - **Validates: Requirements 10.5**
 
-- [ ] 9. Math Forest - Game screens
-  - [ ] 9.1 Build LevelSelectionScreen
+- [x] 9. Math Forest - Game screens
+  - [x] 9.1 Build LevelSelectionScreen
     - Display grid of level cards
     - Show stars earned per level
     - Implement level unlock logic
     - Add zone theme styling
     - _Requirements: 2.1_
   
-  - [ ] 9.2 Build MathGameScreen
+  - [x] 9.2 Build MathGameScreen
     - Create game layout with problem display
     - Add 4 answer bubbles in grid
     - Implement timer display
@@ -226,7 +226,7 @@ This implementation plan breaks down the BrainLand game development into discret
     - Add pause button
     - _Requirements: 2.1, 2.2, 2.3_
   
-  - [ ] 9.3 Implement game logic in MathGameScreen
+  - [x] 9.3 Implement game logic in MathGameScreen
     - Handle answer selection
     - Check correctness
     - Update score and counter
@@ -234,7 +234,7 @@ This implementation plan breaks down the BrainLand game development into discret
     - Handle level completion
     - _Requirements: 2.2, 2.3, 2.4_
   
-  - [ ] 9.4 Build LevelCompleteScreen
+  - [x] 9.4 Build LevelCompleteScreen
     - Display stars earned with animation
     - Show accuracy percentage
     - Display time taken
@@ -242,7 +242,7 @@ This implementation plan breaks down the BrainLand game development into discret
     - Trigger reward chest if applicable
     - _Requirements: 2.4, 6.1, 6.2_
   
-  - [ ] 9.5 Write integration test for complete math game flow
+  - [x] 9.5 Write integration test for complete math game flow
     - Test full flow: select level → play → complete → rewards
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 

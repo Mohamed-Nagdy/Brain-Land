@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "31249678994",
+    "project_id": "brain-land",
+    "storage_bucket": "brain-land.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31249678994:android:2877e0210c582263ef9c4b",
+        "android_client_info": {
+          "package_name": "com.mohamednagdy.brain_land"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgz2VZQk-IO7c7Z0DR5VtUHPgWH2JDl9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -97,7 +97,7 @@ class _AnimatedZoneCardState extends State<AnimatedZoneCard>
                         Text(
                           widget.zone.name,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
