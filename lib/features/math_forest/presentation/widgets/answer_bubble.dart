@@ -134,32 +134,44 @@ class _AnswerBubbleState extends State<AnswerBubble>
               ? _feedbackAnimation.value
               : _scaleAnimation.value;
 
-          return Transform.scale(
-            scale: scale,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: _getGradient(),
-                boxShadow: [
-                  BoxShadow(
-                    color: _getShadowColor(),
-                    blurRadius: 15,
-                    offset: const Offset(0, 8),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              // Use the smaller dimension to ensure the bubble fits
+              final size = constraints.maxWidth < constraints.maxHeight
+                  ? constraints.maxWidth
+                  : constraints.maxHeight;
+
+              // Calculate font size based on bubble size
+              final fontSize = size * 0.4;
+
+              return Transform.scale(
+                scale: scale,
+                child: Container(
+                  width: size,
+                  height: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: _getGradient(),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _getShadowColor(),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  widget.answer,
-                  style: AppTextStyles.gameNumber.copyWith(
-                    color: AppColors.textLight,
-                    fontSize: 40,
+                  child: Center(
+                    child: Text(
+                      widget.answer,
+                      style: AppTextStyles.gameNumber.copyWith(
+                        color: AppColors.textLight,
+                        fontSize: fontSize,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),

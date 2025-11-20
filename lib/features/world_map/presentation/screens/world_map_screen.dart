@@ -1,3 +1,4 @@
+import 'package:brain_land/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -62,18 +63,17 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
                 // Header with player info
                 _buildHeader(context),
 
-                // Zone grid
+                // Zone grid - Responsive with landscape support
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: context.responsivePadding,
                     child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 0.85,
-                          ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: _getGridColumnCount(context),
+                        mainAxisSpacing: context.responsiveSpacing,
+                        crossAxisSpacing: context.responsiveSpacing,
+                        childAspectRatio: _getChildAspectRatio(context),
+                      ),
                       itemCount: zones.length,
                       itemBuilder: (context, index) {
                         final zone = zones[index];
@@ -133,53 +133,133 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
     }
   }
 
+  /// Get grid column count based on screen size and orientation
+  int _getGridColumnCount(BuildContext context) {
+    if (context.isLandscape) {
+      // In landscape, show more columns
+      return context.responsiveValue(
+        mobile: 4, // 4 zones fit nicely in a row on landscape mobile
+        tablet: 4,
+        desktop: 4,
+      );
+    } else {
+      // In portrait, use standard responsive columns
+      return context.responsiveValue(mobile: 2, tablet: 3, desktop: 4);
+    }
+  }
+
+  /// Get child aspect ratio based on screen size and orientation
+  double _getChildAspectRatio(BuildContext context) {
+    if (context.isLandscape) {
+      // In landscape, make cards slightly wider
+      return context.responsiveValue(mobile: 0.75, tablet: 0.85, desktop: 0.9);
+    } else {
+      // In portrait, use standard aspect ratios
+      return context.responsiveValue(mobile: 0.85, tablet: 0.9, desktop: 1.0);
+    }
+  }
+
   Widget _buildHeader(BuildContext context) {
+    final avatarSize = context.responsiveValue(
+      mobile: 60.0,
+      tablet: 70.0,
+      desktop: 80.0,
+    );
+    final iconSize = context.responsiveValue(
+      mobile: 32.0,
+      tablet: 36.0,
+      desktop: 40.0,
+    );
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: context.responsivePadding,
       child: Row(
         children: [
           // Avatar
           GestureDetector(
             onTap: () => context.push(AppRoutes.avatarCustomization),
             child: Container(
-              width: 60,
-              height: 60,
+              width: avatarSize,
+              height: avatarSize,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
                 border: Border.all(color: AppColors.primary, width: 2),
               ),
-              child: const Center(
-                child: Text('🐼', style: TextStyle(fontSize: 32)),
+              child: Center(
+                child: Text(
+                  '🐼',
+                  style: TextStyle(fontSize: avatarSize * 0.53),
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: context.responsiveSpacing),
 
           // Player stats
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Welcome back!', style: AppTextStyles.heading3),
-                const SizedBox(height: 4),
+                Text(
+                  'Welcome back!',
+                  style: AppTextStyles.heading3.copyWith(
+                    fontSize: ResponsiveUtils.responsiveFontSize(
+                      context,
+                      mobile: 20,
+                      tablet: 22,
+                      desktop: 24,
+                    ),
+                  ),
+                ),
+                SizedBox(height: context.responsiveSpacing * 0.5),
                 Row(
                   children: [
-                    const Text('⭐', style: TextStyle(fontSize: 16)),
-                    const SizedBox(width: 4),
                     Text(
-                      '0',
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        fontWeight: FontWeight.bold,
+                      '⭐',
+                      style: TextStyle(
+                        fontSize: context.responsiveValue(
+                          mobile: 16.0,
+                          tablet: 18.0,
+                          desktop: 20.0,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    const Text('🪙', style: TextStyle(fontSize: 16)),
-                    const SizedBox(width: 4),
+                    SizedBox(width: context.responsiveSpacing * 0.5),
                     Text(
                       '0',
                       style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.bold,
+                        fontSize: ResponsiveUtils.responsiveFontSize(
+                          context,
+                          mobile: 16,
+                          tablet: 18,
+                          desktop: 20,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: context.responsiveSpacing),
+                    Text(
+                      '🪙',
+                      style: TextStyle(
+                        fontSize: context.responsiveValue(
+                          mobile: 16.0,
+                          tablet: 18.0,
+                          desktop: 20.0,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: context.responsiveSpacing * 0.5),
+                    Text(
+                      '0',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: ResponsiveUtils.responsiveFontSize(
+                          context,
+                          mobile: 16,
+                          tablet: 18,
+                          desktop: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -190,7 +270,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
 
           // Progress button
           IconButton(
-            icon: const Icon(Icons.emoji_events, size: 32),
+            icon: Icon(Icons.emoji_events, size: iconSize),
             color: AppColors.warningYellow,
             onPressed: () => context.push(AppRoutes.progress),
             tooltip: 'View Progress',

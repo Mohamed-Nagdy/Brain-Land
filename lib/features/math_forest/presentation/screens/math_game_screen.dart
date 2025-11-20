@@ -1,4 +1,5 @@
 import 'package:brain_land/core/utils/audio_manager.dart';
+import 'package:brain_land/core/utils/responsive_utils.dart';
 import 'package:brain_land/features/math_forest/presentation/widgets/celebration_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -130,16 +131,21 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
       return _buildErrorState('No problem available');
     }
 
+    // Use different layout for landscape mode
+    if (context.isLandscape) {
+      return _buildLandscapeLayout(gameState, problem);
+    }
+
     return Column(
       children: [
         // Header with timer, counter, and pause button
         _buildHeader(gameState),
 
-        const SizedBox(height: 24),
+        SizedBox(height: context.responsiveSpacing * 2),
 
         // Problem display
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: context.responsiveHorizontalPadding,
           child: ProblemDisplay(problem: problem),
         ),
 
@@ -148,7 +154,42 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
         // Answer bubbles grid
         _buildAnswerBubbles(problem.options),
 
-        const SizedBox(height: 32),
+        SizedBox(height: context.responsiveSpacing * 3),
+      ],
+    );
+  }
+
+  /// Build landscape layout with side-by-side problem and answers
+  Widget _buildLandscapeLayout(MathGameState gameState, problem) {
+    return Column(
+      children: [
+        // Header with timer, counter, and pause button
+        _buildHeader(gameState),
+
+        Expanded(
+          child: Row(
+            children: [
+              // Left side: Problem display
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: Padding(
+                    padding: context.responsiveHorizontalPadding,
+                    child: ProblemDisplay(problem: problem),
+                  ),
+                ),
+              ),
+
+              // Right side: Answer bubbles
+              Expanded(
+                flex: 3,
+                child: Center(child: _buildAnswerBubbles(problem.options)),
+              ),
+            ],
+          ),
+        ),
+
+        SizedBox(height: context.responsiveSpacing),
       ],
     );
   }
@@ -214,15 +255,21 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
   }
 
   Widget _buildAnswerBubbles(List<int> options) {
+    final spacing = context.responsiveValue(
+      mobile: 24.0,
+      tablet: 32.0,
+      desktop: 40.0,
+    );
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      padding: context.responsiveHorizontalPadding,
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 24,
-          mainAxisSpacing: 24,
+          crossAxisSpacing: spacing,
+          mainAxisSpacing: spacing,
           childAspectRatio: 1.0,
         ),
         itemCount: options.length,

@@ -1,3 +1,4 @@
+import 'package:brain_land/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -108,14 +109,42 @@ class _FancyButtonState extends State<FancyButton>
   Widget build(BuildContext context) {
     final gradient = widget.gradient ?? AppColors.buttonPrimaryGradient;
     final isEnabled = widget.onPressed != null;
+
+    // Ensure minimum touch target size for accessibility
+    final minHeight = ResponsiveUtils.minTouchTargetSize;
+    final effectiveHeight = widget.height ?? minHeight;
+
     final buttonPadding =
         widget.padding ??
         (widget.isSmall
-            ? const EdgeInsets.symmetric(horizontal: 24, vertical: 16)
-            : const EdgeInsets.symmetric(horizontal: 40, vertical: 16));
+            ? EdgeInsets.symmetric(
+                horizontal: context.responsiveValue(
+                  mobile: 24.0,
+                  tablet: 28.0,
+                  desktop: 32.0,
+                ),
+                vertical: 12,
+              )
+            : EdgeInsets.symmetric(
+                horizontal: context.responsiveValue(
+                  mobile: 40.0,
+                  tablet: 48.0,
+                  desktop: 56.0,
+                ),
+                vertical: 16,
+              ));
+
     final textStyle =
         widget.textStyle ??
-        (widget.isSmall ? AppTextStyles.buttonSmall : AppTextStyles.button);
+        (widget.isSmall ? AppTextStyles.buttonSmall : AppTextStyles.button)
+            .copyWith(
+              fontSize: ResponsiveUtils.responsiveFontSize(
+                context,
+                mobile: widget.isSmall ? 14 : 18,
+                tablet: widget.isSmall ? 16 : 20,
+                desktop: widget.isSmall ? 18 : 22,
+              ),
+            );
 
     return MouseRegion(
       onEnter: isEnabled ? _handleHoverEnter : null,
@@ -125,7 +154,11 @@ class _FancyButtonState extends State<FancyButton>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: widget.width,
-          height: widget.height,
+          height: effectiveHeight >= minHeight ? effectiveHeight : minHeight,
+          constraints: BoxConstraints(
+            minHeight: minHeight,
+            minWidth: minHeight,
+          ),
           decoration: BoxDecoration(
             gradient: gradient,
             borderRadius: BorderRadius.circular(30),
