@@ -1,20 +1,15 @@
-import 'package:brain_land/core/router/app_router.dart';
+import 'dart:math' as math;
+
 import 'package:brain_land/core/utils/audio_manager.dart';
-import 'package:brain_land/core/utils/responsive_utils.dart';
 import 'package:brain_land/features/progress/providers/progress_provider.dart';
-import 'package:brain_land/features/world_map/providers/zone_unlock_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/colors.dart';
-import '../../../../core/theme/text_styles.dart';
 import '../../../../shared/models/zone.dart';
-import '../../../../shared/widgets/gradient_background.dart';
 import '../../providers/world_map_provider.dart';
-import '../widgets/animated_zone_card.dart';
 
-/// Main World Map Screen where players choose which zone to play
+/// Modern World Map Screen with child-friendly UI
 class WorldMapScreen extends ConsumerStatefulWidget {
   const WorldMapScreen({super.key});
 
@@ -22,148 +17,258 @@ class WorldMapScreen extends ConsumerStatefulWidget {
   ConsumerState<WorldMapScreen> createState() => _WorldMapScreenState();
 }
 
-class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
+class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _cloudController;
+  late AnimationController _characterController;
+
   @override
   void initState() {
     super.initState();
-    // Play main menu music
     AudioManager.instance.playMusic(MusicTrack.mainMenu.path);
+
+    // Cloud animation
+    _cloudController = AnimationController(
+      duration: const Duration(seconds: 30),
+      vsync: this,
+    )..repeat();
+
+    // Character bounce animation
+    _characterController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _cloudController.dispose();
+    _characterController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final zonesAsync = ref.watch(worldMapProvider);
-    final unlockedZonesAsync = ref.watch(zoneUnlockProvider);
     final totalStarsAsync = ref.watch(totalStarsProvider);
     final totalCoinsAsync = ref.watch(totalCoinsProvider);
 
     return Scaffold(
-      body: GradientBackground(
-        gradient: AppColors.worldMapGradient,
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header with player stats
-              _buildHeader(context, totalStarsAsync, totalCoinsAsync),
+      body: Stack(
+        children: [
+          // Animated gradient background
+          _buildAnimatedBackground(),
 
-              // Map content
-              Expanded(
-                child: zonesAsync.when(
-                  data: (zones) {
-                    return unlockedZonesAsync.when(
-                      data: (unlockedZoneIds) {
-                        return _buildZonesGrid(context, zones, unlockedZoneIds);
-                      },
-                      loading: () => _buildLoading(),
-                      error: (e, s) => _buildError(e.toString()),
-                    );
-                  },
-                  loading: () => _buildLoading(),
-                  error: (e, s) => _buildError(e.toString()),
+          // Floating clouds
+          _buildFloatingClouds(),
+
+          // Main content
+          SafeArea(
+            child: Column(
+              children: [
+                // Modern header
+                _buildModernHeader(totalStarsAsync, totalCoinsAsync),
+
+                // Zones grid
+                Expanded(
+                  child: zonesAsync.when(
+                    data: (zones) => _buildModernZonesGrid(zones),
+                    loading: () => _buildLoading(),
+                    error: (e, s) => _buildError(e.toString()),
+                  ),
                 ),
-              ),
-
-              // Bottom navigation for other features
-              _buildBottomNav(context),
-            ],
+              ],
+            ),
           ),
+
+          // Animated character
+          _buildAnimatedCharacter(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnimatedBackground() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF87CEEB), // Sky blue
+            Color(0xFF98D8E8), // Light blue
+            Color(0xFFB0E0E6), // Powder blue
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
+  Widget _buildFloatingClouds() {
+    return AnimatedBuilder(
+      animation: _cloudController,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            _buildCloud(0, _cloudController.value),
+            _buildCloud(1, (_cloudController.value + 0.3) % 1.0),
+            _buildCloud(2, (_cloudController.value + 0.6) % 1.0),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCloud(int index, double progress) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final yPosition = 50.0 + (index * 80.0);
+    final xPosition = -100 + (progress * (screenWidth + 200));
+
+    return Positioned(
+      left: xPosition,
+      top: yPosition,
+      child: Opacity(
+        opacity: 0.6,
+        child: Text('☁️', style: TextStyle(fontSize: 40 + (index * 10))),
+      ),
+    );
+  }
+
+  Widget _buildModernHeader(
     AsyncValue<int> starsAsync,
     AsyncValue<int> coinsAsync,
   ) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withValues(alpha: 0.3),
+            Colors.white.withValues(alpha: 0.15),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.4),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
       child: Row(
         children: [
-          // Avatar (placeholder)
+          // Avatar with glow
           Container(
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: Colors.white,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 3),
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFF6B9D), Color(0xFFFF8FAB)],
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+                  color: const Color(0xFFFF6B9D).withValues(alpha: 0.5),
+                  blurRadius: 15,
+                  spreadRadius: 2,
                 ),
               ],
             ),
-            child: const Icon(Icons.face, size: 40, color: AppColors.primary),
+            child: const Center(
+              child: Text('😊', style: TextStyle(fontSize: 32)),
+            ),
           ),
           const SizedBox(width: 16),
-          // Player Name and Level (placeholder)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Explorer',
-                style: AppTextStyles.heading2.copyWith(color: Colors.white),
-              ),
-              Text(
-                'Level 1',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white.withValues(alpha: 0.9),
+
+          // Player info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Explorer',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black26,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  'Level 1 🌟',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
-          // Stats
-          Row(
-            children: [
-              _buildStatBadge(
-                Icons.star,
-                AppColors.starGold,
-                starsAsync.when(
-                  data: (stars) => stars.toString(),
-                  loading: () => '...',
-                  error: (_, __) => '0',
-                ),
-              ),
-              const SizedBox(width: 8),
-              _buildStatBadge(
-                Icons.monetization_on,
-                AppColors.coinGold,
-                coinsAsync.when(
-                  data: (coins) => coins.toString(),
-                  loading: () => '...',
-                  error: (_, __) => '0',
-                ),
-              ),
-            ],
+
+          // Stats badges
+          _buildModernStatBadge(
+            '⭐',
+            starsAsync.when(
+              data: (stars) => stars.toString(),
+              loading: () => '...',
+              error: (_, __) => '0',
+            ),
+            const Color(0xFFFFA726),
+          ),
+          const SizedBox(width: 8),
+          _buildModernStatBadge(
+            '🪙',
+            coinsAsync.when(
+              data: (coins) => coins.toString(),
+              loading: () => '...',
+              error: (_, __) => '0',
+            ),
+            const Color(0xFFFFD700),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatBadge(IconData icon, Color color, String value) {
+  Widget _buildModernStatBadge(String emoji, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
+        gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.7)]),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 4),
+          Text(emoji, style: const TextStyle(fontSize: 20)),
+          const SizedBox(width: 6),
           Text(
             value,
             style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
               fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              shadows: [Shadow(color: Colors.black26, blurRadius: 2)],
             ),
           ),
         ],
@@ -171,44 +276,134 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
     );
   }
 
-  Widget _buildZonesGrid(
-    BuildContext context,
-    List<Zone> zones,
-    List<String> unlockedZoneIds,
-  ) {
-    // Responsive grid layout
-    final crossAxisCount = context.responsiveValue(
-      mobile: 1,
-      tablet: 2,
-      desktop: 3,
-    );
-
-    final spacing = context.responsiveValue(
-      mobile: 16.0,
-      tablet: 24.0,
-      desktop: 32.0,
-    );
-
+  Widget _buildModernZonesGrid(List<Zone> zones) {
     return GridView.builder(
-      padding: EdgeInsets.all(spacing),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        crossAxisSpacing: spacing,
-        mainAxisSpacing: spacing,
-        childAspectRatio: 1.5,
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.85,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
       ),
       itemCount: zones.length,
       itemBuilder: (context, index) {
         final zone = zones[index];
-        final isUnlocked = unlockedZoneIds.contains(zone.id);
+        return _buildModernZoneCard(zone, index);
+      },
+    );
+  }
 
-        // Create a copy of the zone with the correct unlocked status
-        // This ensures the UI reflects the actual unlock status from the provider
-        final zoneWithStatus = zone.copyWith(isUnlocked: isUnlocked);
+  Widget _buildModernZoneCard(Zone zone, int index) {
+    final progress = zone.completedLevels / zone.totalLevels;
+    final colors = _getZoneColors(zone.id);
 
-        return AnimatedZoneCard(
-          zone: zoneWithStatus,
-          onTap: () => _navigateToZone(context, zone.id),
+    return GestureDetector(
+      onTap: () => _navigateToZone(context, zone.id),
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: Duration(milliseconds: 300 + (index * 100)),
+        curve: Curves.easeOutBack,
+        builder: (context, value, child) {
+          return Transform.scale(
+            scale: value,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: colors,
+                ),
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors[0].withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  // Progress ring
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(
+                        value: progress,
+                        backgroundColor: Colors.white.withValues(alpha: 0.3),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
+                        strokeWidth: 4,
+                      ),
+                    ),
+                  ),
+
+                  // Zone content
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Zone emoji
+                        Text(
+                          _getZoneEmoji(zone.id),
+                          style: const TextStyle(fontSize: 64),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Zone name
+                        Text(
+                          zone.name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Progress text
+                        Text(
+                          '${zone.completedLevels}/${zone.totalLevels}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildAnimatedCharacter() {
+    return AnimatedBuilder(
+      animation: _characterController,
+      builder: (context, child) {
+        final bounce = math.sin(_characterController.value * math.pi) * 10;
+        return Positioned(
+          bottom: 120 + bounce,
+          right: 30,
+          child: const Text('🚀', style: TextStyle(fontSize: 48)),
         );
       },
     );
@@ -221,88 +416,40 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
   Widget _buildError(String message) {
     return Center(
       child: Text(
-        'Error loading map: $message',
-        style: const TextStyle(color: Colors.white),
+        'Oops! $message',
+        style: const TextStyle(color: Colors.white, fontSize: 16),
       ),
     );
   }
 
-  Widget _buildBottomNav(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(
-            context,
-            Icons.pets,
-            'Pets',
-            () => _navigateToFeature(context, '/pets'),
-          ),
-          _buildNavItem(
-            context,
-            Icons.calendar_today,
-            'Daily',
-            () => _navigateToFeature(context, AppRoutes.dailyReward),
-          ),
-          _buildNavItem(
-            context,
-            Icons.checkroom,
-            'Avatar',
-            () => _navigateToFeature(context, '/avatar'),
-          ),
-          _buildNavItem(
-            context,
-            Icons.settings,
-            'Settings',
-            () => _navigateToFeature(context, '/settings'),
-          ),
-        ],
-      ),
-    );
+  List<Color> _getZoneColors(String zoneId) {
+    switch (zoneId) {
+      case 'math_forest':
+        return [const Color(0xFF6D4C41), const Color(0xFF5D4037)];
+      case 'logic_mountain':
+        return [const Color(0xFF64B5F6), const Color(0xFF42A5F5)];
+      case 'memory_river':
+        return [const Color(0xFF00BCD4), const Color(0xFF0097A7)];
+      case 'shape_valley':
+        return [const Color(0xFF9C27B0), const Color(0xFF6A1B9A)];
+      default:
+        return [Colors.grey, Colors.grey.shade700];
+    }
   }
 
-  Widget _buildNavItem(
-    BuildContext context,
-    IconData icon,
-    String label,
-    VoidCallback onTap,
-  ) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        // Ensure minimum touch target size for children
-        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: AppColors.primary, size: 28),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  String _getZoneEmoji(String zoneId) {
+    switch (zoneId) {
+      case 'math_forest':
+        return '🌲';
+      case 'logic_mountain':
+        return '⛰️';
+      case 'memory_river':
+        return '🌊';
+      case 'shape_valley':
+        return '⬡';
+      default:
+        return '❓';
+    }
   }
 
   void _navigateToZone(BuildContext context, String zoneId) {
@@ -318,10 +465,5 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
     if (route != null) {
       context.push(route);
     }
-  }
-
-  void _navigateToFeature(BuildContext context, String route) {
-    // Navigate to implemented features
-    context.push(route);
   }
 }

@@ -5,8 +5,6 @@ import 'package:brain_land/features/shape_valley/presentation/screens/shape_vall
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-// Avatar screens
-import '../../features/avatar/presentation/screens/avatar_customization_screen.dart';
 // Math Forest screens
 import '../../features/math_forest/presentation/screens/level_complete_screen.dart';
 import '../../features/math_forest/presentation/screens/level_selection_screen.dart';
@@ -16,9 +14,6 @@ import '../../features/memory_river/presentation/screens/memory_game_screen.dart
 // Progress screens
 import '../../features/progress/presentation/screens/daily_reward_screen.dart';
 import '../../features/progress/presentation/screens/progress_screen.dart';
-// Reward screens
-import '../../features/rewards/presentation/screens/pet_collection_screen.dart';
-import '../../features/rewards/presentation/screens/reward_chest_screen.dart';
 // Settings screens
 import '../../features/settings/presentation/screens/settings_screen.dart';
 // Shape Valley screens
@@ -248,43 +243,6 @@ class AppRouter {
             context: context,
             state: state,
             child: const PlaceholderScreen(title: 'Level Complete'),
-          ),
-        ),
-
-        // Avatar Customization
-        GoRoute(
-          path: AppRoutes.avatarCustomization,
-          name: 'avatarCustomization',
-          pageBuilder: (context, state) => _buildPageWithTransition(
-            context: context,
-            state: state,
-            child: const AvatarCustomizationScreen(),
-          ),
-        ),
-
-        // Reward Chest
-        GoRoute(
-          path: AppRoutes.rewardChest,
-          name: 'rewardChest',
-          pageBuilder: (context, state) {
-            final chestId =
-                state.uri.queryParameters['chestId'] ?? 'default_chest';
-            return _buildPageWithTransition(
-              context: context,
-              state: state,
-              child: RewardChestScreen(chestId: chestId),
-            );
-          },
-        ),
-
-        // Pet Collection
-        GoRoute(
-          path: AppRoutes.petCollection,
-          name: 'petCollection',
-          pageBuilder: (context, state) => _buildPageWithTransition(
-            context: context,
-            state: state,
-            child: const PetCollectionScreen(),
           ),
         ),
       ],
