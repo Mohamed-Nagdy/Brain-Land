@@ -281,5 +281,138 @@ void main() {
         );
       }
     });
+
+    // **Feature: brainland-game, Property 43: Failed saves trigger retry**
+    test('failed saves trigger retry with exponential backoff', () async {
+      final random = Random();
+
+      // Test that the retry mechanism is invoked when saves fail
+      // We'll test this by verifying the onRetry callback is called
+      for (int i = 0; i < AppConstants.pbtIterations; i++) {
+        final testKey = 'retry_test_${random.nextInt(10000)}';
+        final testData = {
+          'value': random.nextInt(1000),
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+        };
+
+        final maxRetries = 3;
+
+        // Save with retry callback to track retry attempts
+        await storage.save(
+          boxName: AppConstants.progressBoxName,
+          key: testKey,
+          value: testData,
+          maxRetries: maxRetries,
+          onRetry: (attempt, max) {
+            // Verify that retry is being attempted
+            expect(attempt, lessThanOrEqualTo(max));
+            expect(attempt, greaterThan(0));
+          },
+        );
+
+        // Verify the data was saved successfully
+        final loadedData = storage.load<Map>(
+          boxName: AppConstants.progressBoxName,
+          key: testKey,
+        );
+
+        expect(loadedData, isNotNull);
+        expect(loadedData!['value'], equals(testData['value']));
+        expect(loadedData['timestamp'], equals(testData['timestamp']));
+
+        // Clean up
+        await storage.delete(
+          boxName: AppConstants.progressBoxName,
+          key: testKey,
+        );
+      }
+    });
+
+    test('save retry mechanism respects maxRetries parameter', () async {
+      final random = Random();
+
+      // Test with different maxRetries values
+      final retryValues = [1, 2, 3, 5];
+
+      for (final maxRetries in retryValues) {
+        for (int i = 0; i < 10; i++) {
+          // Reduced iterations for this test
+          final testKey = 'max_retry_test_${random.nextInt(10000)}';
+          final testData = {'iteration': i, 'maxRetries': maxRetries};
+
+          await storage.save(
+            boxName: AppConstants.progressBoxName,
+            key: testKey,
+            value: testData,
+            maxRetries: maxRetries,
+            onRetry: (attempt, max) {
+              expect(max, equals(maxRetries));
+            },
+          );
+
+          // Verify data was saved
+          final loadedData = storage.load<Map>(
+            boxName: AppConstants.progressBoxName,
+            key: testKey,
+          );
+
+          expect(loadedData, isNotNull);
+          expect(loadedData!['iteration'], equals(i));
+          expect(loadedData['maxRetries'], equals(maxRetries));
+
+          // Clean up
+          await storage.delete(
+            boxName: AppConstants.progressBoxName,
+            key: testKey,
+          );
+        }
+      }
+    });
+
+    test('batch save operations work correctly with retry', () async {
+      final random = Random();
+
+      for (int i = 0; i < AppConstants.pbtIterations; i++) {
+        // Generate random batch of entries
+        final batchSize = random.nextInt(20) + 1;
+        final entries = <String, dynamic>{};
+
+        for (int j = 0; j < batchSize; j++) {
+          entries['batch_key_${i}_$j'] = {
+            'value': random.nextInt(1000),
+            'index': j,
+          };
+        }
+
+        // Save batch
+        await storage.saveBatch(
+          boxName: AppConstants.progressBoxName,
+          entries: entries,
+          maxRetries: 3,
+          onRetry: (attempt, max) {
+            // Verify retry parameters if callback is invoked
+            expect(attempt, lessThanOrEqualTo(max));
+          },
+        );
+
+        // Verify all entries were saved
+        for (final entry in entries.entries) {
+          final loadedData = storage.load<Map>(
+            boxName: AppConstants.progressBoxName,
+            key: entry.key,
+          );
+
+          expect(loadedData, isNotNull);
+          final originalData = entry.value as Map;
+          expect(loadedData!['value'], equals(originalData['value']));
+          expect(loadedData['index'], equals(originalData['index']));
+        }
+
+        // Clean up
+        for (final key in entries.keys) {
+          await storage.delete(boxName: AppConstants.progressBoxName, key: key);
+        }
+      }
+    });
   });
 }

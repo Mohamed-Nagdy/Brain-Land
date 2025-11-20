@@ -119,11 +119,112 @@ class StorageService {
     return Hive.box(boxName);
   }
 
-  /// Save data to a box with retry mechanism
+  /// Save data to a box with retry mechanism and exponential backoff
+  ///
+  /// Implements retry logic with exponential backoff:
+  /// - Attempt 1: immediate
+  /// - Attempt 2: 100ms delay
+  /// - Attempt 3: 200ms delay
+  /// - Attempt 4: 400ms delay (if maxRetries > 3)
+  ///
+  /// Throws [StorageException] if all retry attempts fail
   Future<void> save({
     required String boxName,
     required String key,
     required dynamic value,
+    int maxRetries = 3,
+    void Function(int attempt, int maxRetries)? onRetry,
+  }) async {
+    if (maxRetries < 1) {
+      throw ArgumentError('maxRetries must be at least 1');
+    }
+
+    int attempts = 0;
+    Duration delay = const Duration(milliseconds: 100);
+    Exception? lastException;
+
+    while (attempts < maxRetries) {
+      try {
+        final box = getBox(boxName);
+        await box.put(key, value);
+        return; // Success!
+      } catch (e, stackTrace) {
+        attempts++;
+        lastException = StorageException(
+          message: 'Save attempt $attempts failed: $e',
+          severity: attempts >= maxRetries
+              ? ErrorSeverity.high
+              : ErrorSeverity.medium,
+          stackTrace: stackTrace,
+        );
+
+        if (attempts >= maxRetries) {
+          // All retries exhausted
+          throw StorageException(
+            message: 'Failed to save data after $maxRetries attempts: $e',
+            severity: ErrorSeverity.high,
+            stackTrace: stackTrace,
+          );
+        }
+
+        // Notify about retry attempt
+        onRetry?.call(attempts, maxRetries);
+
+        // Wait before retrying with exponential backoff
+        await Future.delayed(delay);
+        delay *= 2; // Exponential backoff: 100ms, 200ms, 400ms, etc.
+      }
+    }
+
+    // This should never be reached, but just in case
+    throw lastException ??
+        StorageException(
+          message: 'Unexpected error during save operation',
+          severity: ErrorSeverity.high,
+        );
+  }
+
+  /// Load data from a box
+  ///
+  /// Returns null if the key doesn't exist or if data cannot be loaded.
+  /// Throws [StorageException] for critical errors.
+  T? load<T>({required String boxName, required String key, T? defaultValue}) {
+    try {
+      final box = getBox(boxName);
+      final value = box.get(key);
+
+      if (value == null) {
+        return defaultValue;
+      }
+
+      // Attempt to cast to the expected type
+      if (value is T) {
+        return value;
+      } else {
+        throw StorageException(
+          message: 'Type mismatch: expected $T but got ${value.runtimeType}',
+          severity: ErrorSeverity.medium,
+        );
+      }
+    } catch (e, stackTrace) {
+      if (e is StorageException) {
+        rethrow;
+      }
+      throw StorageException(
+        message: 'Failed to load data for key "$key": $e',
+        severity: ErrorSeverity.medium,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  /// Delete data from a box with retry mechanism
+  ///
+  /// Implements retry logic for delete operations.
+  /// Throws [StorageException] if all retry attempts fail.
+  Future<void> delete({
+    required String boxName,
+    required String key,
     int maxRetries = 3,
   }) async {
     int attempts = 0;
@@ -132,14 +233,14 @@ class StorageService {
     while (attempts < maxRetries) {
       try {
         final box = getBox(boxName);
-        await box.put(key, value);
-        return;
+        await box.delete(key);
+        return; // Success!
       } catch (e, stackTrace) {
         attempts++;
         if (attempts >= maxRetries) {
           throw StorageException(
-            message: 'Failed to save data after $maxRetries attempts: $e',
-            severity: ErrorSeverity.high,
+            message: 'Failed to delete data after $maxRetries attempts: $e',
+            severity: ErrorSeverity.medium,
             stackTrace: stackTrace,
           );
         }
@@ -149,43 +250,99 @@ class StorageService {
     }
   }
 
-  /// Load data from a box
-  T? load<T>({required String boxName, required String key}) {
+  /// Clear all data from a box with retry mechanism
+  ///
+  /// Implements retry logic for clear operations.
+  /// Throws [StorageException] if all retry attempts fail.
+  Future<void> clearBox(String boxName, {int maxRetries = 3}) async {
+    int attempts = 0;
+    Duration delay = const Duration(milliseconds: 100);
+
+    while (attempts < maxRetries) {
+      try {
+        final box = getBox(boxName);
+        await box.clear();
+        return; // Success!
+      } catch (e, stackTrace) {
+        attempts++;
+        if (attempts >= maxRetries) {
+          throw StorageException(
+            message: 'Failed to clear box after $maxRetries attempts: $e',
+            severity: ErrorSeverity.medium,
+            stackTrace: stackTrace,
+          );
+        }
+        await Future.delayed(delay);
+        delay *= 2; // Exponential backoff
+      }
+    }
+  }
+
+  /// Save multiple key-value pairs in a batch with retry mechanism
+  ///
+  /// More efficient than multiple individual save calls.
+  /// Throws [StorageException] if the batch operation fails after all retries.
+  Future<void> saveBatch({
+    required String boxName,
+    required Map<String, dynamic> entries,
+    int maxRetries = 3,
+    void Function(int attempt, int maxRetries)? onRetry,
+  }) async {
+    if (entries.isEmpty) return;
+
+    int attempts = 0;
+    Duration delay = const Duration(milliseconds: 100);
+
+    while (attempts < maxRetries) {
+      try {
+        final box = getBox(boxName);
+        await box.putAll(entries);
+        return; // Success!
+      } catch (e, stackTrace) {
+        attempts++;
+        if (attempts >= maxRetries) {
+          throw StorageException(
+            message: 'Failed to save batch after $maxRetries attempts: $e',
+            severity: ErrorSeverity.high,
+            stackTrace: stackTrace,
+          );
+        }
+
+        // Notify about retry attempt
+        onRetry?.call(attempts, maxRetries);
+
+        await Future.delayed(delay);
+        delay *= 2; // Exponential backoff
+      }
+    }
+  }
+
+  /// Check if storage is initialized
+  bool get isInitialized => _isInitialized;
+
+  /// Get all keys in a box
+  List<String> getKeys(String boxName) {
     try {
       final box = getBox(boxName);
-      return box.get(key) as T?;
+      return box.keys.cast<String>().toList();
     } catch (e, stackTrace) {
       throw StorageException(
-        message: 'Failed to load data: $e',
-        severity: ErrorSeverity.medium,
+        message: 'Failed to get keys from box: $e',
+        severity: ErrorSeverity.low,
         stackTrace: stackTrace,
       );
     }
   }
 
-  /// Delete data from a box
-  Future<void> delete({required String boxName, required String key}) async {
+  /// Check if a key exists in a box
+  bool containsKey({required String boxName, required String key}) {
     try {
       final box = getBox(boxName);
-      await box.delete(key);
+      return box.containsKey(key);
     } catch (e, stackTrace) {
       throw StorageException(
-        message: 'Failed to delete data: $e',
-        severity: ErrorSeverity.medium,
-        stackTrace: stackTrace,
-      );
-    }
-  }
-
-  /// Clear all data from a box
-  Future<void> clearBox(String boxName) async {
-    try {
-      final box = getBox(boxName);
-      await box.clear();
-    } catch (e, stackTrace) {
-      throw StorageException(
-        message: 'Failed to clear box: $e',
-        severity: ErrorSeverity.medium,
+        message: 'Failed to check key existence: $e',
+        severity: ErrorSeverity.low,
         stackTrace: stackTrace,
       );
     }
