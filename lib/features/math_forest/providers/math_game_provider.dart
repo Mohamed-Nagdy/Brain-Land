@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:brain_land/features/math_forest/models/math_level.dart';
 import 'package:brain_land/features/progress/providers/progress_provider.dart';
 import 'package:brain_land/features/rewards/providers/pet_provider.dart';
 import 'package:brain_land/features/rewards/services/pet_service.dart';
+import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
+import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:brain_land/shared/services/analytics_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,6 +39,12 @@ final mathGameProvider =
       );
     });
 
+/// Provider for fetching all math levels
+final mathLevelsProvider = FutureProvider<List<MathLevel>>((ref) async {
+  final storage = ref.watch(mathStorageServiceProvider);
+  return storage.getAllLevels();
+});
+
 /// Notifier for managing math game state
 class MathGameNotifier extends StateNotifier<MathGameState> {
   final String levelId;
@@ -67,10 +76,6 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
     try {
       // Load level data
       final level = await storage.getLevel(levelId);
-      if (level == null) {
-        state = MathGameState.error('Level not found');
-        return;
-      }
 
       // Generate problems for the level
       final problemCount = level.targetScore + 5; // Extra problems for variety
@@ -206,6 +211,33 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
     // Save progress
     await storage.updateLevelProgress(result);
 
+    // Sync with global progress provider
+    // This is critical because LevelSelectionScreen relies on this provider to unlock levels
+    final completedCount = await storage.getCompletedLevelsCount();
+    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentZoneProgress =
+        currentProgress.zoneProgress['math_forest'] ??
+        ZoneProgress(
+          zoneId: 'math_forest',
+          levelsCompleted: 0,
+          totalStars: 0,
+          bestAccuracy: 0,
+          lastPlayedAt: DateTime.now(),
+        );
+
+    final updatedZoneProgress = currentZoneProgress.copyWith(
+      levelsCompleted: completedCount,
+      lastPlayedAt: DateTime.now(),
+    );
+
+    await ref
+        .read(progressNotifierProvider.notifier)
+        .updateZoneProgress('math_forest', updatedZoneProgress);
+
+    // Invalidate providers to ensure UI updates
+    ref.invalidate(mathLevelsProvider);
+    ref.invalidate(worldMapProvider); // Refresh world map display
+
     // Handle consecutive level completion and pet unlocking
     if (starsEarned > 0) {
       // Level was completed successfully
@@ -226,8 +258,16 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
       timeTaken: timeSpent,
     );
 
-    // Update state to completed
-    state = state.copyWith(status: GameStatus.completed);
+    // Update state to completed and update level data
+    // This ensures the UI shows the correct stars earned
+    final updatedLevel = state.level?.copyWith(
+      isCompleted: true,
+      starsEarned: starsEarned > (state.level?.starsEarned ?? 0)
+          ? starsEarned
+          : state.level?.starsEarned,
+    );
+
+    state = state.copyWith(status: GameStatus.completed, level: updatedLevel);
   }
 
   /// Handle level completion and check for pet unlock

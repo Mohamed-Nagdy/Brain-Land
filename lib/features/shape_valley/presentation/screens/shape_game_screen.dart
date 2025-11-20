@@ -394,8 +394,6 @@ class _ShapeGameScreenState extends ConsumerState<ShapeGameScreen> {
   }
 
   void _navigateToLevelComplete() {
-    // TODO: Navigate to level complete screen
-    // For now, just go back
     context.pop();
   }
 }

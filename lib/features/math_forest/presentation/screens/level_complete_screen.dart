@@ -12,6 +12,7 @@ import '../../../../shared/widgets/gradient_background.dart';
 import '../../models/math_game_state.dart';
 import '../../providers/math_game_provider.dart';
 import '../widgets/celebration_widget.dart';
+import '../widgets/forest_widgets.dart';
 
 /// Level Complete Screen showing results and rewards
 /// Features:
@@ -35,6 +36,7 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
+  bool _isChestOpen = false;
 
   @override
   void initState() {
@@ -61,6 +63,15 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
 
     // Start animation
     _animationController.forward();
+
+    // Open chest after a delay
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        setState(() {
+          _isChestOpen = true;
+        });
+      }
+    });
   }
 
   @override
@@ -154,49 +165,31 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
                                 Icons.timer,
                               ),
 
-                              // Reward chest message
+                              // Reward chest
                               if (shouldShowRewardChest) ...[
                                 const SizedBox(height: 24),
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.starGold.withValues(
-                                      alpha: 0.2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: AppColors.starGold,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.card_giftcard,
-                                        color: AppColors.starGold,
-                                        size: 32,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'You earned a reward chest!',
-                                          style: AppTextStyles.bodyLarge
-                                              .copyWith(
-                                                color: AppColors.textPrimary,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ),
-                                    ],
+                                TreasureChest(
+                                  isOpen: _isChestOpen,
+                                  onTap: () {
+                                    if (!_isChestOpen) {
+                                      setState(() => _isChestOpen = true);
+                                    }
+                                  },
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Reward Unlocked!',
+                                  style: AppTextStyles.bodyLarge.copyWith(
+                                    color: AppColors.starGold,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
+                              const SizedBox(height: 32),
                             ],
                           ),
                         ),
                       ),
-
-                      const SizedBox(height: 32),
 
                       // Action buttons
                       FadeTransition(

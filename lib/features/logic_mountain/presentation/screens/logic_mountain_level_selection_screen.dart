@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../progress/providers/progress_provider.dart';
-import '../../models/logic_level.dart';
 import '../../providers/logic_game_provider.dart';
+import '../widgets/winding_logic_path.dart';
 
 /// Logic Mountain Level Selection Screen
 /// Shows 20 levels with purple gradient theme
@@ -41,7 +41,7 @@ class LogicMountainLevelSelectionScreen extends ConsumerWidget {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -92,23 +92,14 @@ class LogicMountainLevelSelectionScreen extends ConsumerWidget {
                       final levelsCompleted =
                           zoneProgressAsync.value?.levelsCompleted ?? 0;
 
-                      return GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              childAspectRatio: 1,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                            ),
-                        itemCount: levels.length,
-                        itemBuilder: (context, index) {
-                          final level = levels[index];
-                          // Lock if level number is greater than completed + 1
-                          // e.g. if 0 completed, level 1 is unlocked, level 2 is locked.
-                          final isLocked =
-                              level.levelNumber > levelsCompleted + 1;
-                          return _buildLevelCard(context, level, isLocked);
+                      return WindingLogicPath(
+                        levels: levels,
+                        levelsCompleted: levelsCompleted,
+                        onLevelTap: (levelId) {
+                          context.pushNamed(
+                            'logicGame',
+                            pathParameters: {'levelId': levelId},
+                          );
                         },
                       );
                     },
@@ -126,99 +117,6 @@ class LogicMountainLevelSelectionScreen extends ConsumerWidget {
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLevelCard(
-    BuildContext context,
-    LogicLevel level,
-    bool isLocked,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        if (!isLocked) {
-          context.pushNamed('logicGame', pathParameters: {'levelId': level.id});
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Complete Level ${level.levelNumber - 1} to unlock!',
-              ),
-              duration: const Duration(seconds: 1),
-              backgroundColor: Colors.redAccent,
-            ),
-          );
-        }
-      },
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: isLocked
-                  ? LinearGradient(
-                      colors: [Colors.grey.shade400, Colors.grey.shade600],
-                    )
-                  : LinearGradient(
-                      colors: [
-                        Colors.purple.shade400,
-                        Colors.deepPurple.shade600,
-                      ],
-                    ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.2),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (isLocked)
-                    const Icon(Icons.lock, color: Colors.white54, size: 24)
-                  else
-                    Text(
-                      level.levelNumber.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-          // Star overlay for completed levels
-          if (!isLocked && level.starsEarned > 0)
-            Positioned(
-              bottom: 8,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (index) {
-                  return Icon(
-                    index < level.starsEarned
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                    size: 12,
-                    color: index < level.starsEarned
-                        ? Colors.amber
-                        : Colors.white30,
-                  );
-                }),
-              ),
-            ),
         ],
       ),
     );

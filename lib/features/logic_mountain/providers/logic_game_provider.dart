@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:brain_land/features/progress/providers/progress_provider.dart';
+import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
 import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -206,42 +207,39 @@ class LogicGameNotifier extends StateNotifier<LogicGameState> {
     // Save progress
     await storage.saveProgress(updatedLevel);
 
-    // Handle level completion for progress tracking
+    // Sync with global progress provider
+    // This is critical because level selection relies on this provider to unlock levels
+    final completedCount = await storage.getCompletedLevelsCount();
+    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentZoneProgress =
+        currentProgress.zoneProgress['logic_mountain'] ??
+        ZoneProgress(
+          zoneId: 'logic_mountain',
+          levelsCompleted: 0,
+          totalStars: 0,
+          bestAccuracy: 0,
+          lastPlayedAt: DateTime.now(),
+        );
+
+    final updatedZoneProgress = currentZoneProgress.copyWith(
+      levelsCompleted: completedCount,
+      lastPlayedAt: DateTime.now(),
+    );
+
+    await ref
+        .read(progressNotifierProvider.notifier)
+        .updateZoneProgress('logic_mountain', updatedZoneProgress);
+
+    // Invalidate providers to ensure UI updates
+    ref.invalidate(logicLevelsProvider);
+    ref.invalidate(worldMapProvider); // Refresh world map display
+
+    // Handle consecutive level completion for pet unlocking
     if (starsEarned > 0) {
       // Level was completed successfully
       await ref
           .read(progressNotifierProvider.notifier)
           .incrementConsecutiveLevels();
-
-      // Update Zone Progress to unlock next level
-      final zoneId = 'logic_mountain';
-      final currentZoneProgress = await ref.read(
-        zoneProgressProvider(zoneId).future,
-      );
-      final currentLevelsCompleted = currentZoneProgress?.levelsCompleted ?? 0;
-
-      // Only update if we've completed a new level
-      if (state.level!.levelNumber > currentLevelsCompleted) {
-        final newZoneProgress =
-            (currentZoneProgress ??
-                    ZoneProgress(
-                      zoneId: zoneId,
-                      levelsCompleted: 0,
-                      totalStars: 0,
-                      bestAccuracy: 0,
-                      lastPlayedAt: DateTime.now(),
-                    ))
-                .copyWith(
-                  levelsCompleted: state.level!.levelNumber,
-                  totalStars:
-                      (currentZoneProgress?.totalStars ?? 0) + starsEarned,
-                  lastPlayedAt: DateTime.now(),
-                );
-
-        await ref
-            .read(progressNotifierProvider.notifier)
-            .updateZoneProgress(zoneId, newZoneProgress);
-      }
     } else {
       // Level was failed, reset consecutive counter
       await ref

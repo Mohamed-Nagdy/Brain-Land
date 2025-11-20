@@ -1,16 +1,17 @@
 import 'package:brain_land/core/utils/audio_manager.dart';
 import 'package:brain_land/core/utils/responsive_utils.dart';
 import 'package:brain_land/features/math_forest/presentation/widgets/celebration_widget.dart';
+import 'package:brain_land/features/math_forest/presentation/widgets/forest_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/gradient_background.dart';
 import '../../models/math_game_state.dart';
 import '../../providers/math_game_provider.dart';
-import '../widgets/answer_bubble.dart';
 import '../widgets/problem_display.dart';
 import '../widgets/timer_widget.dart';
 
@@ -146,7 +147,7 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
         // Problem display
         Padding(
           padding: context.responsiveHorizontalPadding,
-          child: ProblemDisplay(problem: problem),
+          child: WoodSign(child: ProblemDisplay(problem: problem)),
         ),
 
         const Spacer(),
@@ -175,7 +176,7 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
                 child: Center(
                   child: Padding(
                     padding: context.responsiveHorizontalPadding,
-                    child: ProblemDisplay(problem: problem),
+                    child: WoodSign(child: ProblemDisplay(problem: problem)),
                   ),
                 ),
               ),
@@ -200,16 +201,41 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Pause button
-          IconButton(
-            onPressed: _handlePause,
-            icon: Icon(
-              gameState.status == GameStatus.paused
-                  ? Icons.play_arrow
-                  : Icons.pause,
-              color: Colors.white,
-              size: 28,
-            ),
+          Row(
+            children: [
+              // Back Button
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => context.pop(),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Pause button
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: _handlePause,
+                  icon: Icon(
+                    gameState.status == GameStatus.paused
+                        ? Icons.play_arrow
+                        : Icons.pause,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ],
           ),
 
           // Timer
@@ -282,8 +308,8 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
             isCorrect = _isCorrect;
           }
 
-          return AnswerBubble(
-            answer: option.toString(),
+          return FruitButton(
+            text: option.toString(),
             onTap: () => _handleAnswerTap(option),
             isCorrect: isCorrect,
             isEnabled: _selectedAnswer == null,
@@ -388,7 +414,117 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
   }
 
   void _navigateToLevelComplete() {
-    // Navigate to level complete screen
-    context.push('/math-forest/complete/${widget.levelId}');
+    final gameState = ref.read(mathGameProvider(widget.levelId));
+    final stars = gameState.level?.starsEarned ?? 0;
+    final score = gameState.correctAnswers;
+    final currentLevelNumber = gameState.level?.levelNumber ?? 0;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('🎉', style: TextStyle(fontSize: 64)),
+              const SizedBox(height: 16),
+              Text(
+                'Level Complete!',
+                style: AppTextStyles.heading2.copyWith(
+                  color: AppColors.mathForestGreen,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) {
+                  // Use the stars from the updated level state
+                  // If the level was just completed, starsEarned will be the new high score
+                  // Note: If the user re-plays a level and gets fewer stars, we show the high score
+                  // Ideally we should show the stars earned *this session*, but for now high score is safer
+                  // to ensure they see their progress.
+                  // Actually, let's check if we can pass the *current* result stars.
+                  // Since we updated state.level with the MAX stars, this will show the best score.
+                  // If the user wants to see what they got *just now*, we might need to change logic.
+                  // But for "Level Complete", showing 3 stars if they already have 3 stars is fine.
+                  // Wait, if they got 1 star now but had 3 before, showing 3 might be confusing?
+                  // No, usually games show the *best* result or the *current* result.
+                  // Given the user said "wrong stars number", they probably saw 0 or previous score.
+                  // Let's stick with state.level.starsEarned which is now updated to be at least the current run.
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Icon(
+                      index < stars
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                      size: 48,
+                      color: index < stars
+                          ? Colors.amber
+                          : Colors.grey.shade300,
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Score: $score',
+                style: AppTextStyles.heading3.copyWith(
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: FancyButton(
+                      text: 'Back',
+                      onPressed: () {
+                        context.pop(); // Close dialog
+                        context.pop(); // Go back to level selection
+                      },
+                      gradient: LinearGradient(
+                        colors: [Colors.grey.shade400, Colors.grey.shade600],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: FancyButton(
+                      text: 'Next',
+                      onPressed: () {
+                        context.pop(); // Close dialog
+                        // Navigate to next level
+                        final nextLevelId =
+                            'math_level_${currentLevelNumber + 1}';
+                        context.pushReplacementNamed(
+                          'mathGame',
+                          pathParameters: {'levelId': nextLevelId},
+                        );
+                      },
+                      gradient: AppColors.mathForestGradient,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

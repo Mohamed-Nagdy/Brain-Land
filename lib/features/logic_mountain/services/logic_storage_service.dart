@@ -71,6 +71,9 @@ class LogicStorageService {
       }
     }
 
+    // Ensure levels are sorted by levelNumber
+    levels.sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
+
     return levels;
   }
 
@@ -117,5 +120,11 @@ class LogicStorageService {
       timeLimit: timeLimit,
       targetScore: targetScore,
     );
+  }
+
+  /// Get number of completed levels
+  Future<int> getCompletedLevelsCount() async {
+    final levels = await getAllLevels();
+    return levels.where((level) => level.isCompleted).length;
   }
 }

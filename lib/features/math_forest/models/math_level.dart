@@ -1,15 +1,36 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+
+part 'math_level.g.dart';
 
 /// Model representing a Math Forest level with difficulty and scoring parameters
+@HiveType(typeId: 17)
 class MathLevel extends Equatable {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final int levelNumber;
+
+  @HiveField(2)
   final int difficulty;
+
+  @HiveField(3)
   final int timeLimit; // 0 for unlimited
+
+  @HiveField(4)
   final int targetScore; // Number of correct answers needed
+
+  @HiveField(5)
   final bool isCompleted;
+
+  @HiveField(6)
   final int starsEarned;
+
+  @HiveField(7)
   final int bestScore;
+
+  @HiveField(8)
   final int bestAccuracy; // Percentage (0-100)
 
   const MathLevel({

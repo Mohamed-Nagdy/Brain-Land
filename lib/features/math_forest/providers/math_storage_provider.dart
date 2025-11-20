@@ -7,17 +7,7 @@ import '../services/math_storage_service.dart';
 /// Provider for the MathStorageService
 final mathStorageServiceProvider = Provider<MathStorageService>((ref) {
   final calculator = DifficultyCalculator();
-  final service = MathStorageService(difficultyCalculator: calculator);
-
-  // Initialize the service
-  service.init();
-
-  // Clean up when provider is disposed
-  ref.onDispose(() {
-    service.close();
-  });
-
-  return service;
+  return MathStorageService(difficultyCalculator: calculator);
 });
 
 /// Provider for fetching all Math Forest levels

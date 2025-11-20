@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:hive/hive.dart';
 
-import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/difficulty_calculator.dart';
 import '../../world_map/services/local/world_map_local_service.dart';
 import '../models/level_result.dart';
@@ -15,96 +14,84 @@ class MathStorageService {
   static const String _mathResultsBoxName = 'math_results';
 
   final DifficultyCalculator _difficultyCalculator;
-  Box<String>? _levelsBox;
-  Box<String>? _resultsBox;
 
   MathStorageService({DifficultyCalculator? difficultyCalculator})
     : _difficultyCalculator = difficultyCalculator ?? DifficultyCalculator();
 
-  /// Initialize the storage service
-  Future<void> init() async {
-    _levelsBox = await Hive.openBox<String>(_mathLevelsBoxName);
-    _resultsBox = await Hive.openBox<String>(_mathResultsBoxName);
-
-    // Initialize default levels if not already created
-    if (_levelsBox!.isEmpty) {
-      await _initializeDefaultLevels();
-    }
-  }
-
-  /// Initialize default levels for Math Forest
-  Future<void> _initializeDefaultLevels() async {
-    for (int i = 1; i <= AppConstants.levelsPerZone; i++) {
-      final difficulty = _difficultyCalculator.calculateDifficulty(i);
-      final timeLimit = _difficultyCalculator.calculateTimeLimit(difficulty);
-      final targetScore = _difficultyCalculator.calculateTargetScore(
-        difficulty,
-      );
-
-      final level = MathLevel(
-        id: 'math_level_$i',
-        levelNumber: i,
-        difficulty: difficulty,
-        timeLimit: timeLimit,
-        targetScore: targetScore,
-      );
-
-      await _saveLevel(level);
-    }
-  }
-
   /// Get a specific level by ID
-  Future<MathLevel?> getLevel(String levelId) async {
-    if (_levelsBox == null) {
-      await init();
+  Future<MathLevel> getLevel(String levelId) async {
+    Box<MathLevel> box;
+    try {
+      box = await Hive.openBox<MathLevel>(_mathLevelsBoxName);
+    } catch (e) {
+      await Hive.deleteBoxFromDisk(_mathLevelsBoxName);
+      box = await Hive.openBox<MathLevel>(_mathLevelsBoxName);
     }
 
-    final levelJson = _levelsBox!.get(levelId);
-    if (levelJson == null) return null;
+    // Try to get from storage first
+    try {
+      final storedLevel = box.get(levelId);
+      if (storedLevel != null) {
+        return storedLevel;
+      }
+    } catch (e) {
+      // Ignore read error and regenerate
+    }
 
-    final levelMap = jsonDecode(levelJson) as Map<String, dynamic>;
-    return MathLevel.fromJson(levelMap);
+    // If not in storage, generate it (first time access)
+    final levelNumber = int.parse(levelId.split('_').last);
+    final newLevel = _createLevel(levelNumber);
+
+    // Save to storage for future use
+    await box.put(levelId, newLevel);
+
+    return newLevel;
   }
 
   /// Get a level by level number
-  Future<MathLevel?> getLevelByNumber(int levelNumber) async {
+  Future<MathLevel> getLevelByNumber(int levelNumber) async {
     return getLevel('math_level_$levelNumber');
   }
 
   /// Get all levels
   Future<List<MathLevel>> getAllLevels() async {
-    if (_levelsBox == null) {
-      await init();
+    Box<MathLevel> box;
+    try {
+      box = await Hive.openBox<MathLevel>(_mathLevelsBoxName);
+    } catch (e) {
+      await Hive.deleteBoxFromDisk(_mathLevelsBoxName);
+      box = await Hive.openBox<MathLevel>(_mathLevelsBoxName);
     }
 
-    final levels = <MathLevel>[];
-    for (final key in _levelsBox!.keys) {
-      final levelJson = _levelsBox!.get(key);
-      if (levelJson != null) {
-        final levelMap = jsonDecode(levelJson) as Map<String, dynamic>;
-        levels.add(MathLevel.fromJson(levelMap));
+    List<MathLevel> levels = [];
+
+    for (int i = 1; i <= 1000; i++) {
+      final id = 'math_level_$i';
+      try {
+        if (box.containsKey(id)) {
+          final level = box.get(id);
+          if (level != null) {
+            levels.add(level);
+          } else {
+            levels.add(_createLevel(i));
+          }
+        } else {
+          levels.add(_createLevel(i));
+        }
+      } catch (e) {
+        levels.add(_createLevel(i));
       }
     }
 
-    // Sort by level number
+    // Ensure levels are sorted by levelNumber
     levels.sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
+
     return levels;
-  }
-
-  /// Save level data
-  Future<void> _saveLevel(MathLevel level) async {
-    if (_levelsBox == null) {
-      await init();
-    }
-
-    final levelJson = jsonEncode(level.toJson());
-    await _levelsBox!.put(level.id, levelJson);
   }
 
   /// Update level progress after completion
   Future<void> updateLevelProgress(LevelResult result) async {
     final level = await getLevel(result.levelId);
-    if (level == null) return;
 
     // Update level with new progress
     final updatedLevel = level.copyWith(
@@ -120,14 +107,16 @@ class MathStorageService {
           : level.bestAccuracy,
     );
 
-    await _saveLevel(updatedLevel);
+    final box = await Hive.openBox<MathLevel>(_mathLevelsBoxName);
+    await box.put(updatedLevel.id, updatedLevel);
+
     await _saveResult(result);
 
-    // Update zone progress and check for zone unlocks
+    // Update zone progress
     await _updateZoneProgress();
   }
 
-  /// Update zone's completed levels count and check for unlocks
+  /// Update zone's completed levels count
   Future<void> _updateZoneProgress() async {
     try {
       // Count completed levels
@@ -139,39 +128,30 @@ class MathStorageService {
       // Update Math Forest zone progress
       final worldMapService = WorldMapLocalService();
       await worldMapService.updateZoneProgress('math_forest', completedCount);
-
-      // Note: Zone unlocking removed - all zones are now available
-
-      // Note: The provider will automatically refresh on the next read
-      // because we're using Riverpod's auto-refresh mechanism
     } catch (e) {
-      // Silent failure - don't break game flow if zone update fails
       log('Failed to update zone progress: $e');
     }
   }
 
   /// Save a level result
   Future<void> _saveResult(LevelResult result) async {
-    if (_resultsBox == null) {
-      await init();
-    }
-
+    final box = await Hive.openBox<String>(_mathResultsBoxName);
     final resultKey =
         '${result.levelId}_${result.completedAt.millisecondsSinceEpoch}';
+    // We still use JSON for results as they are simple historical records
+    // and we haven't created a Hive adapter for LevelResult yet
     final resultJson = jsonEncode(result.toJson());
-    await _resultsBox!.put(resultKey, resultJson);
+    await box.put(resultKey, resultJson);
   }
 
   /// Get all results for a specific level
   Future<List<LevelResult>> getLevelResults(String levelId) async {
-    if (_resultsBox == null) {
-      await init();
-    }
-
+    final box = await Hive.openBox<String>(_mathResultsBoxName);
     final results = <LevelResult>[];
-    for (final key in _resultsBox!.keys) {
+
+    for (final key in box.keys) {
       if (key.toString().startsWith(levelId)) {
-        final resultJson = _resultsBox!.get(key);
+        final resultJson = box.get(key);
         if (resultJson != null) {
           final resultMap = jsonDecode(resultJson) as Map<String, dynamic>;
           results.add(LevelResult.fromJson(resultMap));
@@ -196,20 +176,37 @@ class MathStorageService {
     return levels.where((level) => level.isCompleted).length;
   }
 
-  /// Reset all level progress (for testing or reset functionality)
-  Future<void> resetProgress() async {
-    if (_levelsBox == null || _resultsBox == null) {
-      await init();
-    }
+  /// Create a level with appropriate difficulty progression
+  MathLevel _createLevel(int levelNumber) {
+    // Use the calculator for consistency, but ensure it scales to 1000
+    // The current calculator might be tuned for fewer levels, so we adjust inputs
 
-    await _levelsBox!.clear();
-    await _resultsBox!.clear();
-    await _initializeDefaultLevels();
+    // Map 1-1000 to difficulty 1-10
+    int difficulty;
+    if (levelNumber <= 100) {
+      difficulty = ((levelNumber - 1) ~/ 34) + 1; // 1-3
+    } else if (levelNumber <= 500) {
+      difficulty = 4 + ((levelNumber - 101) ~/ 100); // 4-7
+    } else {
+      difficulty = 8 + ((levelNumber - 501) ~/ 167); // 8-10
+    }
+    difficulty = difficulty.clamp(1, 10);
+
+    final timeLimit = _difficultyCalculator.calculateTimeLimit(difficulty);
+    final targetScore = _difficultyCalculator.calculateTargetScore(difficulty);
+
+    return MathLevel(
+      id: 'math_level_$levelNumber',
+      levelNumber: levelNumber,
+      difficulty: difficulty,
+      timeLimit: timeLimit,
+      targetScore: targetScore,
+    );
   }
 
-  /// Close the storage boxes
-  Future<void> close() async {
-    await _levelsBox?.close();
-    await _resultsBox?.close();
+  /// Reset all level progress
+  Future<void> resetProgress() async {
+    await Hive.deleteBoxFromDisk(_mathLevelsBoxName);
+    await Hive.deleteBoxFromDisk(_mathResultsBoxName);
   }
 }

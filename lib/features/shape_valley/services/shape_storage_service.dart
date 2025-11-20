@@ -10,23 +10,6 @@ class ShapeStorageService {
     return _getMockLevel(levelId);
   }
 
-  /// Save level progress
-  Future<void> saveProgress(ShapeLevel level) async {
-    // TODO: Implement Hive storage
-    // For now, this is a no-op
-  }
-
-  /// Update level progress with results
-  Future<void> updateLevelProgress({
-    required String levelId,
-    required int correctPlacements,
-    required int timeSpent,
-    required int starsEarned,
-  }) async {
-    // TODO: Implement Hive storage
-    // For now, this is a no-op
-  }
-
   /// Get all levels for Shape Valley
   Future<List<ShapeLevel>> getAllLevels() async {
     // Return mock levels

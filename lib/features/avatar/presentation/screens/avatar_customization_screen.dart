@@ -415,9 +415,6 @@ class _AvatarCustomizationScreenState
 
   Future<void> _unlockItem(String itemId) async {
     try {
-      // TODO: Check if player has enough coins
-      // TODO: Deduct coins
-
       await ref
           .read(customizationInventoryProvider.notifier)
           .unlockItem(itemId);

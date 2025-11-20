@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/exceptions.dart';
 import '../../features/logic_mountain/models/logic_level.dart';
+import '../../features/math_forest/models/math_level.dart';
 import '../models/avatar.dart';
 import '../models/level.dart';
 import '../models/player_progress.dart';
@@ -109,6 +110,9 @@ class StorageService {
     }
     if (!Hive.isAdapterRegistered(16)) {
       Hive.registerAdapter(LogicLevelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(17)) {
+      Hive.registerAdapter(MathLevelAdapter());
     }
   }
 

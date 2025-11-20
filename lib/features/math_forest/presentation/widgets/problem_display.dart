@@ -74,18 +74,7 @@ class _ProblemDisplayState extends State<ProblemDisplay>
       child: SlideTransition(
         position: _slideAnimation,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          // Container decoration removed for WoodSign integration
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -93,7 +82,7 @@ class _ProblemDisplayState extends State<ProblemDisplay>
               Text(
                 widget.problem.getQuestion(),
                 style: AppTextStyles.gameNumberLarge.copyWith(
-                  color: widget.textColor ?? AppColors.textPrimary,
+                  color: widget.textColor ?? Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -123,7 +112,7 @@ class _ProblemDisplayState extends State<ProblemDisplay>
           height: 8,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.textSecondary.withValues(alpha: 0.3),
+            color: Colors.white.withValues(alpha: 0.5),
           ),
         ),
       ),

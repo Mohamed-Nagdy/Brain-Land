@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:hive/hive.dart';
@@ -7,6 +6,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/models/zone.dart';
 import '../../../../shared/models/zone_progress.dart';
 import '../../../../shared/services/storage_service.dart';
+import '../../../math_forest/models/math_level.dart';
 
 /// Local service for managing world map data
 class WorldMapLocalService {
@@ -143,7 +143,7 @@ class WorldMapLocalService {
         iconPath: 'assets/icons/math_forest.png',
         type: ZoneType.mathForest,
         isUnlocked: true,
-        totalLevels: 30,
+        totalLevels: 1000,
         completedLevels: 0,
         availableGames: ['counting', 'addition', 'subtraction'],
       ),
@@ -221,18 +221,13 @@ class WorldMapLocalService {
   /// Count completed Math Forest levels
   Future<int> _countCompletedMathLevels() async {
     try {
-      final box = await Hive.openBox<String>('math_levels');
+      final box = await Hive.openBox<MathLevel>('math_levels');
       int count = 0;
 
       for (final key in box.keys) {
-        final levelJson = box.get(key);
-        if (levelJson != null) {
-          final levelData = Map<String, dynamic>.from(
-            const JsonDecoder().convert(levelJson) as Map,
-          );
-          if (levelData['isCompleted'] == true) {
-            count++;
-          }
+        final level = box.get(key);
+        if (level != null && level.isCompleted) {
+          count++;
         }
       }
 

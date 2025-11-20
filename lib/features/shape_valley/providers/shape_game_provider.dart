@@ -256,14 +256,6 @@ class ShapeGameNotifier extends StateNotifier<ShapeGameState> {
       state.level!.difficulty,
     );
 
-    // Save progress
-    await storage.updateLevelProgress(
-      levelId: levelId,
-      correctPlacements: state.correctPlacements,
-      timeSpent: state.timeSpent,
-      starsEarned: starsEarned,
-    );
-
     // Handle level completion for progress tracking
     if (starsEarned > 0) {
       // Level was completed successfully
