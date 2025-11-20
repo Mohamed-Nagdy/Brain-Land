@@ -26,7 +26,7 @@ void main() {
 
     test('AppState initializes with correct defaults', () {
       final container = ProviderContainer();
-      final appState = container.read(appStateProvider);
+      final appState = container.read(appStateNotifierProvider);
 
       expect(appState.isAudioEnabled, true);
       expect(appState.musicVolume, 0.7);
@@ -38,61 +38,61 @@ void main() {
 
     test('AppState can toggle audio', () {
       final container = ProviderContainer();
-      final notifier = container.read(appStateProvider.notifier);
+      final notifier = container.read(appStateNotifierProvider.notifier);
 
-      expect(container.read(appStateProvider).isAudioEnabled, true);
-
-      notifier.toggleAudio();
-      expect(container.read(appStateProvider).isAudioEnabled, false);
+      expect(container.read(appStateNotifierProvider).isAudioEnabled, true);
 
       notifier.toggleAudio();
-      expect(container.read(appStateProvider).isAudioEnabled, true);
+      expect(container.read(appStateNotifierProvider).isAudioEnabled, false);
+
+      notifier.toggleAudio();
+      expect(container.read(appStateNotifierProvider).isAudioEnabled, true);
 
       container.dispose();
     });
 
     test('AppState can set music volume', () {
       final container = ProviderContainer();
-      final notifier = container.read(appStateProvider.notifier);
+      final notifier = container.read(appStateNotifierProvider.notifier);
 
       notifier.setMusicVolume(0.5);
-      expect(container.read(appStateProvider).musicVolume, 0.5);
+      expect(container.read(appStateNotifierProvider).musicVolume, 0.5);
 
       // Test clamping
       notifier.setMusicVolume(1.5);
-      expect(container.read(appStateProvider).musicVolume, 1.0);
+      expect(container.read(appStateNotifierProvider).musicVolume, 1.0);
 
       notifier.setMusicVolume(-0.5);
-      expect(container.read(appStateProvider).musicVolume, 0.0);
+      expect(container.read(appStateNotifierProvider).musicVolume, 0.0);
 
       container.dispose();
     });
 
     test('AppState can set SFX volume', () {
       final container = ProviderContainer();
-      final notifier = container.read(appStateProvider.notifier);
+      final notifier = container.read(appStateNotifierProvider.notifier);
 
       notifier.setSfxVolume(0.6);
-      expect(container.read(appStateProvider).sfxVolume, 0.6);
+      expect(container.read(appStateNotifierProvider).sfxVolume, 0.6);
 
       // Test clamping
       notifier.setSfxVolume(2.0);
-      expect(container.read(appStateProvider).sfxVolume, 1.0);
+      expect(container.read(appStateNotifierProvider).sfxVolume, 1.0);
 
       notifier.setSfxVolume(-1.0);
-      expect(container.read(appStateProvider).sfxVolume, 0.0);
+      expect(container.read(appStateNotifierProvider).sfxVolume, 0.0);
 
       container.dispose();
     });
 
     test('AppState can mark first launch complete', () {
       final container = ProviderContainer();
-      final notifier = container.read(appStateProvider.notifier);
+      final notifier = container.read(appStateNotifierProvider.notifier);
 
-      expect(container.read(appStateProvider).isFirstLaunch, true);
+      expect(container.read(appStateNotifierProvider).isFirstLaunch, true);
 
       notifier.setFirstLaunchComplete();
-      expect(container.read(appStateProvider).isFirstLaunch, false);
+      expect(container.read(appStateNotifierProvider).isFirstLaunch, false);
 
       container.dispose();
     });

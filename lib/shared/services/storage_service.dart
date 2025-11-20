@@ -13,11 +13,19 @@ class StorageService {
   bool _isInitialized = false;
 
   /// Initialize Hive and open all required boxes
-  Future<void> initialize() async {
+  ///
+  /// For testing, pass a custom [path] to avoid using Flutter plugins
+  Future<void> initialize({String? path}) async {
     if (_isInitialized) return;
 
     try {
-      await Hive.initFlutter();
+      if (path != null) {
+        // For testing: use plain Hive.init with custom path
+        Hive.init(path);
+      } else {
+        // For production: use Hive.initFlutter
+        await Hive.initFlutter();
+      }
 
       // Open all required boxes
       await Future.wait([

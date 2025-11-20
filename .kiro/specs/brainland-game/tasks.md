@@ -39,40 +39,40 @@ This implementation plan breaks down the BrainLand game development into discret
     - _Requirements: 10.3_
 
 
-- [ ] 3. Core services and utilities
-  - [ ] 3.1 Implement storage service with Hive
+- [x] 3. Core services and utilities
+  - [x] 3.1 Implement storage service with Hive
     - Create HiveStorageService for data persistence
     - Set up Hive boxes for progress, avatar, rewards
     - Implement save/load methods
     - _Requirements: 12.1, 12.2, 12.3_
   
-  - [ ] 3.2 Write property test for storage round-trip
+  - [x] 3.2 Write property test for storage round-trip
     - **Property 42: Save and load preserves state (Round-trip)**
     - **Validates: Requirements 12.4**
   
-  - [ ] 3.3 Create audio manager service
+  - [x] 3.3 Create audio manager service
     - Implement AudioManager singleton with audioplayers
     - Add methods for playing sounds and music
     - Implement volume controls and mute functionality
     - _Requirements: 10.2_
   
-  - [ ] 3.4 Implement difficulty calculator utility
+  - [x] 3.4 Implement difficulty calculator utility
     - Create DifficultyCalculator class
     - Implement progressive difficulty algorithm
     - _Requirements: 11.1, 11.2_
   
-  - [ ] 3.5 Write property tests for difficulty progression
+  - [x] 3.5 Write property tests for difficulty progression
     - **Property 36: Difficulty increases monotonically**
     - **Property 37: Higher difficulty reduces time limit**
     - **Property 38: Early levels have unlimited time**
     - **Validates: Requirements 11.1, 11.2, 11.5**
   
-  - [ ] 3.6 Set up Firebase Analytics service
+  - [x] 3.6 Set up Firebase Analytics service
     - Create AnalyticsService wrapper
     - Implement event tracking methods
     - _Requirements: N/A (Analytics)_
   
-  - [ ] 3.7 Set up Google Mobile Ads service
+  - [x] 3.7 Set up Google Mobile Ads service
     - Create AdsService for ad management
     - Implement banner and interstitial ad loading
     - _Requirements: N/A (Monetization)_

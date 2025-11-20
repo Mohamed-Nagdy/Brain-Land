@@ -1,4 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'app_state_provider.g.dart';
 
 /// Global app state model
 class AppState {
@@ -29,8 +31,9 @@ class AppState {
   }
 }
 
-/// App state notifier
-class AppStateNotifier extends Notifier<AppState> {
+/// App state notifier with code generation
+@riverpod
+class AppStateNotifier extends _$AppStateNotifier {
   @override
   AppState build() {
     return const AppState();
@@ -52,8 +55,3 @@ class AppStateNotifier extends Notifier<AppState> {
     state = state.copyWith(isFirstLaunch: false);
   }
 }
-
-/// Provider for app state
-final appStateProvider = NotifierProvider<AppStateNotifier, AppState>(
-  () => AppStateNotifier(),
-);
