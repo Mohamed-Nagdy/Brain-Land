@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:brain_land/features/math_forest/presentation/screens/level_complete_screen.dart';
 import 'package:brain_land/features/math_forest/presentation/screens/level_selection_screen.dart';
 import 'package:brain_land/features/math_forest/presentation/screens/math_game_screen.dart';
+import 'package:brain_land/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +13,24 @@ import 'package:flutter_test/flutter_test.dart';
 /// Validates Requirements: 2.1, 2.2, 2.3, 2.4
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  late StorageService storage;
+  late Directory tempDir;
+
+  setUp(() async {
+    // Create a temporary directory for test storage
+    tempDir = await Directory.systemTemp.createTemp('integration_test_');
+    storage = StorageService.instance;
+    await storage.initialize(path: tempDir.path);
+  });
+
+  tearDown(() async {
+    await storage.dispose();
+    // Clean up temp directory
+    if (await tempDir.exists()) {
+      await tempDir.delete(recursive: true);
+    }
+  });
 
   group('Math Game Flow Integration Tests', () {
     testWidgets('Level selection screen renders correctly', (

@@ -250,49 +250,49 @@ This implementation plan breaks down the BrainLand game development into discret
   - Ensure all tests pass, ask the user if questions arise.
 
 
-- [ ] 11. Reward system
-  - [ ] 11.1 Create Reward and Chest models
+- [x] 11. Reward system
+  - [x] 11.1 Create Reward and Chest models
     - Implement Reward model (type, name, rarity, icon)
     - Implement RewardChest model
     - Create reward type enums
     - _Requirements: 6.1, 6.2, 6.3_
   
-  - [ ] 11.2 Create reward generation service
+  - [x] 11.2 Create reward generation service
     - Implement RewardGenerator for random rewards
     - Create rarity-based selection algorithm
     - _Requirements: 6.3_
   
-  - [ ] 11.3 Write property tests for reward system
+  - [x] 11.3 Write property tests for reward system
     - **Property 19: High accuracy awards chest**
     - **Property 20: Chest rewards are from valid set**
     - **Property 22: Reward display triggers celebration**
     - **Validates: Requirements 6.2, 6.3, 6.5**
   
-  - [ ] 11.4 Create rewards providers
+  - [x] 11.4 Create rewards providers
     - Implement RewardsProvider for reward state
     - Create ChestProvider for chest opening logic
     - _Requirements: 6.2, 6.3_
   
-  - [ ] 11.5 Build ChestAnimation widget
+  - [x] 11.5 Build ChestAnimation widget
     - Create chest opening animation
     - Add shake and bounce effects
     - Implement reveal animation for rewards
     - _Requirements: 6.5_
   
-  - [ ] 11.6 Build RewardCard widget
+  - [x] 11.6 Build RewardCard widget
     - Display reward with icon and name
     - Add rarity indicator (stars/glow)
     - Implement appear animation
     - _Requirements: 6.3_
   
-  - [ ] 11.7 Build RewardChestScreen
+  - [x] 11.7 Build RewardChestScreen
     - Display chest with animation
     - Show rewards after opening
     - Add confetti overlay
     - Implement "Collect" button
     - _Requirements: 6.3, 6.5_
   
-  - [ ] 11.8 Write widget tests for reward UI
+  - [x] 11.8 Write widget tests for reward UI
     - Test chest animation
     - Test reward card display
     - _Requirements: 6.3, 6.5_
