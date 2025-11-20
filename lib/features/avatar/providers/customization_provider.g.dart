@@ -186,7 +186,7 @@ class _IsItemEquippedProviderElement extends AutoDisposeProviderElement<bool>
 }
 
 String _$customizationInventoryHash() =>
-    r'0f07d104137c445c375d93d4ee650939fcf4b9ad';
+    r'9a1af0b527d7fcdfd13b0f54b3e24f8c468490cb';
 
 /// Customization inventory state notifier
 ///

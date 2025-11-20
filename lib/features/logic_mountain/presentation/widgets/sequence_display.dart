@@ -17,15 +17,15 @@ class SequenceDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -35,12 +35,13 @@ class SequenceDisplay extends StatelessWidget {
           Text(
             'Complete the Pattern',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
+              color: Colors.purple[800],
+              letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Wrap(
             spacing: 12,
             runSpacing: 12,
@@ -66,14 +67,26 @@ class SequenceDisplay extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
+      padding: EdgeInsets.all(isHighlighted ? 4 : 0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: isHighlighted ? Border.all(color: Colors.blue, width: 3) : null,
+        borderRadius: BorderRadius.circular(20),
+        border: isHighlighted
+            ? Border.all(color: Colors.yellow, width: 3)
+            : Border.all(color: Colors.transparent, width: 3),
+        boxShadow: isHighlighted
+            ? [
+                BoxShadow(
+                  color: Colors.yellow.withValues(alpha: 0.4),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                ),
+              ]
+            : [],
       ),
       child: PatternTile(
         element: element,
         isPlaceholder: isPlaceholder,
-        size: 80,
+        size: 70,
       ),
     );
   }

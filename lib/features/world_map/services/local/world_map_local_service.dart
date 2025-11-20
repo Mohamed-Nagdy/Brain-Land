@@ -154,7 +154,7 @@ class WorldMapLocalService {
         iconPath: 'assets/icons/logic_mountain.png',
         type: ZoneType.logicMountain,
         isUnlocked: true, // ✅ Now unlocked!
-        totalLevels: 20,
+        totalLevels: 1000,
         completedLevels: 0,
         availableGames: ['patterns', 'sequences'],
       ),
@@ -195,6 +195,9 @@ class WorldMapLocalService {
       switch (zone.id) {
         case 'math_forest':
           completedCount = await _countCompletedMathLevels();
+          break;
+        case 'logic_mountain':
+          completedCount = await _countCompletedLogicLevels();
           break;
         // Add other zones here when their storage is implemented
         default:
@@ -237,6 +240,33 @@ class WorldMapLocalService {
       return count;
     } catch (e) {
       log('[Math Levels] Error counting: $e');
+      return 0;
+    }
+  }
+
+  /// Count completed Logic Mountain levels
+  Future<int> _countCompletedLogicLevels() async {
+    try {
+      final box = await Hive.openBox('logic_levels');
+      int count = 0;
+
+      for (final key in box.keys) {
+        final dynamic level = box.get(key);
+        if (level != null) {
+          try {
+            if ((level as dynamic).isCompleted == true) {
+              count++;
+            }
+          } catch (e) {
+            log('[Logic Levels] Error accessing level data: $e');
+          }
+        }
+      }
+
+      log('[Logic Levels] Found $count completed levels');
+      return count;
+    } catch (e) {
+      log('[Logic Levels] Error counting: $e');
       return 0;
     }
   }

@@ -57,19 +57,28 @@ class _PatternOptionState extends State<PatternOption>
         scale: _scaleAnimation,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
             border: widget.isSelected
-                ? Border.all(color: Colors.green, width: 3)
-                : Border.all(color: Colors.grey[300]!, width: 2),
+                ? Border.all(color: Colors.yellow, width: 4)
+                : Border.all(
+                    color: Colors.white.withValues(alpha: 0.5),
+                    width: 2,
+                  ),
             boxShadow: widget.isSelected
                 ? [
                     BoxShadow(
-                      color: Colors.green.withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      color: Colors.yellow.withValues(alpha: 0.5),
+                      blurRadius: 15,
+                      spreadRadius: 2,
                     ),
                   ]
-                : [],
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
           ),
           child: PatternTile(element: widget.element, size: 80),
         ),

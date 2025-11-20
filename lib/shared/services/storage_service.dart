@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/exceptions.dart';
+import '../../features/logic_mountain/models/logic_level.dart';
 import '../models/avatar.dart';
 import '../models/level.dart';
 import '../models/player_progress.dart';
@@ -105,6 +106,9 @@ class StorageService {
     }
     if (!Hive.isAdapterRegistered(15)) {
       Hive.registerAdapter(PetAdapter());
+    }
+    if (!Hive.isAdapterRegistered(16)) {
+      Hive.registerAdapter(LogicLevelAdapter());
     }
   }
 

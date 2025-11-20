@@ -15,6 +15,7 @@ class AppTextStyles {
     color: AppColors.textPrimary,
     letterSpacing: 0.5,
     height: 1.2,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const heading2 = TextStyle(
@@ -23,6 +24,7 @@ class AppTextStyles {
     color: AppColors.textPrimary,
     letterSpacing: 0.3,
     height: 1.3,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const heading3 = TextStyle(
@@ -31,6 +33,7 @@ class AppTextStyles {
     color: AppColors.textPrimary,
     letterSpacing: 0.2,
     height: 1.3,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const heading4 = TextStyle(
@@ -38,6 +41,7 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.4,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Body text - Clear and readable
@@ -46,6 +50,7 @@ class AppTextStyles {
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
     height: 1.5,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const bodyMedium = TextStyle(
@@ -53,6 +58,7 @@ class AppTextStyles {
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
     height: 1.5,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const bodySmall = TextStyle(
@@ -60,6 +66,7 @@ class AppTextStyles {
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
     height: 1.5,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Secondary text - Less prominent
@@ -68,6 +75,7 @@ class AppTextStyles {
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
     height: 1.4,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const overline = TextStyle(
@@ -76,6 +84,7 @@ class AppTextStyles {
     color: AppColors.textSecondary,
     letterSpacing: 1.5,
     height: 1.6,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Button text - Bold and prominent
@@ -85,6 +94,7 @@ class AppTextStyles {
     color: Colors.white,
     letterSpacing: 1.0,
     height: 1.2,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const buttonSmall = TextStyle(
@@ -93,6 +103,7 @@ class AppTextStyles {
     color: Colors.white,
     letterSpacing: 0.8,
     height: 1.2,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Numbers in games - Extra large and clear
@@ -101,6 +112,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const gameNumberLarge = TextStyle(
@@ -108,6 +120,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const gameNumberSmall = TextStyle(
@@ -115,6 +128,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Special text styles
@@ -124,6 +138,7 @@ class AppTextStyles {
     color: AppColors.textPrimary,
     letterSpacing: 0.5,
     height: 1.2,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const subtitle = TextStyle(
@@ -131,6 +146,7 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.4,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Score and stats text
@@ -139,6 +155,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const stat = TextStyle(
@@ -146,6 +163,7 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.2,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Label text
@@ -155,6 +173,7 @@ class AppTextStyles {
     color: AppColors.textSecondary,
     letterSpacing: 0.5,
     height: 1.4,
+    fontFamily: 'Comic Sans MS',
   );
 
   static const labelBold = TextStyle(
@@ -163,6 +182,7 @@ class AppTextStyles {
     color: AppColors.textPrimary,
     letterSpacing: 0.5,
     height: 1.4,
+    fontFamily: 'Comic Sans MS',
   );
 
   // Helper methods for color variations

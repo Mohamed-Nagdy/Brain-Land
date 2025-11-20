@@ -23,6 +23,7 @@ class AppTheme {
         error: AppColors.errorRed,
       ),
       useMaterial3: true,
+      fontFamily: 'Comic Sans MS',
 
       // Background
       scaffoldBackgroundColor: AppColors.background,

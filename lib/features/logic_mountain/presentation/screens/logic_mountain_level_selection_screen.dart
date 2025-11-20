@@ -1,217 +1,226 @@
-import 'package:brain_land/core/constants/game_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../progress/providers/progress_provider.dart';
+import '../../models/logic_level.dart';
+import '../../providers/logic_game_provider.dart';
 
 /// Logic Mountain Level Selection Screen
 /// Shows 20 levels with purple gradient theme
-class LogicMountainLevelSelectionScreen extends StatelessWidget {
+class LogicMountainLevelSelectionScreen extends ConsumerWidget {
   const LogicMountainLevelSelectionScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final zoneProgressAsync = ref.watch(zoneProgressProvider('logic_mountain'));
+    final levelsAsync = ref.watch(logicLevelsProvider);
+
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF9C27B0), // Purple
-              Color(0xFF7B1FA2), // Dark Purple
-            ],
+      body: Stack(
+        children: [
+          // Background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.indigo.shade900, Colors.purple.shade900],
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      GameAssets.logicMountainEmoji,
-                      style: const TextStyle(fontSize: 48),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Logic Mountain',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
+
+          // Content
+          SafeArea(
+            child: Column(
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white,
                           ),
-                          Text(
-                            'Pattern Puzzles',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+                          onPressed: () => context.pop(),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Progress
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _StatItem(icon: '✅', label: 'Completed', value: '0/20'),
-                    _StatItem(icon: '⭐', label: 'Stars', value: '0'),
-                    _StatItem(icon: '🏆', label: 'Best', value: '-'),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Level Grid
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 1.0,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Logic Mountain',
+                              style: Theme.of(context).textTheme.headlineMedium!
+                                  .copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            zoneProgressAsync.when(
+                              data: (progress) => Text(
+                                '${progress?.levelsCompleted ?? 0}/1000 Levels Completed',
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(color: Colors.white70),
+                              ),
+                              loading: () => const SizedBox(
+                                height: 20,
+                                width: 100,
+                                child: LinearProgressIndicator(),
+                              ),
+                              error: (_, __) => const SizedBox(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return _buildLevelCard(context, index + 1);
-                  },
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildLevelCard(BuildContext context, int levelNumber) {
-    return GestureDetector(
-      onTap: () => _showComingSoonDialog(context),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withValues(alpha: 0.3),
-              Colors.white.withValues(alpha: 0.1),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 2,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '$levelNumber',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text('🧩', style: const TextStyle(fontSize: 20)),
-          ],
-        ),
-      ),
-    );
-  }
+                // Level Grid
+                Expanded(
+                  child: levelsAsync.when(
+                    data: (levels) {
+                      final levelsCompleted =
+                          zoneProgressAsync.value?.levelsCompleted ?? 0;
 
-  void _showComingSoonDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Row(
-          children: [
-            Text(
-              GameAssets.logicMountainEmoji,
-              style: const TextStyle(fontSize: 32),
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(16),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              childAspectRatio: 1,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
+                        itemCount: levels.length,
+                        itemBuilder: (context, index) {
+                          final level = levels[index];
+                          // Lock if level number is greater than completed + 1
+                          // e.g. if 0 completed, level 1 is unlocked, level 2 is locked.
+                          final isLocked =
+                              level.levelNumber > levelsCompleted + 1;
+                          return _buildLevelCard(context, level, isLocked);
+                        },
+                      );
+                    },
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
+                    error: (error, stack) => Center(
+                      child: Text(
+                        'Error loading levels',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            const Expanded(child: Text('Coming Soon!')),
-          ],
-        ),
-        content: const Text(
-          'Logic Mountain levels are being designed by our puzzle masters. Stay tuned!',
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK', style: TextStyle(fontSize: 18)),
           ),
         ],
       ),
     );
   }
-}
 
-class _StatItem extends StatelessWidget {
-  final String icon;
-  final String label;
-  final String value;
-
-  const _StatItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+  Widget _buildLevelCard(
+    BuildContext context,
+    LogicLevel level,
+    bool isLocked,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        if (!isLocked) {
+          context.pushNamed('logicGame', pathParameters: {'levelId': level.id});
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Complete Level ${level.levelNumber - 1} to unlock!',
+              ),
+              duration: const Duration(seconds: 1),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
+      },
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: isLocked
+                  ? LinearGradient(
+                      colors: [Colors.grey.shade400, Colors.grey.shade600],
+                    )
+                  : LinearGradient(
+                      colors: [
+                        Colors.purple.shade400,
+                        Colors.deepPurple.shade600,
+                      ],
+                    ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.2),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (isLocked)
+                    const Icon(Icons.lock, color: Colors.white54, size: 24)
+                  else
+                    Text(
+                      level.levelNumber.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.7),
-            fontSize: 12,
-          ),
-        ),
-      ],
+          // Star overlay for completed levels
+          if (!isLocked && level.starsEarned > 0)
+            Positioned(
+              bottom: 8,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) {
+                  return Icon(
+                    index < level.starsEarned
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
+                    size: 12,
+                    color: index < level.starsEarned
+                        ? Colors.amber
+                        : Colors.white30,
+                  );
+                }),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

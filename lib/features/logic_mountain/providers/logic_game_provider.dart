@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:brain_land/features/progress/providers/progress_provider.dart';
+import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
 import '../../math_forest/providers/problem_generator_provider.dart';
 import '../models/logic_game_state.dart';
+import '../models/logic_level.dart';
 import '../models/pattern_problem.dart';
 import '../services/logic_storage_service.dart';
 import '../services/pattern_generator.dart';
@@ -30,6 +32,12 @@ final logicGameProvider =
         ref: ref,
       );
     });
+
+/// Provider for fetching all logic levels
+final logicLevelsProvider = FutureProvider<List<LogicLevel>>((ref) async {
+  final storage = ref.watch(logicStorageServiceProvider);
+  return storage.getAllLevels();
+});
 
 /// Notifier for managing logic game state
 class LogicGameNotifier extends StateNotifier<LogicGameState> {
@@ -204,6 +212,36 @@ class LogicGameNotifier extends StateNotifier<LogicGameState> {
       await ref
           .read(progressNotifierProvider.notifier)
           .incrementConsecutiveLevels();
+
+      // Update Zone Progress to unlock next level
+      final zoneId = 'logic_mountain';
+      final currentZoneProgress = await ref.read(
+        zoneProgressProvider(zoneId).future,
+      );
+      final currentLevelsCompleted = currentZoneProgress?.levelsCompleted ?? 0;
+
+      // Only update if we've completed a new level
+      if (state.level!.levelNumber > currentLevelsCompleted) {
+        final newZoneProgress =
+            (currentZoneProgress ??
+                    ZoneProgress(
+                      zoneId: zoneId,
+                      levelsCompleted: 0,
+                      totalStars: 0,
+                      bestAccuracy: 0,
+                      lastPlayedAt: DateTime.now(),
+                    ))
+                .copyWith(
+                  levelsCompleted: state.level!.levelNumber,
+                  totalStars:
+                      (currentZoneProgress?.totalStars ?? 0) + starsEarned,
+                  lastPlayedAt: DateTime.now(),
+                );
+
+        await ref
+            .read(progressNotifierProvider.notifier)
+            .updateZoneProgress(zoneId, newZoneProgress);
+      }
     } else {
       // Level was failed, reset consecutive counter
       await ref
@@ -211,8 +249,11 @@ class LogicGameNotifier extends StateNotifier<LogicGameState> {
           .resetConsecutiveLevels();
     }
 
-    // Update state to completed
-    state = state.copyWith(status: LogicGameStatus.completed);
+    // Update state to completed with the updated level
+    state = state.copyWith(
+      status: LogicGameStatus.completed,
+      level: updatedLevel,
+    );
   }
 
   /// Calculate stars earned based on accuracy and difficulty
