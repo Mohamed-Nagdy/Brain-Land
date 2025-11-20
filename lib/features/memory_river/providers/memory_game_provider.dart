@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:brain_land/features/progress/providers/progress_provider.dart';
+import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
+import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/memory_card.dart';
@@ -18,6 +21,12 @@ final memoryStorageServiceProvider = Provider<MemoryStorageService>((ref) {
   return MemoryStorageService();
 });
 
+/// Provider for fetching all memory levels
+final memoryLevelsProvider = FutureProvider<List<MemoryLevel>>((ref) async {
+  final storage = ref.watch(memoryStorageServiceProvider);
+  return storage.getAllLevels();
+});
+
 /// Provider for managing the memory game state
 final memoryGameProvider =
     StateNotifierProvider.family<MemoryGameNotifier, MemoryGameState, String>((
@@ -31,6 +40,7 @@ final memoryGameProvider =
         levelId: levelId,
         generator: generator,
         storage: storage,
+        ref: ref,
       );
     });
 
@@ -39,6 +49,7 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
   final String levelId;
   final CardGenerator generator;
   final MemoryStorageService storage;
+  final Ref ref;
 
   Timer? _timer;
   Timer? _flipBackTimer;
@@ -47,6 +58,7 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
     required this.levelId,
     required this.generator,
     required this.storage,
+    required this.ref,
   }) : super(MemoryGameState.initial());
 
   /// Start the game level
@@ -56,10 +68,6 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
     try {
       // Load level data
       final level = await storage.getLevel(levelId);
-      if (level == null) {
-        state = MemoryGameState.error('Level not found');
-        return;
-      }
 
       // Generate cards for the level
       final cards = generator.generateCards(level);
@@ -239,8 +247,44 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
       starsEarned: starsEarned,
     );
 
-    // Update state to completed
-    state = state.copyWith(status: MemoryGameStatus.completed);
+    // Sync with global progress provider
+    final completedCount = await storage.getCompletedLevelsCount();
+    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentZoneProgress =
+        currentProgress.zoneProgress['memory_river'] ??
+        ZoneProgress(
+          zoneId: 'memory_river',
+          levelsCompleted: 0,
+          totalStars: 0,
+          bestAccuracy: 0,
+          lastPlayedAt: DateTime.now(),
+        );
+
+    final updatedZoneProgress = currentZoneProgress.copyWith(
+      levelsCompleted: completedCount,
+      lastPlayedAt: DateTime.now(),
+    );
+
+    await ref
+        .read(progressNotifierProvider.notifier)
+        .updateZoneProgress('memory_river', updatedZoneProgress);
+
+    // Invalidate providers to ensure UI updates
+    ref.invalidate(memoryLevelsProvider);
+    ref.invalidate(worldMapProvider);
+
+    // Update state to completed with updated level
+    final updatedLevel = state.level!.copyWith(
+      isCompleted: true,
+      starsEarned: starsEarned > state.level!.starsEarned
+          ? starsEarned
+          : state.level!.starsEarned,
+    );
+
+    state = state.copyWith(
+      status: MemoryGameStatus.completed,
+      level: updatedLevel,
+    );
   }
 
   /// Calculate stars earned based on performance

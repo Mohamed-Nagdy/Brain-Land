@@ -1,16 +1,30 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+
+part 'memory_level.g.dart';
 
 /// Model representing a Memory River level with grid configuration and scoring
+@HiveType(typeId: 18)
 class MemoryLevel extends Equatable {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final int levelNumber;
+  @HiveField(2)
   final int gridRows; // Number of rows in the grid
+  @HiveField(3)
   final int gridColumns; // Number of columns in the grid
+  @HiveField(4)
   final int difficulty; // 1-5 difficulty rating
+  @HiveField(5)
   final int timeLimit; // 0 for unlimited
+  @HiveField(6)
   final bool isCompleted;
+  @HiveField(7)
   final int starsEarned;
+  @HiveField(8)
   final int bestMoves; // Fewest moves to complete
+  @HiveField(9)
   final int bestTime; // Fastest completion time in seconds
 
   const MemoryLevel({

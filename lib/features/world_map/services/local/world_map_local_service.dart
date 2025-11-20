@@ -7,6 +7,7 @@ import '../../../../shared/models/zone.dart';
 import '../../../../shared/models/zone_progress.dart';
 import '../../../../shared/services/storage_service.dart';
 import '../../../math_forest/models/math_level.dart';
+import '../../../memory_river/models/memory_level.dart';
 
 /// Local service for managing world map data
 class WorldMapLocalService {
@@ -165,7 +166,7 @@ class WorldMapLocalService {
         iconPath: 'assets/icons/memory_river.png',
         type: ZoneType.memoryRiver,
         isUnlocked: true, // ✅ Now unlocked!
-        totalLevels: 20,
+        totalLevels: 1000,
         completedLevels: 0,
         availableGames: ['memory_match'],
       ),
@@ -176,7 +177,7 @@ class WorldMapLocalService {
         iconPath: 'assets/icons/shape_valley.png',
         type: ZoneType.shapeValley,
         isUnlocked: true, // ✅ Now unlocked!
-        totalLevels: 20,
+        totalLevels: 1000,
         completedLevels: 0,
         availableGames: ['shape_sort', 'shape_match'],
       ),
@@ -198,6 +199,9 @@ class WorldMapLocalService {
           break;
         case 'logic_mountain':
           completedCount = await _countCompletedLogicLevels();
+          break;
+        case 'memory_river':
+          completedCount = await _countCompletedMemoryLevels();
           break;
         // Add other zones here when their storage is implemented
         default:
@@ -262,6 +266,27 @@ class WorldMapLocalService {
       return count;
     } catch (e) {
       log('[Logic Levels] Error counting: $e');
+      return 0;
+    }
+  }
+
+  /// Count completed Memory River levels
+  Future<int> _countCompletedMemoryLevels() async {
+    try {
+      final box = await Hive.openBox<MemoryLevel>('memory_levels');
+      int count = 0;
+
+      for (final key in box.keys) {
+        final level = box.get(key);
+        if (level != null && level.isCompleted) {
+          count++;
+        }
+      }
+
+      log('[Memory Levels] Found $count completed levels');
+      return count;
+    } catch (e) {
+      log('[Memory Levels] Error counting: $e');
       return 0;
     }
   }

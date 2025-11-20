@@ -1,3 +1,4 @@
+import 'package:brain_land/features/memory_river/models/memory_level.dart';
 import 'package:brain_land/shared/models/pet.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -113,6 +114,9 @@ class StorageService {
     }
     if (!Hive.isAdapterRegistered(17)) {
       Hive.registerAdapter(MathLevelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(18)) {
+      Hive.registerAdapter(MemoryLevelAdapter());
     }
   }
 

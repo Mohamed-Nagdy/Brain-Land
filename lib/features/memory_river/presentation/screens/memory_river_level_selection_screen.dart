@@ -1,13 +1,23 @@
 import 'package:brain_land/core/constants/game_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/theme/text_styles.dart';
+import '../../../progress/providers/progress_provider.dart';
+import '../../providers/memory_game_provider.dart';
+import '../widgets/winding_memory_path.dart';
 
 /// Memory River Level Selection Screen
-/// Shows 20 levels with blue gradient theme
-class MemoryRiverLevelSelectionScreen extends StatelessWidget {
+/// Shows 1000 levels with blue gradient theme and winding path
+class MemoryRiverLevelSelectionScreen extends ConsumerWidget {
   const MemoryRiverLevelSelectionScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final levelsAsync = ref.watch(memoryLevelsProvider);
+    final zoneProgressAsync = ref.watch(zoneProgressProvider('memory_river'));
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -24,84 +34,47 @@ class MemoryRiverLevelSelectionScreen extends StatelessWidget {
           child: Column(
             children: [
               // Header
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      GameAssets.memoryRiverEmoji,
-                      style: const TextStyle(fontSize: 48),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Memory River',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Memory Matching',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildHeader(context),
 
-              // Progress
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _StatItem(icon: '✅', label: 'Completed', value: '0/20'),
-                    _StatItem(icon: '⭐', label: 'Stars', value: '0'),
-                    _StatItem(icon: '🏆', label: 'Best', value: '-'),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Level Grid
+              // Levels
               Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 1.0,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                  ),
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return _buildLevelCard(context, index + 1);
+                child: levelsAsync.when(
+                  data: (levels) {
+                    return zoneProgressAsync.when(
+                      data: (zoneProgress) {
+                        final levelsCompleted =
+                            zoneProgress?.levelsCompleted ?? 0;
+                        return WindingMemoryPath(
+                          levels: levels,
+                          levelsCompleted: levelsCompleted,
+                          onLevelTap: (levelId) =>
+                              _navigateToLevel(context, levelId),
+                        );
+                      },
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                      error: (error, stack) => Center(
+                        child: Text(
+                          'Error loading progress: $error',
+                          style: AppTextStyles.bodyLarge.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
                   },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                  error: (error, stack) => Center(
+                    child: Text(
+                      'Error loading levels: $error',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -111,107 +84,46 @@ class MemoryRiverLevelSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLevelCard(BuildContext context, int levelNumber) {
-    return GestureDetector(
-      onTap: () => _showComingSoonDialog(context),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withValues(alpha: 0.3),
-              Colors.white.withValues(alpha: 0.1),
-            ],
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 32),
+            onPressed: () => context.go('/'),
           ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 2,
+          const SizedBox(width: 12),
+          Text(
+            GameAssets.memoryRiverEmoji,
+            style: const TextStyle(fontSize: 48),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '$levelNumber',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Memory River',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Memory Matching',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Text('🎴', style: const TextStyle(fontSize: 20)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Row(
-          children: [
-            Text(
-              GameAssets.memoryRiverEmoji,
-              style: const TextStyle(fontSize: 32),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(child: Text('Coming Soon!')),
-          ],
-        ),
-        content: const Text(
-          'Memory River levels are being crafted to challenge your memory skills. Check back soon!',
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK', style: TextStyle(fontSize: 18)),
           ),
         ],
       ),
     );
   }
-}
 
-class _StatItem extends StatelessWidget {
-  final String icon;
-  final String label;
-  final String value;
-
-  const _StatItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.7),
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
+  void _navigateToLevel(BuildContext context, String levelId) {
+    context.pushNamed('memoryGame', pathParameters: {'levelId': levelId});
   }
 }
