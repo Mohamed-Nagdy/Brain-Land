@@ -27,7 +27,6 @@ class _CustomizationItemCardState extends ConsumerState<CustomizationItemCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -50,14 +49,14 @@ class _CustomizationItemCardState extends ConsumerState<CustomizationItemCard>
 
   void _handleTapDown(TapDownDetails details) {
     if (widget.item.isUnlocked) {
-      setState(() => _isPressed = true);
+      setState(() {});
       _controller.forward();
     }
   }
 
   void _handleTapUp(TapUpDetails details) {
     if (widget.item.isUnlocked) {
-      setState(() => _isPressed = false);
+      setState(() {});
       _controller.reverse();
       widget.onTap?.call();
     }
@@ -65,7 +64,7 @@ class _CustomizationItemCardState extends ConsumerState<CustomizationItemCard>
 
   void _handleTapCancel() {
     if (widget.item.isUnlocked) {
-      setState(() => _isPressed = false);
+      setState(() {});
       _controller.reverse();
     }
   }
