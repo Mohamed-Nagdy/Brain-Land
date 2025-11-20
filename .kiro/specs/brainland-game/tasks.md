@@ -77,14 +77,14 @@ This implementation plan breaks down the BrainLand game development into discret
     - Implement banner and interstitial ad loading
     - _Requirements: N/A (Monetization)_
 
-- [ ] 4. Navigation and routing
-  - [ ] 4.1 Configure go_router with all routes
+- [x] 4. Navigation and routing
+  - [x] 4.1 Configure go_router with all routes
     - Define routes for all screens
     - Set up navigation guards for locked zones
     - Implement route transitions
     - _Requirements: 1.3_
   
-  - [ ] 4.2 Create app shell with navigation
+  - [x] 4.2 Create app shell with navigation
     - Build main app widget with MaterialApp.router
     - Set up theme configuration
     - _Requirements: All_
