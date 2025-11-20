@@ -190,116 +190,125 @@ class _LevelNode extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          // Avatar if current level
-          if (isCurrent)
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: const Text(
-                '🦊', // Fox avatar
-                style: TextStyle(fontSize: 40),
-              ),
-            ),
-
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: isUnlocked
-                  ? const Color(0xFF8D6E63)
-                  : Colors.grey.shade400, // Wood color
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isCurrent ? Colors.white : const Color(0xFF5D4037),
-                width: isCurrent ? 4 : 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          gradient: isUnlocked
+              ? level.isCompleted
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF4CAF50), // Green for completed
+                          Color(0xFF388E3C),
+                        ],
+                      )
+                    : isCurrent
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF2196F3), // Blue for current
+                          Color(0xFF1976D2),
+                        ],
+                      )
+                    : const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF6D4C41), // Brown
+                          Color(0xFF5D4037), // Dark Brown
+                        ],
+                      )
+              : LinearGradient(
+                  colors: [Colors.grey.shade400, Colors.grey.shade600],
                 ),
-              ],
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Wood rings pattern
-                if (isUnlocked)
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFF5D4037).withValues(alpha: 0.3),
-                        width: 2,
-                      ),
-                    ),
-                  ),
-
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (!isUnlocked)
-                      const Icon(Icons.lock, color: Colors.white54, size: 32)
-                    else ...[
-                      Text(
-                        '${level.levelNumber}',
-                        style: AppTextStyles.heading3.copyWith(
-                          color: Colors.white,
-                          fontSize: 24,
-                          shadows: [
-                            const Shadow(
-                              color: Colors.black45,
-                              blurRadius: 2,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (level.starsEarned > 0)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(3, (index) {
-                            return Icon(
-                              index < level.starsEarned
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              color: index < level.starsEarned
-                                  ? Colors.amber
-                                  : Colors.white38,
-                              size: 12,
-                            );
-                          }),
-                        ),
-                    ],
-                  ],
-                ),
-
-                // Checkmark if completed
-                if (level.isCompleted)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.successGreen,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 12,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isCurrent ? Colors.white : const Color(0xFF5D4037),
+            width: isCurrent ? 4 : 2,
           ),
-        ],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Wood rings pattern
+            if (isUnlocked)
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFF5D4037).withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+              ),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (!isUnlocked)
+                  const Icon(Icons.lock, color: Colors.white54, size: 32)
+                else ...[
+                  Text(
+                    '${level.levelNumber}',
+                    style: AppTextStyles.heading3.copyWith(
+                      color: Colors.white,
+                      fontSize: 24,
+                      shadows: [
+                        const Shadow(
+                          color: Colors.black45,
+                          blurRadius: 2,
+                          offset: Offset(1, 1),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (level.starsEarned > 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(3, (index) {
+                        return Icon(
+                          index < level.starsEarned
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: index < level.starsEarned
+                              ? Colors.amber
+                              : Colors.white38,
+                          size: 12,
+                        );
+                      }),
+                    ),
+                ],
+              ],
+            ),
+
+            // Checkmark if completed
+            if (level.isCompleted)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: AppColors.successGreen,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 12),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

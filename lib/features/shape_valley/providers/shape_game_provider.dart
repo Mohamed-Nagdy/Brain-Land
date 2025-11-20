@@ -1,16 +1,25 @@
 import 'dart:async';
 
+import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
+import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
 import '../../progress/providers/progress_provider.dart';
 import '../models/shape.dart';
 import '../models/shape_game_state.dart';
+import '../models/shape_level.dart';
 import '../services/shape_storage_service.dart';
 
 /// Provider for the shape storage service
 final shapeStorageServiceProvider = Provider<ShapeStorageService>((ref) {
   return ShapeStorageService();
+});
+
+/// Provider for fetching all shape levels
+final shapeLevelsProvider = FutureProvider<List<ShapeLevel>>((ref) async {
+  final storage = ref.watch(shapeStorageServiceProvider);
+  return storage.getAllLevels();
 });
 
 /// Provider for managing the shape game state
@@ -256,21 +265,62 @@ class ShapeGameNotifier extends StateNotifier<ShapeGameState> {
       state.level!.difficulty,
     );
 
-    // Handle level completion for progress tracking
+    // Save progress
+    await storage.updateLevelProgress(
+      levelId: levelId,
+      score: state.correctPlacements,
+      starsEarned: starsEarned,
+    );
+
+    // Sync with global progress provider
+    final completedCount = await storage.getCompletedLevelsCount();
+    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentZoneProgress =
+        currentProgress.zoneProgress['shape_valley'] ??
+        ZoneProgress(
+          zoneId: 'shape_valley',
+          levelsCompleted: 0,
+          totalStars: 0,
+          bestAccuracy: 0,
+          lastPlayedAt: DateTime.now(),
+        );
+
+    final updatedZoneProgress = currentZoneProgress.copyWith(
+      levelsCompleted: completedCount,
+      lastPlayedAt: DateTime.now(),
+    );
+
+    await ref
+        .read(progressNotifierProvider.notifier)
+        .updateZoneProgress('shape_valley', updatedZoneProgress);
+
+    // Invalidate providers to ensure UI updates
+    ref.invalidate(shapeLevelsProvider);
+    ref.invalidate(worldMapProvider);
+
+    // Handle consecutive level completion
     if (starsEarned > 0) {
-      // Level was completed successfully
       await ref
           .read(progressNotifierProvider.notifier)
           .incrementConsecutiveLevels();
     } else {
-      // Level was failed, reset consecutive counter
       await ref
           .read(progressNotifierProvider.notifier)
           .resetConsecutiveLevels();
     }
 
-    // Update state to completed
-    state = state.copyWith(status: ShapeGameStatus.completed);
+    // Update state to completed with updated level
+    final updatedLevel = state.level!.copyWith(
+      isCompleted: true,
+      starsEarned: starsEarned > state.level!.starsEarned
+          ? starsEarned
+          : state.level!.starsEarned,
+    );
+
+    state = state.copyWith(
+      status: ShapeGameStatus.completed,
+      level: updatedLevel,
+    );
   }
 
   /// Calculate stars earned based on accuracy and difficulty

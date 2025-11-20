@@ -1,4 +1,6 @@
 import 'package:brain_land/features/memory_river/models/memory_level.dart';
+import 'package:brain_land/features/shape_valley/models/shape.dart';
+import 'package:brain_land/features/shape_valley/models/shape_level.dart';
 import 'package:brain_land/shared/models/pet.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -117,6 +119,25 @@ class StorageService {
     }
     if (!Hive.isAdapterRegistered(18)) {
       Hive.registerAdapter(MemoryLevelAdapter());
+    }
+
+    if (!Hive.isAdapterRegistered(19)) {
+      Hive.registerAdapter(ShapeTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(20)) {
+      Hive.registerAdapter(ShapeLevelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(21)) {
+      Hive.registerAdapter(ShapeColorAdapter());
+    }
+    if (!Hive.isAdapterRegistered(22)) {
+      Hive.registerAdapter(SortingRuleAdapter());
+    }
+    if (!Hive.isAdapterRegistered(23)) {
+      Hive.registerAdapter(ShapeTargetAdapter());
+    }
+    if (!Hive.isAdapterRegistered(24)) {
+      Hive.registerAdapter(ShapeAdapter());
     }
   }
 

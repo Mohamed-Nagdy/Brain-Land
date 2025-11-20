@@ -68,9 +68,12 @@ class AppColors {
   static const shapeValleyLight = Color(0xFFFFB74D);
   static const shapeValleyDark = Color(0xFFF57C00);
   static const shapeValleyGradient = LinearGradient(
-    colors: [Color(0xFFFFA726), Color(0xFFFF9800)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF9C27B0), // Purple
+      Color(0xFF6A1B9A), // Deep Purple
+    ],
   );
 
   // UI Background Colors

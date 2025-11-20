@@ -1,60 +1,161 @@
+import 'package:hive/hive.dart';
+
 import '../models/shape.dart';
 import '../models/shape_level.dart';
 
 /// Service for managing Shape Valley level data and progress
 class ShapeStorageService {
+  static const String _shapeLevelsBoxName = 'shape_levels';
+
   /// Get a specific level by ID
   Future<ShapeLevel> getLevel(String levelId) async {
-    // For now, return mock data
-    // In a real implementation, this would load from Hive or another storage
-    return _getMockLevel(levelId);
+    Box<ShapeLevel> box;
+    try {
+      box = await Hive.openBox<ShapeLevel>(_shapeLevelsBoxName);
+    } catch (e) {
+      await Hive.deleteBoxFromDisk(_shapeLevelsBoxName);
+      box = await Hive.openBox<ShapeLevel>(_shapeLevelsBoxName);
+    }
+
+    // Try to get from storage first
+    try {
+      final storedLevel = box.get(levelId);
+      if (storedLevel != null) {
+        return storedLevel;
+      }
+    } catch (e) {
+      // Ignore read error and regenerate
+    }
+
+    // If not in storage, generate it
+    final levelNumber = int.parse(levelId.split('_').last);
+    final newLevel = _createLevel(levelNumber);
+
+    // Save to storage
+    await box.put(levelId, newLevel);
+
+    return newLevel;
   }
 
-  /// Get all levels for Shape Valley
+  /// Get all levels
   Future<List<ShapeLevel>> getAllLevels() async {
-    // Return mock levels
-    return List.generate(
-      10,
-      (index) => _getMockLevel('shape_level_${index + 1}'),
-    );
+    Box<ShapeLevel> box;
+    try {
+      box = await Hive.openBox<ShapeLevel>(_shapeLevelsBoxName);
+    } catch (e) {
+      await Hive.deleteBoxFromDisk(_shapeLevelsBoxName);
+      box = await Hive.openBox<ShapeLevel>(_shapeLevelsBoxName);
+    }
+
+    List<ShapeLevel> levels = [];
+
+    for (int i = 1; i <= 1000; i++) {
+      final id = 'shape_$i';
+      try {
+        if (box.containsKey(id)) {
+          final level = box.get(id);
+          if (level != null) {
+            levels.add(level);
+          } else {
+            levels.add(_createLevel(i));
+          }
+        } else {
+          levels.add(_createLevel(i));
+        }
+      } catch (e) {
+        levels.add(_createLevel(i));
+      }
+    }
+
+    // Ensure levels are sorted by levelNumber
+    levels.sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
+
+    return levels;
   }
 
-  /// Mock level generator for testing
-  ShapeLevel _getMockLevel(String levelId) {
-    final levelNumber = int.tryParse(levelId.split('_').last) ?? 1;
-    final difficulty =
-        ((levelNumber - 1) ~/ 3) + 1; // Difficulty increases every 3 levels
+  /// Update level progress after completion
+  Future<void> updateLevelProgress({
+    required String levelId,
+    required int score,
+    required int starsEarned,
+  }) async {
+    final level = await getLevel(levelId);
 
-    // Generate shapes based on difficulty
-    final shapes = _generateShapesForLevel(levelNumber, difficulty);
-    final targets = _generateTargetsForLevel(levelNumber, difficulty, shapes);
+    final updatedLevel = level.copyWith(
+      isCompleted: true,
+      starsEarned: starsEarned > level.starsEarned
+          ? starsEarned
+          : level.starsEarned,
+      bestScore: score > level.bestScore ? score : level.bestScore,
+    );
+
+    final box = await Hive.openBox<ShapeLevel>(_shapeLevelsBoxName);
+    await box.put(updatedLevel.id, updatedLevel);
+  }
+
+  /// Get number of completed levels
+  Future<int> getCompletedLevelsCount() async {
+    final levels = await getAllLevels();
+    return levels.where((level) => level.isCompleted).length;
+  }
+
+  /// Create a level with appropriate difficulty progression
+  ShapeLevel _createLevel(int levelNumber) {
+    int difficulty, shapeCount, timeLimit;
+    SortingRule sortingRule;
+
+    if (levelNumber <= 200) {
+      // Easy levels: Sort by type
+      difficulty = ((levelNumber - 1) ~/ 67) + 1; // 1-3
+      shapeCount = 4 + (difficulty * 2); // 6-10 shapes
+      sortingRule = SortingRule.byType;
+      timeLimit = 0; // Unlimited
+    } else if (levelNumber <= 600) {
+      // Medium levels: Sort by color/size
+      difficulty = 4 + ((levelNumber - 201) ~/ 100); // 4-7
+      shapeCount = 8 + (difficulty - 3) * 2; // 10-16 shapes
+      sortingRule = levelNumber % 2 == 0
+          ? SortingRule.byColor
+          : SortingRule.bySize;
+      timeLimit = 120 - (difficulty * 10); // 80-50 seconds
+    } else {
+      // Hard levels: Sort by type+color
+      difficulty = 8 + ((levelNumber - 601) ~/ 134); // 8-10
+      shapeCount = 12 + (difficulty - 7) * 2; // 14-18 shapes
+      sortingRule = SortingRule.byTypeAndColor;
+      timeLimit = 100 - (difficulty - 7) * 10; // 100-80 seconds
+    }
+
+    difficulty = difficulty.clamp(1, 10);
+
+    // Generate shapes and targets
+    final shapes = _generateShapesForLevel(levelNumber, shapeCount);
+    final targets = _generateTargetsForLevel(sortingRule, shapes);
 
     return ShapeLevel(
-      id: levelId,
+      id: 'shape_$levelNumber',
       levelNumber: levelNumber,
       difficulty: difficulty,
       shapes: shapes,
       targets: targets,
-      sortingRule: _getSortingRuleForLevel(levelNumber),
-      timeLimit: difficulty > 2
-          ? 120 - (difficulty * 10)
-          : 0, // Time limit for harder levels
+      sortingRule: sortingRule,
+      timeLimit: timeLimit,
       targetScore: 100,
     );
   }
 
   /// Generate shapes for a level
-  List<Shape> _generateShapesForLevel(int levelNumber, int difficulty) {
+  List<Shape> _generateShapesForLevel(int levelNumber, int shapeCount) {
     final shapes = <Shape>[];
-    final shapeCount = 4 + (difficulty * 2); // More shapes for harder levels
+    final seed = levelNumber * 7; // Deterministic but varied
 
     for (int i = 0; i < shapeCount; i++) {
       shapes.add(
         Shape(
           id: 'shape_$i',
-          type: ShapeType.values[i % ShapeType.values.length],
-          color: ShapeColor.values[i % ShapeColor.values.length],
-          size: (i % 3) + 1,
+          type: ShapeType.values[(seed + i) % ShapeType.values.length],
+          color: ShapeColor.values[(seed + i * 3) % ShapeColor.values.length],
+          size: ((seed + i) % 3) + 1,
         ),
       );
     }
@@ -64,16 +165,13 @@ class ShapeStorageService {
 
   /// Generate targets for a level
   List<ShapeTarget> _generateTargetsForLevel(
-    int levelNumber,
-    int difficulty,
+    SortingRule rule,
     List<Shape> shapes,
   ) {
     final targets = <ShapeTarget>[];
-    final rule = _getSortingRuleForLevel(levelNumber);
 
     switch (rule) {
       case SortingRule.byType:
-        // Create targets for each unique shape type
         final uniqueTypes = shapes.map((s) => s.type).toSet();
         for (final type in uniqueTypes) {
           targets.add(
@@ -88,7 +186,6 @@ class ShapeStorageService {
         break;
 
       case SortingRule.byColor:
-        // Create targets for each unique color
         final uniqueColors = shapes.map((s) => s.color).toSet();
         for (final color in uniqueColors) {
           targets.add(
@@ -103,21 +200,21 @@ class ShapeStorageService {
         break;
 
       case SortingRule.bySize:
-        // Create targets for each size
         for (int size = 1; size <= 3; size++) {
-          targets.add(
-            ShapeTarget(
-              id: 'target_size_$size',
-              rule: rule,
-              requiredSize: size,
-              label: _getSizeName(size),
-            ),
-          );
+          if (shapes.any((s) => s.size == size)) {
+            targets.add(
+              ShapeTarget(
+                id: 'target_size_$size',
+                rule: rule,
+                requiredSize: size,
+                label: _getSizeName(size),
+              ),
+            );
+          }
         }
         break;
 
       case SortingRule.byTypeAndColor:
-        // Create targets for specific type-color combinations
         final combinations = shapes
             .map((s) => '${s.type.name}_${s.color.name}')
             .toSet();
@@ -139,19 +236,6 @@ class ShapeStorageService {
     }
 
     return targets;
-  }
-
-  /// Get sorting rule based on level number
-  SortingRule _getSortingRuleForLevel(int levelNumber) {
-    if (levelNumber <= 3) {
-      return SortingRule.byType;
-    } else if (levelNumber <= 6) {
-      return SortingRule.byColor;
-    } else if (levelNumber <= 8) {
-      return SortingRule.bySize;
-    } else {
-      return SortingRule.byTypeAndColor;
-    }
   }
 
   /// Get human-readable shape type name
@@ -210,5 +294,10 @@ class ShapeStorageService {
       default:
         return 'Unknown';
     }
+  }
+
+  /// Reset all progress
+  Future<void> resetProgress() async {
+    await Hive.deleteBoxFromDisk(_shapeLevelsBoxName);
   }
 }

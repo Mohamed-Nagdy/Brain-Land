@@ -106,22 +106,54 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget>
   Widget _buildFrontFace() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: AppColors.memoryCardBackGradient,
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF42A5F5), Color(0xFF1E88E5)],
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.memoryRiverPurple.withValues(alpha: 0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: const Color(0xFF1E88E5).withValues(alpha: 0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
           ),
         ],
-      ),
-      child: Center(
-        child: Icon(
-          Icons.question_mark_rounded,
-          size: 48,
-          color: AppColors.textLight.withValues(alpha: 0.5),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.3),
+          width: 3,
         ),
+      ),
+      child: Stack(
+        children: [
+          // Decorative pattern
+          Positioned.fill(child: CustomPaint(painter: _CardPatternPainter())),
+          // Question mark
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Text(
+                '?',
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -133,27 +165,46 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget>
       transform: Matrix4.identity()..rotateY(math.pi), // Flip horizontally
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: widget.card.isMatched
-              ? AppColors.successGreen.withValues(alpha: 0.2)
-              : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          gradient: widget.card.isMatched
+              ? const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF66BB6A), Color(0xFF4CAF50)],
+                )
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.white, Color(0xFFF5F5F5)],
+                ),
           border: Border.all(
             color: widget.card.isMatched
-                ? AppColors.successGreen
-                : AppColors.memoryRiverPurple,
-            width: 3,
+                ? const Color(0xFF4CAF50)
+                : const Color(0xFF42A5F5),
+            width: 4,
           ),
           boxShadow: [
             BoxShadow(
               color: widget.card.isMatched
-                  ? AppColors.successGreen.withValues(alpha: 0.4)
-                  : AppColors.memoryRiverPurple.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+                  ? const Color(0xFF4CAF50).withValues(alpha: 0.5)
+                  : const Color(0xFF42A5F5).withValues(alpha: 0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
-        child: Center(child: _buildCardImage()),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: widget.card.isMatched
+                  ? Colors.white.withValues(alpha: 0.3)
+                  : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: _buildCardImage(),
+          ),
+        ),
       ),
     );
   }
@@ -192,4 +243,32 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget>
     if (assetPath.contains('lime')) return Icons.stars;
     return Icons.help_outline;
   }
+}
+
+/// Custom painter for decorative pattern on card back
+class _CardPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.1)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    // Draw decorative circles
+    for (int i = 0; i < 3; i++) {
+      canvas.drawCircle(
+        Offset(size.width * 0.3, size.height * (0.3 + i * 0.2)),
+        10 + i * 5,
+        paint,
+      );
+      canvas.drawCircle(
+        Offset(size.width * 0.7, size.height * (0.3 + i * 0.2)),
+        10 + i * 5,
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CardPatternPainter oldDelegate) => false;
 }

@@ -1,19 +1,34 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 
 import 'shape.dart';
 
+part 'shape_level.g.dart';
+
 /// Model representing a Shape Valley level with shapes and targets
+@HiveType(typeId: 20)
 class ShapeLevel extends Equatable {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final int levelNumber;
+  @HiveField(2)
   final int difficulty; // 1-5 scale
+  @HiveField(3)
   final List<Shape> shapes; // Shapes to be sorted
+  @HiveField(4)
   final List<ShapeTarget> targets; // Target zones for sorting
+  @HiveField(5)
   final SortingRule sortingRule;
+  @HiveField(6)
   final int timeLimit; // 0 for unlimited
+  @HiveField(7)
   final int targetScore;
+  @HiveField(8)
   final bool isCompleted;
+  @HiveField(9)
   final int starsEarned; // 0-3
+  @HiveField(10)
   final int bestScore;
 
   const ShapeLevel({

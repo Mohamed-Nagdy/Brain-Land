@@ -394,6 +394,70 @@ class _ShapeGameScreenState extends ConsumerState<ShapeGameScreen> {
   }
 
   void _navigateToLevelComplete() {
-    context.pop();
+    final gameState = ref.read(shapeGameProvider(widget.levelId));
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            const Icon(Icons.celebration, color: Colors.amber, size: 32),
+            const SizedBox(width: 12),
+            const Text('Level Complete!'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                3,
+                (index) => Icon(
+                  Icons.star,
+                  color: index < (gameState.level?.starsEarned ?? 0)
+                      ? Colors.amber
+                      : Colors.grey.shade300,
+                  size: 48,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Accuracy: ${gameState.accuracy.toStringAsFixed(1)}%',
+              style: AppTextStyles.bodyLarge,
+            ),
+            Text(
+              'Correct: ${gameState.correctPlacements}/${gameState.level?.targets.length ?? 0}',
+              style: AppTextStyles.bodyMedium,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop(); // Close dialog
+              context.pop(); // Exit game
+            },
+            child: const Text('Back'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.pop(); // Close dialog
+              context.pop(); // Exit game
+              // Navigate to next level
+              final nextLevelNumber = (gameState.level?.levelNumber ?? 0) + 1;
+              context.pushNamed(
+                'shapeGame',
+                pathParameters: {'levelId': 'shape_$nextLevelNumber'},
+              );
+            },
+            child: const Text('Next Level'),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -8,6 +8,7 @@ import '../../../../shared/models/zone_progress.dart';
 import '../../../../shared/services/storage_service.dart';
 import '../../../math_forest/models/math_level.dart';
 import '../../../memory_river/models/memory_level.dart';
+import '../../../shape_valley/models/shape_level.dart';
 
 /// Local service for managing world map data
 class WorldMapLocalService {
@@ -173,13 +174,13 @@ class WorldMapLocalService {
       const Zone(
         id: 'shape_valley',
         name: 'Shape Valley',
-        description: 'Sort and match shapes',
+        description: 'Sort shapes by color, type, and size',
         iconPath: 'assets/icons/shape_valley.png',
         type: ZoneType.shapeValley,
         isUnlocked: true, // ✅ Now unlocked!
         totalLevels: 1000,
         completedLevels: 0,
-        availableGames: ['shape_sort', 'shape_match'],
+        availableGames: ['shape_sorting'],
       ),
     ];
   }
@@ -202,6 +203,9 @@ class WorldMapLocalService {
           break;
         case 'memory_river':
           completedCount = await _countCompletedMemoryLevels();
+          break;
+        case 'shape_valley':
+          completedCount = await _countCompletedShapeLevels();
           break;
         // Add other zones here when their storage is implemented
         default:
@@ -287,6 +291,27 @@ class WorldMapLocalService {
       return count;
     } catch (e) {
       log('[Memory Levels] Error counting: $e');
+      return 0;
+    }
+  }
+
+  /// Count completed Shape Valley levels
+  Future<int> _countCompletedShapeLevels() async {
+    try {
+      final box = await Hive.openBox<ShapeLevel>('shape_levels');
+      int count = 0;
+
+      for (final key in box.keys) {
+        final level = box.get(key);
+        if (level != null && level.isCompleted) {
+          count++;
+        }
+      }
+
+      log('[Shape Levels] Found $count completed levels');
+      return count;
+    } catch (e) {
+      log('[Shape Levels] Error counting: $e');
       return 0;
     }
   }

@@ -3,15 +3,15 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/text_styles.dart';
-import '../../models/memory_level.dart';
+import '../../models/shape_level.dart';
 
-/// Winding path widget for Memory River level selection
-class WindingMemoryPath extends StatefulWidget {
-  final List<MemoryLevel> levels;
+/// Winding path widget for Shape Valley level selection
+class WindingShapePath extends StatefulWidget {
+  final List<ShapeLevel> levels;
   final int levelsCompleted;
   final Function(String) onLevelTap;
 
-  const WindingMemoryPath({
+  const WindingShapePath({
     super.key,
     required this.levels,
     required this.levelsCompleted,
@@ -19,10 +19,10 @@ class WindingMemoryPath extends StatefulWidget {
   });
 
   @override
-  State<WindingMemoryPath> createState() => _WindingMemoryPathState();
+  State<WindingShapePath> createState() => _WindingShapePathState();
 }
 
-class _WindingMemoryPathState extends State<WindingMemoryPath> {
+class _WindingShapePathState extends State<WindingShapePath> {
   late ScrollController _scrollController;
 
   @override
@@ -68,7 +68,7 @@ class _WindingMemoryPathState extends State<WindingMemoryPath> {
             painter: PathPainter(
               itemCount: widget.levels.length,
               itemHeight: 120.0,
-              pathColor: const Color(0xFF64B5F6), // River blue
+              pathColor: const Color(0xFF9C27B0), // Purple
               width: constraints.maxWidth,
             ),
             child: SizedBox(
@@ -81,14 +81,10 @@ class _WindingMemoryPathState extends State<WindingMemoryPath> {
                   final isCurrent =
                       level.levelNumber == widget.levelsCompleted + 1;
 
-                  // Calculate position along the sine wave path
                   final y = (widget.levels.length - 1 - index) * 120.0 + 60;
                   final xOffset =
                       math.sin(index * 0.8) * (constraints.maxWidth * 0.35);
-                  final x =
-                      constraints.maxWidth / 2 +
-                      xOffset -
-                      40; // Center - half button width
+                  final x = constraints.maxWidth / 2 + xOffset - 40;
 
                   return Positioned(
                     top: y,
@@ -139,10 +135,8 @@ class PathPainter extends CustomPainter {
     final path = Path();
     final centerX = width / 2;
 
-    // Start from bottom
     path.moveTo(centerX, size.height);
 
-    // Draw winding path
     for (int i = 0; i < itemCount; i++) {
       final y = (itemCount - 1 - i) * itemHeight + 60;
       final xOffset = math.sin(i * 0.8) * (width * 0.35);
@@ -155,7 +149,6 @@ class PathPainter extends CustomPainter {
         final prevXOffset = math.sin((i - 1) * 0.8) * (width * 0.35);
         final prevX = centerX + prevXOffset;
 
-        // Smooth curve between points
         final controlY = (y + prevY) / 2;
         path.quadraticBezierTo(prevX, controlY, x, y);
       }
@@ -163,8 +156,8 @@ class PathPainter extends CustomPainter {
 
     canvas.drawPath(path, paint);
 
-    // Draw water droplets along the path
-    final dropletPaint = Paint()
+    // Draw geometric shapes along the path
+    final shapePaint = Paint()
       ..color = pathColor.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
 
@@ -172,7 +165,21 @@ class PathPainter extends CustomPainter {
       final y = (itemCount - 1 - i) * itemHeight + 60;
       final xOffset = math.sin(i * 0.8) * (width * 0.35);
       final x = centerX + xOffset + 15;
-      canvas.drawCircle(Offset(x, y), 4, dropletPaint);
+
+      // Draw hexagon
+      final hexPath = Path();
+      for (int j = 0; j < 6; j++) {
+        final angle = (math.pi / 3) * j;
+        final px = x + 4 * math.cos(angle);
+        final py = y + 4 * math.sin(angle);
+        if (j == 0) {
+          hexPath.moveTo(px, py);
+        } else {
+          hexPath.lineTo(px, py);
+        }
+      }
+      hexPath.close();
+      canvas.drawPath(hexPath, shapePaint);
     }
   }
 
@@ -182,7 +189,7 @@ class PathPainter extends CustomPainter {
 
 /// Individual level node widget
 class _LevelNode extends StatelessWidget {
-  final MemoryLevel level;
+  final ShapeLevel level;
   final bool isUnlocked;
   final bool isCurrent;
   final VoidCallback onTap;
@@ -225,10 +232,7 @@ class _LevelNode extends StatelessWidget {
                     : const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF00BCD4), // Cyan
-                          Color(0xFF0097A7), // Dark Cyan
-                        ],
+                        colors: [Color(0xFF9C27B0), Color(0xFF6A1B9A)],
                       )
               : LinearGradient(
                   colors: [Colors.grey.shade400, Colors.grey.shade600],
@@ -236,7 +240,7 @@ class _LevelNode extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: isUnlocked
-                  ? const Color(0xFF2196F3).withValues(alpha: 0.4)
+                  ? const Color(0xFF9C27B0).withValues(alpha: 0.4)
                   : Colors.black26,
               blurRadius: 8,
               offset: const Offset(0, 4),
@@ -251,17 +255,22 @@ class _LevelNode extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Level number
             Center(
-              child: Text(
-                '${level.levelNumber}',
-                style: AppTextStyles.heading3.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (isCurrent)
+                    const Text('⬡', style: TextStyle(fontSize: 24)),
+                  Text(
+                    '${level.levelNumber}',
+                    style: AppTextStyles.heading3.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
-            // Stars
             if (level.starsEarned > 0)
               Positioned(
                 bottom: 4,
@@ -276,7 +285,6 @@ class _LevelNode extends StatelessWidget {
                   ),
                 ),
               ),
-            // Lock icon
             if (!isUnlocked)
               const Center(
                 child: Icon(Icons.lock, color: Colors.white, size: 32),
