@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/colors.dart';
 import '../../../../shared/models/avatar.dart';
 import '../../providers/customization_provider.dart';
 
-/// Widget that displays a tab bar for selecting customization categories
+/// Super colorful emoji-based category selector for kids!
 class CategorySelector extends ConsumerWidget {
   const CategorySelector({super.key});
 
@@ -14,18 +13,27 @@ class CategorySelector extends ConsumerWidget {
     final selectedCategory = ref.watch(selectedCategoryProvider);
 
     return Container(
-      height: 60,
+      height: 110, // Increased from 100 to prevent overflow
+      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.white.withValues(alpha: 0.8),
+            Colors.white.withValues(alpha: 0.4),
+          ],
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
           ),
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: ItemCategory.values.map((category) {
           final isSelected = category == selectedCategory;
           return Expanded(
@@ -64,18 +72,24 @@ class _CategoryTabState extends State<_CategoryTab>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _bounceAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 400),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
       begin: 1.0,
-      end: 0.95,
+      end: 0.85,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    _bounceAnimation = Tween<double>(
+      begin: 0.0,
+      end: -10.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
   }
 
   @override
@@ -84,90 +98,111 @@ class _CategoryTabState extends State<_CategoryTab>
     super.dispose();
   }
 
-  void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
+  void _handleTap() {
+    _controller.forward().then((_) => _controller.reverse());
     widget.onTap();
-  }
-
-  void _handleTapCancel() {
-    _controller.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: widget.isSelected
-                    ? AppColors.primary
-                    : Colors.transparent,
-                width: 3,
+      onTap: _handleTap,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(
+              0,
+              _bounceAnimation.value * (widget.isSelected ? 1 : 0),
+            ),
+            child: Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Emoji with background
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      gradient: widget.isSelected
+                          ? _getSelectedGradient(widget.category)
+                          : LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.grey.shade300,
+                                Colors.grey.shade400,
+                              ],
+                            ),
+                      shape: BoxShape.circle,
+                      boxShadow: widget.isSelected
+                          ? [
+                              BoxShadow(
+                                color: _getGlowColor(
+                                  widget.category,
+                                ).withValues(alpha: 0.6),
+                                blurRadius: 16,
+                                spreadRadius: 3,
+                              ),
+                            ]
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                      border: Border.all(
+                        color: widget.isSelected
+                            ? Colors.white
+                            : Colors.transparent,
+                        width: 3,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        _getCategoryEmoji(widget.category),
+                        style: TextStyle(
+                          fontSize: widget.isSelected ? 32 : 28,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4), // Reduced from 6
+                  // Category name
+                  Text(
+                    _getCategoryName(widget.category),
+                    style: TextStyle(
+                      fontSize: 10, // Reduced from 11
+                      fontWeight: widget.isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w600,
+                      color: widget.isSelected
+                          ? _getGlowColor(widget.category)
+                          : Colors.grey.shade700,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: widget.isSelected
-                      ? AppColors.primary.withValues(alpha: 0.1)
-                      : Colors.transparent,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  _getCategoryIcon(widget.category),
-                  size: 24,
-                  color: widget.isSelected
-                      ? AppColors.primary
-                      : AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _getCategoryName(widget.category),
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: widget.isSelected
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                  color: widget.isSelected
-                      ? AppColors.primary
-                      : AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  IconData _getCategoryIcon(ItemCategory category) {
+  String _getCategoryEmoji(ItemCategory category) {
     switch (category) {
       case ItemCategory.hat:
-        return Icons.sports_baseball;
+        return '🎩';
       case ItemCategory.clothing:
-        return Icons.checkroom;
+        return '👕';
       case ItemCategory.eyes:
-        return Icons.visibility;
+        return '👁️';
       case ItemCategory.background:
-        return Icons.landscape;
+        return '🎨';
     }
   }
 
@@ -181,6 +216,48 @@ class _CategoryTabState extends State<_CategoryTab>
         return 'Eyes';
       case ItemCategory.background:
         return 'Backgrounds';
+    }
+  }
+
+  LinearGradient _getSelectedGradient(ItemCategory category) {
+    switch (category) {
+      case ItemCategory.hat:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFF6B9D), Color(0xFFFF1493)], // Pink
+        );
+      case ItemCategory.clothing:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF4FC3F7), Color(0xFF0288D1)], // Blue
+        );
+      case ItemCategory.eyes:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF81C784), Color(0xFF388E3C)], // Green
+        );
+      case ItemCategory.background:
+        return const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFFD54F), Color(0xFFFFA000)], // Gold
+        );
+    }
+  }
+
+  Color _getGlowColor(ItemCategory category) {
+    switch (category) {
+      case ItemCategory.hat:
+        return const Color(0xFFFF1493);
+      case ItemCategory.clothing:
+        return const Color(0xFF0288D1);
+      case ItemCategory.eyes:
+        return const Color(0xFF388E3C);
+      case ItemCategory.background:
+        return const Color(0xFFFFA000);
     }
   }
 }

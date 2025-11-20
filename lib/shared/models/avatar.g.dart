@@ -73,7 +73,7 @@ class CustomizationItemAdapter extends TypeAdapter<CustomizationItem> {
       name: fields[1] as String,
       description: fields[2] as String,
       category: fields[3] as ItemCategory,
-      iconPath: fields[4] as String,
+      emoji: fields[4] as String,
       isUnlocked: fields[5] as bool,
       unlockCost: fields[6] as int,
     );
@@ -92,7 +92,7 @@ class CustomizationItemAdapter extends TypeAdapter<CustomizationItem> {
       ..writeByte(3)
       ..write(obj.category)
       ..writeByte(4)
-      ..write(obj.iconPath)
+      ..write(obj.emoji)
       ..writeByte(5)
       ..write(obj.isUnlocked)
       ..writeByte(6)

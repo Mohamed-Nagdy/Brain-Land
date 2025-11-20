@@ -105,7 +105,7 @@ class CustomizationItem extends Equatable {
   final ItemCategory category;
 
   @HiveField(4)
-  final String iconPath;
+  final String emoji; // Changed from iconPath to emoji
 
   @HiveField(5)
   final bool isUnlocked;
@@ -118,7 +118,7 @@ class CustomizationItem extends Equatable {
     required this.name,
     required this.description,
     required this.category,
-    required this.iconPath,
+    required this.emoji, // Changed from iconPath
     required this.isUnlocked,
     required this.unlockCost,
   });
@@ -128,7 +128,7 @@ class CustomizationItem extends Equatable {
     String? name,
     String? description,
     ItemCategory? category,
-    String? iconPath,
+    String? emoji, // Changed from iconPath
     bool? isUnlocked,
     int? unlockCost,
   }) {
@@ -137,7 +137,7 @@ class CustomizationItem extends Equatable {
       name: name ?? this.name,
       description: description ?? this.description,
       category: category ?? this.category,
-      iconPath: iconPath ?? this.iconPath,
+      emoji: emoji ?? this.emoji, // Changed from iconPath
       isUnlocked: isUnlocked ?? this.isUnlocked,
       unlockCost: unlockCost ?? this.unlockCost,
     );
@@ -149,7 +149,7 @@ class CustomizationItem extends Equatable {
     name,
     description,
     category,
-    iconPath,
+    emoji, // Changed from iconPath
     isUnlocked,
     unlockCost,
   ];

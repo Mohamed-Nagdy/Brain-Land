@@ -13,28 +13,24 @@ part 'customization_provider.g.dart';
 class CustomizationInventory extends _$CustomizationInventory {
   @override
   List<CustomizationItem> build() {
-    _loadInventory();
-    return [];
+    // Load items synchronously since loadInventory() is not async
+    try {
+      final service = ref.read(avatarStorageServiceProvider);
+      return service.loadInventory();
+    } catch (e) {
+      log('Failed to load inventory: $e');
+      return [];
+    }
   }
 
   AvatarStorageService get _service => ref.read(avatarStorageServiceProvider);
-
-  /// Load inventory from storage
-  Future<void> _loadInventory() async {
-    try {
-      final inventory = _service.loadInventory();
-      state = inventory;
-    } catch (e) {
-      log('Failed to load inventory: $e');
-    }
-  }
 
   /// Unlock an item
   Future<void> unlockItem(String itemId) async {
     try {
       await _service.unlockItem(itemId);
       // Reload inventory to reflect changes
-      await _loadInventory();
+      state = _service.loadInventory();
     } catch (e) {
       log('Failed to unlock item: $e');
       rethrow;
@@ -67,7 +63,7 @@ class CustomizationInventory extends _$CustomizationInventory {
         name: '',
         description: '',
         category: ItemCategory.hat,
-        iconPath: '',
+        emoji: '', // Changed from iconPath
         isUnlocked: false,
         unlockCost: 0,
       ),
@@ -86,7 +82,7 @@ class CustomizationInventory extends _$CustomizationInventory {
 
   /// Refresh inventory (reload from storage)
   Future<void> refresh() async {
-    await _loadInventory();
+    state = _service.loadInventory();
   }
 }
 
