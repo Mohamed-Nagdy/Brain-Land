@@ -484,19 +484,19 @@ This implementation plan breaks down the BrainLand game development into discret
     - _Requirements: 3.1, 3.2, 3.5_
 
 
-- [ ] 16. Memory River zone
-  - [ ] 16.1 Create memory card models
+- [x] 16. Memory River zone
+  - [x] 16.1 Create memory card models
     - Implement MemoryCard model
     - Create MemoryLevel model with grid size
     - _Requirements: 4.1_
   
-  - [ ] 16.2 Create Memory River providers
+  - [x] 16.2 Create Memory River providers
     - Implement MemoryGameProvider with card state
     - Add card flip logic
     - Implement match detection
     - _Requirements: 4.2, 4.3, 4.4_
   
-  - [ ] 16.3 Write property tests for memory game
+  - [x] 16.3 Write property tests for memory game
     - **Property 11: Memory game starts with all cards face-down**
     - **Property 12: Card pair reveal is simultaneous**
     - **Property 13: Matching cards stay revealed**
@@ -504,13 +504,13 @@ This implementation plan breaks down the BrainLand game development into discret
     - **Property 15: All matches complete the level**
     - **Validates: Requirements 4.1, 4.2, 4.3, 4.4, 4.5**
   
-  - [ ] 16.3 Build MemoryCard widget
+  - [x] 16.3 Build MemoryCard widget
     - Create card with flip animation
     - Display front and back faces
     - Implement 3D flip effect
     - _Requirements: 4.2_
   
-  - [ ] 16.4 Build MemoryGameScreen
+  - [x] 16.4 Build MemoryGameScreen
     - Display grid of memory cards
     - Implement card selection logic
     - Handle match/mismatch animations

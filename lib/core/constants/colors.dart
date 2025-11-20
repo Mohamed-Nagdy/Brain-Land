@@ -176,4 +176,11 @@ class AppColors {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+
+  // Memory Card Gradients
+  static const memoryCardBackGradient = LinearGradient(
+    colors: [Color(0xFFAB47BC), Color(0xFF9C27B0)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
