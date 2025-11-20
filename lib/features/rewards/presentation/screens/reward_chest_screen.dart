@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/models/reward.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/gradient_background.dart';
@@ -56,6 +57,9 @@ class _RewardChestScreenState extends ConsumerState<RewardChestScreen> {
     final chestState = ref.read(chestProvider);
 
     if (!chestState.isOpening && !chestState.isOpened) {
+      // Play chest opening sound
+      AudioManager.instance.playSound(SoundEffect.chestOpen.path);
+
       // Start opening animation
       ref.read(chestProvider.notifier).startOpening();
     }
@@ -64,6 +68,9 @@ class _RewardChestScreenState extends ConsumerState<RewardChestScreen> {
   void _handleOpeningComplete() {
     // Complete the opening
     ref.read(chestProvider.notifier).completeOpening();
+
+    // Play reward unlock sound
+    AudioManager.instance.playSound(SoundEffect.rewardUnlock.path);
 
     // Show confetti
     setState(() {

@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'core/constants/app_constants.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/audio_manager.dart';
 import 'firebase_options.dart';
 import 'shared/services/storage_service.dart';
 
@@ -29,6 +30,9 @@ void main() async {
 
   // Initialize Hive storage
   await StorageService.instance.initialize();
+
+  // Initialize Audio Manager
+  await AudioManager.instance.initialize();
 
   // Run the app with Riverpod
   runApp(const ProviderScope(child: BrainLandApp()));

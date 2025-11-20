@@ -6,6 +6,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/models/zone.dart';
 import '../../providers/world_map_provider.dart';
 import '../widgets/animated_zone_card.dart';
@@ -13,11 +14,23 @@ import '../widgets/animated_zone_card.dart';
 /// World Map Screen - Main navigation hub for BrainLand
 ///
 /// Displays all four zones with their unlock status and progress
-class WorldMapScreen extends ConsumerWidget {
+class WorldMapScreen extends ConsumerStatefulWidget {
   const WorldMapScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WorldMapScreen> createState() => _WorldMapScreenState();
+}
+
+class _WorldMapScreenState extends ConsumerState<WorldMapScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Play main menu music when entering world map
+    AudioManager.instance.playMusic(MusicTrack.mainMenu.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final zonesAsync = ref.watch(worldMapProvider);
 
     return Scaffold(

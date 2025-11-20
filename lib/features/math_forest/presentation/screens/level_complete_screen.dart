@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/fancy_card.dart';
 import '../../../../shared/widgets/gradient_background.dart';
@@ -54,6 +55,9 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
         curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
       ),
     );
+
+    // Play level complete sound
+    AudioManager.instance.playSound(SoundEffect.levelComplete.path);
 
     // Start animation
     _animationController.forward();

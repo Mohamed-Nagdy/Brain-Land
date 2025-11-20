@@ -37,6 +37,9 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
   @override
   void initState() {
     super.initState();
+    // Play Math Forest zone music
+    AudioManager.instance.playMusic(MusicTrack.mathForest.path);
+
     // Start the level when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(mathGameProvider(widget.levelId).notifier).startLevel();

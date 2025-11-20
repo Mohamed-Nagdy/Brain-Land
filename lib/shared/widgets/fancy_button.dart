@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/colors.dart';
 import '../../core/theme/text_styles.dart';
+import '../../core/utils/audio_manager.dart';
 
 /// FancyButton is a reusable button widget with gradient background and shadow
 /// Provides a delightful press animation for children
@@ -66,6 +67,8 @@ class _FancyButtonState extends State<FancyButton>
   void _handleTapUp(TapUpDetails details) {
     if (widget.onPressed != null) {
       _controller.reverse();
+      // Play button click sound
+      AudioManager.instance.playSound(SoundEffect.buttonClick.path);
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:brain_land/core/utils/audio_manager.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/animations.dart';
@@ -62,6 +63,16 @@ class _AnswerBubbleState extends State<AnswerBubble>
     // Trigger feedback animation when isCorrect changes from null to a value
     if (oldWidget.isCorrect == null && widget.isCorrect != null) {
       _playFeedbackAnimation();
+      _playFeedbackSound();
+    }
+  }
+
+  void _playFeedbackSound() {
+    // Play appropriate sound based on correctness
+    if (widget.isCorrect == true) {
+      AudioManager.instance.playSound(SoundEffect.correctAnswer.path);
+    } else if (widget.isCorrect == false) {
+      AudioManager.instance.playSound(SoundEffect.incorrectAnswer.path);
     }
   }
 

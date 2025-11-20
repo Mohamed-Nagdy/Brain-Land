@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:brain_land/core/utils/audio_manager.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/animations.dart';
@@ -75,6 +76,9 @@ class _CelebrationWidgetState extends State<CelebrationWidget>
 
     // Initialize confetti particles
     _particles = _generateConfettiParticles();
+
+    // Play celebration sound
+    AudioManager.instance.playSound(SoundEffect.celebration.path);
 
     // Start animations
     _confettiController.forward();

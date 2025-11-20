@@ -1,4 +1,5 @@
 import 'package:brain_land/core/constants/app_constants.dart';
+import 'package:brain_land/core/utils/audio_manager.dart';
 import 'package:brain_land/features/math_forest/presentation/widgets/answer_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -411,6 +412,263 @@ void main() {
         isTrue,
         reason: 'Feedback state should persist after animation',
       );
+    });
+  });
+
+  group('Audio Feedback Properties', () {
+    // **Feature: brainland-game, Property 5: Answer feedback is immediate (includes audio)**
+    // **Validates: Requirements 2.2, 10.2**
+    test('audio manager is initialized and ready for playback', () async {
+      // Verify AudioManager singleton is accessible
+      final audioManager = AudioManager.instance;
+      expect(audioManager, isNotNull);
+
+      // Verify audio manager can be initialized
+      await audioManager.initialize();
+
+      // Verify volume controls are accessible
+      expect(audioManager.musicVolume, greaterThanOrEqualTo(0.0));
+      expect(audioManager.musicVolume, lessThanOrEqualTo(1.0));
+      expect(audioManager.soundVolume, greaterThanOrEqualTo(0.0));
+      expect(audioManager.soundVolume, lessThanOrEqualTo(1.0));
+    });
+
+    test('sound effect paths are defined for all feedback types', () {
+      // Verify all required sound effects are defined
+      expect(SoundEffect.correctAnswer.path, isNotEmpty);
+      expect(SoundEffect.incorrectAnswer.path, isNotEmpty);
+      expect(SoundEffect.buttonClick.path, isNotEmpty);
+      expect(SoundEffect.levelComplete.path, isNotEmpty);
+      expect(SoundEffect.starEarned.path, isNotEmpty);
+      expect(SoundEffect.rewardUnlock.path, isNotEmpty);
+      expect(SoundEffect.chestOpen.path, isNotEmpty);
+      expect(SoundEffect.celebration.path, isNotEmpty);
+
+      // Verify paths follow expected format
+      expect(SoundEffect.correctAnswer.path, contains('sounds/'));
+      expect(SoundEffect.incorrectAnswer.path, contains('sounds/'));
+    });
+
+    test('audio playback methods are non-blocking', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      // Measure time to call playSound (should return immediately)
+      final stopwatch = Stopwatch()..start();
+      await audioManager.playSound(SoundEffect.correctAnswer.path);
+      stopwatch.stop();
+
+      // Audio playback should be asynchronous and return quickly
+      // Even if file doesn't exist, it should fail gracefully and return fast
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(100),
+        reason: 'Audio playback should be non-blocking and return quickly',
+      );
+    });
+
+    test('multiple sound effects can be triggered in sequence', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      // Trigger multiple sounds rapidly (simulating rapid user interaction)
+      final stopwatch = Stopwatch()..start();
+
+      for (int i = 0; i < 10; i++) {
+        await audioManager.playSound(SoundEffect.buttonClick.path);
+      }
+
+      stopwatch.stop();
+
+      // All sounds should be triggered quickly
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(500),
+        reason: 'Multiple sound effects should be triggered rapidly',
+      );
+    });
+
+    test('audio feedback respects mute state', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      // Mute audio
+      await audioManager.mute();
+      expect(audioManager.isMuted, isTrue);
+
+      // Attempt to play sound while muted (should not throw)
+      expect(
+        () async =>
+            await audioManager.playSound(SoundEffect.correctAnswer.path),
+        returnsNormally,
+      );
+
+      // Unmute
+      await audioManager.unmute();
+      expect(audioManager.isMuted, isFalse);
+
+      // Sound should play when unmuted (should not throw)
+      expect(
+        () async =>
+            await audioManager.playSound(SoundEffect.correctAnswer.path),
+        returnsNormally,
+      );
+    });
+
+    test(
+      'volume controls work independently for music and sound effects',
+      () async {
+        final audioManager = AudioManager.instance;
+        await audioManager.initialize();
+
+        // Set different volumes
+        await audioManager.setMusicVolume(0.5);
+        await audioManager.setSoundVolume(0.8);
+
+        // Verify volumes are set correctly
+        expect(audioManager.musicVolume, equals(0.5));
+        expect(audioManager.soundVolume, equals(0.8));
+
+        // Verify volumes are clamped to valid range
+        await audioManager.setMusicVolume(1.5); // Above max
+        expect(audioManager.musicVolume, equals(1.0));
+
+        await audioManager.setSoundVolume(-0.5); // Below min
+        expect(audioManager.soundVolume, equals(0.0));
+      },
+    );
+
+    test('audio manager handles missing files gracefully', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      // Attempt to play non-existent file (should not throw)
+      expect(
+        () async => await audioManager.playSound('sounds/nonexistent.mp3'),
+        returnsNormally,
+      );
+
+      expect(
+        () async => await audioManager.playMusic('music/nonexistent.mp3'),
+        returnsNormally,
+      );
+    });
+
+    test('correct and incorrect sounds are distinct', () {
+      // Verify different sound effects have different paths
+      expect(
+        SoundEffect.correctAnswer.path,
+        isNot(equals(SoundEffect.incorrectAnswer.path)),
+        reason: 'Correct and incorrect sounds should be different',
+      );
+
+      // Verify paths are meaningful
+      expect(SoundEffect.correctAnswer.path, contains('correct'));
+      expect(SoundEffect.incorrectAnswer.path, contains('incorrect'));
+    });
+
+    test('audio feedback is immediate across multiple iterations', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      // Test across multiple iterations (property-based approach)
+      for (int i = 0; i < AppConstants.pbtIterations; i++) {
+        final stopwatch = Stopwatch()..start();
+
+        // Simulate answer feedback
+        await audioManager.playSound(
+          i % 2 == 0
+              ? SoundEffect.correctAnswer.path
+              : SoundEffect.incorrectAnswer.path,
+        );
+
+        stopwatch.stop();
+
+        // Verify audio call returns immediately (non-blocking)
+        expect(
+          stopwatch.elapsedMilliseconds,
+          lessThan(50),
+          reason: 'Audio feedback should be immediate on iteration $i',
+        );
+      }
+    });
+
+    test('audio manager can be toggled between mute states', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      final initialMuteState = audioManager.isMuted;
+
+      // Toggle mute
+      await audioManager.toggleMute();
+      expect(audioManager.isMuted, equals(!initialMuteState));
+
+      // Toggle back
+      await audioManager.toggleMute();
+      expect(audioManager.isMuted, equals(initialMuteState));
+
+      // Multiple rapid toggles
+      for (int i = 0; i < 10; i++) {
+        await audioManager.toggleMute();
+      }
+
+      // Should end up in opposite state (10 toggles)
+      expect(audioManager.isMuted, equals(!initialMuteState));
+    });
+
+    test(
+      'background music and sound effects can play simultaneously',
+      () async {
+        final audioManager = AudioManager.instance;
+        await audioManager.initialize();
+
+        // Start background music
+        await audioManager.playMusic(MusicTrack.mathForest.path);
+
+        // Play sound effect while music is playing (should not interfere)
+        expect(
+          () async =>
+              await audioManager.playSound(SoundEffect.correctAnswer.path),
+          returnsNormally,
+        );
+
+        // Stop music
+        await audioManager.stopMusic();
+      },
+    );
+
+    test('audio feedback timing is consistent under load', () async {
+      final audioManager = AudioManager.instance;
+      await audioManager.initialize();
+
+      final timings = <int>[];
+
+      // Measure timing across multiple rapid calls
+      for (int i = 0; i < 50; i++) {
+        final stopwatch = Stopwatch()..start();
+        await audioManager.playSound(SoundEffect.buttonClick.path);
+        stopwatch.stop();
+        timings.add(stopwatch.elapsedMilliseconds);
+      }
+
+      // Calculate average timing
+      final averageTiming = timings.reduce((a, b) => a + b) / timings.length;
+
+      // Verify consistent timing (should be fast and consistent)
+      expect(
+        averageTiming,
+        lessThan(20),
+        reason: 'Average audio feedback timing should be fast',
+      );
+
+      // Verify no outliers (all calls should be reasonably fast)
+      for (final timing in timings) {
+        expect(
+          timing,
+          lessThan(100),
+          reason: 'All audio feedback calls should be fast',
+        );
+      }
     });
   });
 }

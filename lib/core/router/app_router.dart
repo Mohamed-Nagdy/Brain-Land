@@ -16,6 +16,8 @@ import '../../features/progress/presentation/screens/progress_screen.dart';
 // Reward screens
 import '../../features/rewards/presentation/screens/pet_collection_screen.dart';
 import '../../features/rewards/presentation/screens/reward_chest_screen.dart';
+// Settings screens
+import '../../features/settings/presentation/screens/settings_screen.dart';
 // Shape Valley screens
 import '../../features/shape_valley/presentation/screens/shape_game_screen.dart';
 // World Map screens
@@ -89,7 +91,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Settings'),
+            child: const SettingsScreen(),
           ),
         ),
 
