@@ -1,9 +1,24 @@
-import 'package:brain_land/features/math_forest/presentation/screens/level_complete_screen.dart';
+import 'package:brain_land/features/logic_mountain/presentation/screens/logic_game_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// Avatar screens
+import '../../features/avatar/presentation/screens/avatar_customization_screen.dart';
+// Math Forest screens
+import '../../features/math_forest/presentation/screens/level_complete_screen.dart';
 import '../../features/math_forest/presentation/screens/level_selection_screen.dart';
 import '../../features/math_forest/presentation/screens/math_game_screen.dart';
+// Memory River screens
+import '../../features/memory_river/presentation/screens/memory_game_screen.dart';
+// Progress screens
+import '../../features/progress/presentation/screens/daily_reward_screen.dart';
+import '../../features/progress/presentation/screens/progress_screen.dart';
+// Reward screens
+import '../../features/rewards/presentation/screens/pet_collection_screen.dart';
+import '../../features/rewards/presentation/screens/reward_chest_screen.dart';
+// Shape Valley screens
+import '../../features/shape_valley/presentation/screens/shape_game_screen.dart';
+// World Map screens
 import '../../features/world_map/presentation/screens/world_map_screen.dart';
 
 /// Route names for type-safe navigation
@@ -85,7 +100,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Progress'),
+            child: const ProgressScreen(),
           ),
         ),
 
@@ -96,7 +111,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Daily Reward'),
+            child: const DailyRewardScreen(),
           ),
         ),
 
@@ -157,7 +172,7 @@ class AppRouter {
             return _buildPageWithTransition(
               context: context,
               state: state,
-              child: PlaceholderScreen(title: 'Logic Game - Level $levelId'),
+              child: LogicGameScreen(levelId: levelId),
             );
           },
         ),
@@ -191,7 +206,7 @@ class AppRouter {
             return _buildPageWithTransition(
               context: context,
               state: state,
-              child: PlaceholderScreen(title: 'Memory Game - Level $levelId'),
+              child: MemoryGameScreen(levelId: levelId),
             );
           },
         ),
@@ -225,7 +240,7 @@ class AppRouter {
             return _buildPageWithTransition(
               context: context,
               state: state,
-              child: PlaceholderScreen(title: 'Shape Game - Level $levelId'),
+              child: ShapeGameScreen(levelId: levelId),
             );
           },
         ),
@@ -246,7 +261,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Avatar Customization'),
+            child: const AvatarCustomizationScreen(),
           ),
         ),
 
@@ -254,11 +269,15 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.rewardChest,
           name: 'rewardChest',
-          pageBuilder: (context, state) => _buildPageWithTransition(
-            context: context,
-            state: state,
-            child: const PlaceholderScreen(title: 'Reward Chest'),
-          ),
+          pageBuilder: (context, state) {
+            final chestId =
+                state.uri.queryParameters['chestId'] ?? 'default_chest';
+            return _buildPageWithTransition(
+              context: context,
+              state: state,
+              child: RewardChestScreen(chestId: chestId),
+            );
+          },
         ),
 
         // Pet Collection
@@ -268,7 +287,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Pet Collection'),
+            child: const PetCollectionScreen(),
           ),
         ),
       ],
