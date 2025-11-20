@@ -2,6 +2,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/exceptions.dart';
+import '../models/avatar.dart';
+import '../models/level.dart';
+import '../models/player_progress.dart';
+import '../models/reward.dart';
+import '../models/zone.dart';
+import '../models/zone_progress.dart';
 
 /// Service for managing local storage using Hive
 class StorageService {
@@ -27,6 +33,9 @@ class StorageService {
         await Hive.initFlutter();
       }
 
+      // Register all type adapters
+      _registerAdapters();
+
       // Open all required boxes
       await Future.wait([
         Hive.openBox(AppConstants.progressBoxName),
@@ -42,6 +51,50 @@ class StorageService {
         severity: ErrorSeverity.critical,
         stackTrace: stackTrace,
       );
+    }
+  }
+
+  /// Register all Hive type adapters
+  void _registerAdapters() {
+    // Only register if not already registered
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(ZoneTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(ZoneAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(LevelAdapter());
+    }
+    if (!Hive.isAdapterRegistered(3)) {
+      Hive.registerAdapter(ZoneProgressAdapter());
+    }
+    if (!Hive.isAdapterRegistered(4)) {
+      Hive.registerAdapter(PlayerProgressAdapter());
+    }
+    if (!Hive.isAdapterRegistered(5)) {
+      Hive.registerAdapter(AvatarTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(6)) {
+      Hive.registerAdapter(AvatarAdapter());
+    }
+    if (!Hive.isAdapterRegistered(7)) {
+      Hive.registerAdapter(ItemCategoryAdapter());
+    }
+    if (!Hive.isAdapterRegistered(8)) {
+      Hive.registerAdapter(CustomizationItemAdapter());
+    }
+    if (!Hive.isAdapterRegistered(9)) {
+      Hive.registerAdapter(RewardTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(10)) {
+      Hive.registerAdapter(RewardAdapter());
+    }
+    if (!Hive.isAdapterRegistered(11)) {
+      Hive.registerAdapter(ChestTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(12)) {
+      Hive.registerAdapter(RewardChestAdapter());
     }
   }
 

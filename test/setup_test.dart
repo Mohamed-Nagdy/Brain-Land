@@ -5,6 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  // Initialize Flutter bindings for tests that need platform channels
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Disable audio integration for tests
+  AppStateNotifier.disableAudioIntegration = true;
+
   group('Project Setup Tests', () {
     test('AppConstants are properly defined', () {
       expect(AppConstants.appName, 'BrainLand');
