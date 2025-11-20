@@ -1,4 +1,7 @@
 import 'package:brain_land/features/logic_mountain/presentation/screens/logic_game_screen.dart';
+import 'package:brain_land/features/logic_mountain/presentation/screens/logic_mountain_level_selection_screen.dart';
+import 'package:brain_land/features/memory_river/presentation/screens/memory_river_level_selection_screen.dart';
+import 'package:brain_land/features/shape_valley/presentation/screens/shape_valley_level_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -159,7 +162,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Logic Mountain Levels'),
+            child: const LogicMountainLevelSelectionScreen(),
           ),
         ),
         GoRoute(
@@ -191,7 +194,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Memory River Levels'),
+            child: const MemoryRiverLevelSelectionScreen(),
           ),
         ),
         GoRoute(
@@ -223,7 +226,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithTransition(
             context: context,
             state: state,
-            child: const PlaceholderScreen(title: 'Shape Valley Levels'),
+            child: const ShapeValleyLevelSelectionScreen(),
           ),
         ),
         GoRoute(
