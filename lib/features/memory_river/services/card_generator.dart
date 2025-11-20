@@ -9,7 +9,6 @@ class CardGenerator {
 
   /// Generate a shuffled list of memory cards for a level
   List<MemoryCard> generateCards(MemoryLevel level) {
-    final totalCards = level.totalCards;
     final totalPairs = level.totalPairs;
 
     // Generate pair IDs

@@ -126,8 +126,6 @@ class AppRouter {
             state: state,
             child: const LevelSelectionScreen(),
           ),
-          redirect: (context, state) =>
-              _checkZoneUnlock(context, 'math_forest'),
         ),
         GoRoute(
           path: AppRoutes.mathGame,
@@ -163,8 +161,6 @@ class AppRouter {
             state: state,
             child: const PlaceholderScreen(title: 'Logic Mountain Levels'),
           ),
-          redirect: (context, state) =>
-              _checkZoneUnlock(context, 'logic_mountain'),
         ),
         GoRoute(
           path: AppRoutes.logicGame,
@@ -197,8 +193,6 @@ class AppRouter {
             state: state,
             child: const PlaceholderScreen(title: 'Memory River Levels'),
           ),
-          redirect: (context, state) =>
-              _checkZoneUnlock(context, 'memory_river'),
         ),
         GoRoute(
           path: AppRoutes.memoryGame,
@@ -231,8 +225,6 @@ class AppRouter {
             state: state,
             child: const PlaceholderScreen(title: 'Shape Valley Levels'),
           ),
-          redirect: (context, state) =>
-              _checkZoneUnlock(context, 'shape_valley'),
         ),
         GoRoute(
           path: AppRoutes.shapeGame,
@@ -334,21 +326,6 @@ class AppRouter {
       },
       transitionDuration: const Duration(milliseconds: 400),
     );
-  }
-
-  /// Navigation guard to check if a zone is unlocked
-  /// Returns null if zone is unlocked, otherwise redirects to world map
-  static String? _checkZoneUnlock(BuildContext context, String zoneId) {
-    // TODO: Implement actual zone unlock check with provider
-    // For now, allow access to all zones during development
-    // In production, this will check the player's progress:
-    //
-    // final isUnlocked = ref.read(worldMapProvider).isZoneUnlocked(zoneId);
-    // if (!isUnlocked) {
-    //   // Show a dialog or snackbar indicating the zone is locked
-    //   return AppRoutes.worldMap;
-    // }
-    return null;
   }
 }
 

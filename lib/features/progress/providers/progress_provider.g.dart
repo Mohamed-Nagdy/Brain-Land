@@ -468,7 +468,7 @@ final formattedPlayTimeProvider = AutoDisposeFutureProvider<String>.internal(
 );
 
 typedef FormattedPlayTimeRef = AutoDisposeFutureProviderRef<String>;
-String _$progressNotifierHash() => r'9b6975c48610e46cdc4fafec48402e1139700383';
+String _$progressNotifierHash() => r'1d3b9695c4acbd519911aad25279adbea1aabd2d';
 
 /// Progress state notifier
 ///

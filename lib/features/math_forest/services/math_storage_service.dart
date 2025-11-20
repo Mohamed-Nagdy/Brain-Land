@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:hive/hive.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/difficulty_calculator.dart';
+import '../../world_map/services/local/world_map_local_service.dart';
 import '../models/level_result.dart';
 import '../models/math_level.dart';
 
@@ -120,6 +122,32 @@ class MathStorageService {
 
     await _saveLevel(updatedLevel);
     await _saveResult(result);
+
+    // Update zone progress and check for zone unlocks
+    await _updateZoneProgress();
+  }
+
+  /// Update zone's completed levels count and check for unlocks
+  Future<void> _updateZoneProgress() async {
+    try {
+      // Count completed levels
+      final allLevels = await getAllLevels();
+      final completedCount = allLevels
+          .where((level) => level.isCompleted)
+          .length;
+
+      // Update Math Forest zone progress
+      final worldMapService = WorldMapLocalService();
+      await worldMapService.updateZoneProgress('math_forest', completedCount);
+
+      // Note: Zone unlocking removed - all zones are now available
+
+      // Note: The provider will automatically refresh on the next read
+      // because we're using Riverpod's auto-refresh mechanism
+    } catch (e) {
+      // Silent failure - don't break game flow if zone update fails
+      log('Failed to update zone progress: $e');
+    }
   }
 
   /// Save a level result

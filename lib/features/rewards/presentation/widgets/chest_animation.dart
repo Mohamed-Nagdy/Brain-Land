@@ -284,7 +284,6 @@ class _ChestAnimationState extends State<ChestAnimation>
                   // Sparkles when opening
                   if (widget.isOpening || widget.isOpened)
                     ...List.generate(8, (index) {
-                      final angle = (index * 45) * (3.14159 / 180);
                       final distance = 80 + (_openAnimation.value * 40);
                       return Transform.translate(
                         offset: Offset(

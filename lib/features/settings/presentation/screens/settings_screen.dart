@@ -100,7 +100,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     value: _isMuted,
                     onChanged: (_) => _toggleMute(),
-                    activeColor: AppColors.primary,
+                    activeThumbColor: AppColors.primary,
                     secondary: Icon(
                       _isMuted ? Icons.volume_off : Icons.volume_up,
                       color: AppColors.primary,

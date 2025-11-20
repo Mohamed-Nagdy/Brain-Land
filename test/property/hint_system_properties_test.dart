@@ -35,11 +35,6 @@ void main() {
           hintsUsed: 0,
         );
 
-        // Get a wrong answer from the options
-        final wrongAnswer = pattern.options.firstWhere(
-          (option) => option != pattern.correctAnswer,
-        );
-
         // Simulate incorrect answer - in the actual provider, this triggers a hint
         // The key property is that the score should NOT decrease
         final scoreBeforeIncorrect = initialState.correctAnswers;

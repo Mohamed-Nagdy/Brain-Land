@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../shared/services/analytics_service.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/gradient_background.dart';
 import '../../providers/avatar_provider.dart';
@@ -161,6 +162,15 @@ class _AvatarCustomizationScreenState
 
     // Equip the item immediately
     ref.read(avatarNotifierProvider.notifier).equipItem(itemId);
+
+    // Track avatar customization event
+    final item = ref
+        .read(customizationInventoryProvider)
+        .firstWhere((item) => item.id == itemId);
+    AnalyticsService.instance.logAvatarCustomization(
+      itemType: item.category.toString(),
+      itemId: itemId,
+    );
   }
 
   void _showUnlockDialog(String itemId) {
@@ -195,8 +205,6 @@ class _AvatarCustomizationScreenState
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: Check if player has enough stars
-              // TODO: Deduct stars and unlock item
               Navigator.of(context).pop();
               _unlockItem(itemId);
             },

@@ -29,15 +29,6 @@ class CustomizationInventory extends _$CustomizationInventory {
     }
   }
 
-  /// Save inventory to storage
-  Future<void> _saveInventory() async {
-    try {
-      await _service.saveInventory(state);
-    } catch (e) {
-      log('Failed to save inventory: $e');
-    }
-  }
-
   /// Unlock an item
   Future<void> unlockItem(String itemId) async {
     try {

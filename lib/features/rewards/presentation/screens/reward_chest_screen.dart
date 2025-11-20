@@ -6,6 +6,7 @@ import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/models/reward.dart';
+import '../../../../shared/services/analytics_service.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/gradient_background.dart';
 import '../../providers/chest_provider.dart';
@@ -71,6 +72,15 @@ class _RewardChestScreenState extends ConsumerState<RewardChestScreen> {
 
     // Play reward unlock sound
     AudioManager.instance.playSound(SoundEffect.rewardUnlock.path);
+
+    // Track reward opening event
+    final chestState = ref.read(chestProvider);
+    if (chestState.currentChest != null) {
+      AnalyticsService.instance.logRewardOpened(
+        rewardType: chestState.currentChest!.type.toString(),
+        rewardId: widget.chestId,
+      );
+    }
 
     // Show confetti
     setState(() {

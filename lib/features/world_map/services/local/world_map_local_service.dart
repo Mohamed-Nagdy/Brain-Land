@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:hive/hive.dart';
+
 import '../../../../core/constants/app_constants.dart';
 import '../../../../shared/models/zone.dart';
 import '../../../../shared/models/zone_progress.dart';
@@ -17,15 +22,26 @@ class WorldMapLocalService {
       final box = _storage.getBox(AppConstants.progressBoxName);
       final List<dynamic>? storedZones = box.get('zones');
 
+      List<Zone> zones;
       if (storedZones != null && storedZones.isNotEmpty) {
-        return storedZones.cast<Zone>();
+        zones = storedZones.cast<Zone>();
+
+        // FORCE UNLOCK: Ensure all zones are unlocked (override old cached data)
+        zones = zones.map((zone) => zone.copyWith(isUnlocked: true)).toList();
+      } else {
+        // If no zones exist, create default zones
+        zones = _createDefaultZones();
+        await _saveZones(zones);
       }
 
-      // If no zones exist, create default zones
-      final defaultZones = _createDefaultZones();
-      await _saveZones(defaultZones);
-      return defaultZones;
+      // IMPORTANT: Always recalculate zone progress from actual level data
+      // This ensures the UI shows correct numbers even if zone wasn't updated properly
+      zones = await _syncZoneProgressWithLevels(zones);
+      await _saveZones(zones); // Save the updated progress and unlock status
+
+      return zones;
     } catch (e) {
+      log('Error loading zones: $e');
       // If loading fails, return default zones
       return _createDefaultZones();
     }
@@ -126,7 +142,7 @@ class WorldMapLocalService {
         description: 'Learn counting, addition, and subtraction',
         iconPath: 'assets/icons/math_forest.png',
         type: ZoneType.mathForest,
-        isUnlocked: true, // First zone is unlocked by default
+        isUnlocked: true,
         totalLevels: 30,
         completedLevels: 0,
         availableGames: ['counting', 'addition', 'subtraction'],
@@ -137,7 +153,7 @@ class WorldMapLocalService {
         description: 'Solve patterns and sequences',
         iconPath: 'assets/icons/logic_mountain.png',
         type: ZoneType.logicMountain,
-        isUnlocked: false,
+        isUnlocked: true, // ✅ Now unlocked!
         totalLevels: 20,
         completedLevels: 0,
         availableGames: ['patterns', 'sequences'],
@@ -148,7 +164,7 @@ class WorldMapLocalService {
         description: 'Match cards and improve memory',
         iconPath: 'assets/icons/memory_river.png',
         type: ZoneType.memoryRiver,
-        isUnlocked: false,
+        isUnlocked: true, // ✅ Now unlocked!
         totalLevels: 20,
         completedLevels: 0,
         availableGames: ['memory_match'],
@@ -159,11 +175,69 @@ class WorldMapLocalService {
         description: 'Sort and match shapes',
         iconPath: 'assets/icons/shape_valley.png',
         type: ZoneType.shapeValley,
-        isUnlocked: false,
+        isUnlocked: true, // ✅ Now unlocked!
         totalLevels: 20,
         completedLevels: 0,
         availableGames: ['shape_sort', 'shape_match'],
       ),
     ];
+  }
+
+  /// Sync zone progress with actual level completion data
+  /// This ensures zones always show correct progress
+  Future<List<Zone>> _syncZoneProgressWithLevels(List<Zone> zones) async {
+    final updatedZones = <Zone>[];
+
+    for (final zone in zones) {
+      int completedCount = 0;
+
+      // Count completed levels for each zone
+      switch (zone.id) {
+        case 'math_forest':
+          completedCount = await _countCompletedMathLevels();
+          break;
+        // Add other zones here when their storage is implemented
+        default:
+          completedCount = zone.completedLevels;
+      }
+
+      log(
+        '[Zone Sync] ${zone.name}: $completedCount/${zone.totalLevels} completed',
+      );
+
+      if (completedCount != zone.completedLevels) {
+        updatedZones.add(zone.copyWith(completedLevels: completedCount));
+      } else {
+        updatedZones.add(zone);
+      }
+    }
+
+    return updatedZones;
+  }
+
+  /// Count completed Math Forest levels
+  Future<int> _countCompletedMathLevels() async {
+    try {
+      final box = await Hive.openBox<String>('math_levels');
+      int count = 0;
+
+      for (final key in box.keys) {
+        final levelJson = box.get(key);
+        if (levelJson != null) {
+          final levelData = Map<String, dynamic>.from(
+            const JsonDecoder().convert(levelJson) as Map,
+          );
+          if (levelData['isCompleted'] == true) {
+            count++;
+          }
+        }
+      }
+
+      log('[Math Levels] Found $count completed levels');
+      return count;
+    } catch (e) {
+      log('[Math Levels] Error counting: $e');
+      return 0;
+    }
   }
 }

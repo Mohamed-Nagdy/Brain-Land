@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:brain_land/features/progress/providers/progress_provider.dart';
 import 'package:brain_land/features/rewards/providers/pet_provider.dart';
 import 'package:brain_land/features/rewards/services/pet_service.dart';
+import 'package:brain_land/shared/services/analytics_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
@@ -87,6 +89,13 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
         incorrectAnswers: 0,
         timeRemaining: level.timeLimit,
         startTime: DateTime.now(),
+      );
+
+      // Track level start event
+      AnalyticsService.instance.logLevelStart(
+        zoneId: 'math_forest',
+        levelId: levelId,
+        difficulty: level.difficulty,
       );
 
       // Start timer if time limit is set
@@ -208,6 +217,15 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
           .resetConsecutiveLevels();
     }
 
+    // Track level completion event
+    AnalyticsService.instance.logLevelComplete(
+      zoneId: 'math_forest',
+      levelId: levelId,
+      stars: starsEarned,
+      accuracy: state.accuracy,
+      timeTaken: timeSpent,
+    );
+
     // Update state to completed
     state = state.copyWith(status: GameStatus.completed);
   }
@@ -240,7 +258,7 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
       }
     } catch (e) {
       // Log error but don't fail the level completion
-      print('Error handling level completion: $e');
+      log('Error handling level completion: $e');
     }
   }
 

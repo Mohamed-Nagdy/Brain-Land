@@ -1,11 +1,10 @@
-import 'dart:math';
-
+import 'package:brain_land/core/constants/game_assets.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../shared/models/zone.dart';
 
-/// A fancy animated card widget for displaying zones on the world map
+/// Child-friendly animated zone card with emojis and bright colors
 class AnimatedZoneCard extends StatefulWidget {
   final Zone zone;
   final VoidCallback onTap;
@@ -25,13 +24,16 @@ class _AnimatedZoneCardState extends State<AnimatedZoneCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 800),
       vsync: this,
     );
+
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+
+    _controller.forward();
   }
 
   @override
@@ -42,127 +44,135 @@ class _AnimatedZoneCardState extends State<AnimatedZoneCard>
 
   @override
   Widget build(BuildContext context) {
-    final gradient = AppColors.getZoneGradient(widget.zone.id);
-    final primaryColor = AppColors.getZonePrimaryColor(widget.zone.id);
-
-    return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) {
-        _controller.reverse();
-        if (widget.zone.isUnlocked) {
-          widget.onTap();
-        }
-      },
-      onTapCancel: () => _controller.reverse(),
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: gradient,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: primaryColor.withValues(alpha: 0.4),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              // Animated background particles
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: CustomPaint(
-                    painter: ParticlesPainter(
-                      color: Colors.white.withValues(alpha: 0.2),
-                    ),
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => _controller.reverse(),
+        onTapUp: (_) => _controller.forward(),
+        onTapCancel: () => _controller.forward(),
+        child: Stack(
+          children: [
+            // Main Card
+            Container(
+              decoration: BoxDecoration(
+                gradient: _getZoneGradient(),
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: [
+                  BoxShadow(
+                    color: _getZoneColor().withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
                   ),
+                ],
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  width: 3,
                 ),
               ),
-              // Zone content
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(32),
+                child: Stack(
                   children: [
-                    // Zone icon and name
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildZoneIcon(),
-                        const SizedBox(height: 12),
-                        Text(
-                          widget.zone.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    // Decorative circles
+                    _buildDecorations(),
+
+                    // Content
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Zone Emoji & Name
+                          Row(
+                            children: [
+                              // Big emoji icon
+                              Text(
+                                _getZoneEmoji(),
+                                style: const TextStyle(fontSize: 64),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.zone.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black26,
+                                            offset: Offset(2, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    _buildProgressBar(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.zone.description,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.9),
+
+                          // Stats Row
+                          Row(
+                            children: [
+                              _buildStatBubble(
+                                '${widget.zone.completedLevels}/${widget.zone.totalLevels}',
+                                '✅',
+                              ),
+                              const SizedBox(width: 8),
+                              if (widget.zone.completedLevels >=
+                                  widget.zone.totalLevels)
+                                _buildStatBubble('Complete!', '🏆'),
+                            ],
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    // Progress bar
-                    _buildProgressBar(),
                   ],
                 ),
               ),
-              // Lock overlay if locked
-              if (!widget.zone.isUnlocked)
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: const Center(
-                      child: Icon(Icons.lock, size: 64, color: Colors.white),
-                    ),
-                  ),
-                ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildZoneIcon() {
-    IconData iconData;
-    switch (widget.zone.type) {
-      case ZoneType.mathForest:
-        iconData = Icons.calculate;
-        break;
-      case ZoneType.logicMountain:
-        iconData = Icons.psychology;
-        break;
-      case ZoneType.memoryRiver:
-        iconData = Icons.memory;
-        break;
-      case ZoneType.shapeValley:
-        iconData = Icons.category;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Icon(iconData, size: 32, color: Colors.white),
+  Widget _buildDecorations() {
+    return Stack(
+      children: [
+        Positioned(
+          top: -30,
+          right: -30,
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.1),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -20,
+          left: -20,
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.05),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -171,62 +181,105 @@ class _AnimatedZoneCardState extends State<AnimatedZoneCard>
         ? widget.zone.completedLevels / widget.zone.totalLevels
         : 0.0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${widget.zone.completedLevels}/${widget.zone.totalLevels} Levels',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white.withValues(alpha: 0.9),
-                fontWeight: FontWeight.w600,
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      height: 8,
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: FractionallySizedBox(
+        alignment: Alignment.centerLeft,
+        widthFactor: progress.clamp(0.0, 1.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.5),
+                blurRadius: 4,
+                spreadRadius: 1,
               ),
-            ),
-            if (widget.zone.completedLevels >= widget.zone.totalLevels)
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
-          ],
-        ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-            value: progress,
-            backgroundColor: Colors.white.withValues(alpha: 0.3),
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-            minHeight: 8,
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
-}
 
-/// Custom painter for animated particle effects in the background
-class ParticlesPainter extends CustomPainter {
-  final Color color;
-  final Random _random = Random(42); // Fixed seed for consistent particles
+  Widget _buildStatBubble(String text, String emoji) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.5),
+          width: 2,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 16)),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: Colors.black26,
+                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  ParticlesPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    // Draw random particles
-    for (int i = 0; i < 20; i++) {
-      final x = _random.nextDouble() * size.width;
-      final y = _random.nextDouble() * size.height;
-      final radius = _random.nextDouble() * 3 + 1;
-
-      canvas.drawCircle(Offset(x, y), radius, paint);
+  String _getZoneEmoji() {
+    switch (widget.zone.id) {
+      case 'math_forest':
+        return GameAssets.mathForestEmoji;
+      case 'logic_mountain':
+        return GameAssets.logicMountainEmoji;
+      case 'memory_river':
+        return GameAssets.memoryRiverEmoji;
+      case 'shape_valley':
+        return GameAssets.shapeValleyEmoji;
+      default:
+        return '🎮';
     }
   }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  Color _getZoneColor() {
+    switch (widget.zone.id) {
+      case 'math_forest':
+        return const Color(0xFF4CAF50); // Green
+      case 'logic_mountain':
+        return const Color(0xFF9C27B0); // Purple
+      case 'memory_river':
+        return const Color(0xFF2196F3); // Blue
+      case 'shape_valley':
+        return const Color(0xFFFF9800); // Orange
+      default:
+        return AppColors.primary;
+    }
+  }
+
+  LinearGradient _getZoneGradient() {
+    final baseColor = _getZoneColor();
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [baseColor, baseColor.withValues(alpha: 0.7)],
+    );
+  }
 }

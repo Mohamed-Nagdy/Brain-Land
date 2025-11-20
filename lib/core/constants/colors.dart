@@ -26,6 +26,13 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
+  // World Map gradient (multi-color for main screen)
+  static const worldMapGradient = LinearGradient(
+    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   // Math Forest Zone Colors
   static const mathForestGreen = Color(0xFF4CAF50);
   static const mathForestLight = Color(0xFF81C784);

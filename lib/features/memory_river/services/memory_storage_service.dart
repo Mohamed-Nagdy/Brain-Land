@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../models/memory_level.dart';
 
 /// Service for managing Memory River level data and progress
@@ -27,7 +29,7 @@ class MemoryStorageService {
   }) async {
     // In a full implementation, this would save to Hive storage
     // For now, we'll just log the progress
-    print(
+    log(
       'Level $levelId completed: $moves moves, $timeSpent seconds, $starsEarned stars',
     );
   }
