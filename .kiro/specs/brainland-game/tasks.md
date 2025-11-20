@@ -149,30 +149,30 @@ This implementation plan breaks down the BrainLand game development into discret
     - Test navigation on tap
     - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 7. Math Forest - Core game engine
-  - [ ] 7.1 Create MathProblem model and generator
+- [x] 7. Math Forest - Core game engine
+  - [x] 7.1 Create MathProblem model and generator
     - Implement MathProblem model (operands, operation, answer)
     - Create ProblemGenerator service
     - Implement generation logic for addition, subtraction
     - _Requirements: 2.1, 2.5_
   
-  - [ ] 7.2 Write property tests for problem generation
+  - [x] 7.2 Write property tests for problem generation
     - **Property 4: Problem difficulty matches level difficulty**
     - **Property 8: Beginner problems use correct number range**
     - **Validates: Requirements 2.1, 2.5**
   
-  - [ ] 7.3 Create MathLevel model and service
+  - [x] 7.3 Create MathLevel model and service
     - Implement MathLevel model with difficulty, time limit, target score
     - Create MathStorageService for level data
     - _Requirements: 2.1, 2.4_
   
-  - [ ] 7.4 Create math game providers
+  - [x] 7.4 Create math game providers
     - Implement MathGameProvider with game state
     - Create ProblemGeneratorProvider
     - Implement MathProgressProvider for tracking
     - _Requirements: 2.1, 2.3, 2.4_
   
-  - [ ] 7.5 Write property tests for game logic
+  - [x] 7.5 Write property tests for game logic
     - **Property 6: Correct answers increment counter**
     - **Property 7: Star awards match performance**
     - **Validates: Requirements 2.3, 2.4, 6.1**
