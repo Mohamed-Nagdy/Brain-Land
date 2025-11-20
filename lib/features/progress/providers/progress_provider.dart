@@ -137,6 +137,30 @@ class ProgressNotifier extends _$ProgressNotifier {
     }
   }
 
+  /// Increment consecutive levels completed
+  /// Returns the new count
+  Future<int> incrementConsecutiveLevels() async {
+    try {
+      final newCount = await _service.incrementConsecutiveLevels();
+      ref.invalidateSelf();
+      return newCount;
+    } catch (e) {
+      log('Failed to increment consecutive levels: $e');
+      rethrow;
+    }
+  }
+
+  /// Reset consecutive levels completed
+  Future<void> resetConsecutiveLevels() async {
+    try {
+      await _service.resetConsecutiveLevels();
+      ref.invalidateSelf();
+    } catch (e) {
+      log('Failed to reset consecutive levels: $e');
+      rethrow;
+    }
+  }
+
   /// Refresh progress
   Future<void> refresh() async {
     ref.invalidateSelf();

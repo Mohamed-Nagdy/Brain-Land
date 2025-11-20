@@ -195,6 +195,29 @@ class ProgressStorageService {
     );
   }
 
+  /// Increment consecutive levels completed
+  /// Returns the new count
+  Future<int> incrementConsecutiveLevels() async {
+    final progress = await getProgress();
+    final newCount = progress.consecutiveLevelsCompleted + 1;
+    await updateProgress(
+      progress.copyWith(consecutiveLevelsCompleted: newCount),
+    );
+    return newCount;
+  }
+
+  /// Reset consecutive levels completed (e.g., when a level is failed)
+  Future<void> resetConsecutiveLevels() async {
+    final progress = await getProgress();
+    await updateProgress(progress.copyWith(consecutiveLevelsCompleted: 0));
+  }
+
+  /// Get consecutive levels completed
+  Future<int> getConsecutiveLevels() async {
+    final progress = await getProgress();
+    return progress.consecutiveLevelsCompleted;
+  }
+
   /// Reset all progress (for testing or user request)
   Future<void> resetProgress() async {
     await updateProgress(_createDefaultProgress());

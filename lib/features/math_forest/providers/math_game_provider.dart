@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:brain_land/features/progress/providers/progress_provider.dart';
+import 'package:brain_land/features/rewards/providers/pet_provider.dart';
+import 'package:brain_land/features/rewards/services/pet_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
@@ -19,12 +22,15 @@ final mathGameProvider =
       final generator = ref.watch(problemGeneratorProvider);
       final storage = ref.watch(mathStorageServiceProvider);
       final calculator = ref.watch(difficultyCalculatorProvider);
+      final petService = ref.watch(petServiceProvider);
 
       return MathGameNotifier(
         levelId: levelId,
         generator: generator,
         storage: storage,
         calculator: calculator,
+        petService: petService,
+        ref: ref,
       );
     });
 
@@ -34,15 +40,23 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
   final ProblemGenerator generator;
   final MathStorageService storage;
   final DifficultyCalculator calculator;
+  final PetService petService;
+  final Ref ref;
 
   Timer? _timer;
+  String? _unlockedPetId;
 
   MathGameNotifier({
     required this.levelId,
     required this.generator,
     required this.storage,
     required this.calculator,
+    required this.petService,
+    required this.ref,
   }) : super(MathGameState.initial());
+
+  /// Get the ID of the pet that was unlocked (if any)
+  String? get unlockedPetId => _unlockedPetId;
 
   /// Start the game level
   Future<void> startLevel() async {
@@ -183,8 +197,51 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
     // Save progress
     await storage.updateLevelProgress(result);
 
+    // Handle consecutive level completion and pet unlocking
+    if (starsEarned > 0) {
+      // Level was completed successfully
+      await _handleLevelCompletion();
+    } else {
+      // Level was failed, reset consecutive counter
+      await ref
+          .read(progressNotifierProvider.notifier)
+          .resetConsecutiveLevels();
+    }
+
     // Update state to completed
     state = state.copyWith(status: GameStatus.completed);
+  }
+
+  /// Handle level completion and check for pet unlock
+  Future<void> _handleLevelCompletion() async {
+    try {
+      // Increment consecutive levels
+      final consecutiveLevels = await ref
+          .read(progressNotifierProvider.notifier)
+          .incrementConsecutiveLevels();
+
+      // Check if a pet should be unlocked
+      if (petService.shouldUnlockPet(consecutiveLevels)) {
+        // Get current progress to check already unlocked pets
+        final progress = await ref.read(progressNotifierProvider.future);
+
+        // Get a random pet to unlock
+        final petToUnlock = petService.getRandomPetToUnlock(
+          progress.unlockedPets,
+        );
+
+        // Unlock the pet
+        await ref
+            .read(progressNotifierProvider.notifier)
+            .unlockPet(petToUnlock.id);
+
+        // Store the unlocked pet ID for UI to display
+        _unlockedPetId = petToUnlock.id;
+      }
+    } catch (e) {
+      // Log error but don't fail the level completion
+      print('Error handling level completion: $e');
+    }
   }
 
   /// Calculate stars earned based on accuracy and difficulty

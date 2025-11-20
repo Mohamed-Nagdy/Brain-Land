@@ -1,3 +1,4 @@
+import 'package:brain_land/shared/models/pet.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../core/constants/app_constants.dart';
@@ -95,6 +96,15 @@ class StorageService {
     }
     if (!Hive.isAdapterRegistered(12)) {
       Hive.registerAdapter(RewardChestAdapter());
+    }
+    if (!Hive.isAdapterRegistered(13)) {
+      Hive.registerAdapter(PetTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(14)) {
+      Hive.registerAdapter(PetAnimationAdapter());
+    }
+    if (!Hive.isAdapterRegistered(15)) {
+      Hive.registerAdapter(PetAdapter());
     }
   }
 

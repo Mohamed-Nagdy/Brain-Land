@@ -43,6 +43,9 @@ class PlayerProgress extends Equatable {
   @HiveField(11)
   final DateTime updatedAt;
 
+  @HiveField(12)
+  final int consecutiveLevelsCompleted;
+
   const PlayerProgress({
     required this.playerId,
     required this.totalStars,
@@ -56,6 +59,7 @@ class PlayerProgress extends Equatable {
     required this.totalPlayTime,
     required this.createdAt,
     required this.updatedAt,
+    this.consecutiveLevelsCompleted = 0,
   });
 
   PlayerProgress copyWith({
@@ -71,6 +75,7 @@ class PlayerProgress extends Equatable {
     int? totalPlayTime,
     DateTime? createdAt,
     DateTime? updatedAt,
+    int? consecutiveLevelsCompleted,
   }) {
     return PlayerProgress(
       playerId: playerId ?? this.playerId,
@@ -85,6 +90,8 @@ class PlayerProgress extends Equatable {
       totalPlayTime: totalPlayTime ?? this.totalPlayTime,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      consecutiveLevelsCompleted:
+          consecutiveLevelsCompleted ?? this.consecutiveLevelsCompleted,
     );
   }
 
@@ -102,5 +109,6 @@ class PlayerProgress extends Equatable {
     totalPlayTime,
     createdAt,
     updatedAt,
+    consecutiveLevelsCompleted,
   ];
 }

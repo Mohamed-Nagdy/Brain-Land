@@ -29,13 +29,14 @@ class PlayerProgressAdapter extends TypeAdapter<PlayerProgress> {
       totalPlayTime: fields[9] as int,
       createdAt: fields[10] as DateTime,
       updatedAt: fields[11] as DateTime,
+      consecutiveLevelsCompleted: fields[12] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, PlayerProgress obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.playerId)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class PlayerProgressAdapter extends TypeAdapter<PlayerProgress> {
       ..writeByte(10)
       ..write(obj.createdAt)
       ..writeByte(11)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(12)
+      ..write(obj.consecutiveLevelsCompleted);
   }
 
   @override

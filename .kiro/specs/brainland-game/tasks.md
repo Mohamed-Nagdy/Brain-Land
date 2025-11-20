@@ -424,27 +424,27 @@ This implementation plan breaks down the BrainLand game development into discret
     - Test login → claim reward → update streak
     - _Requirements: 8.1, 8.2_
 
-- [ ] 14. Pet system
-  - [ ] 14.1 Create Pet model
+- [x] 14. Pet system
+  - [x] 14.1 Create Pet model
     - Implement Pet model with animations
     - Create pet type enum
     - _Requirements: 6.4_
   
-  - [ ] 14.2 Implement pet unlock logic
+  - [x] 14.2 Implement pet unlock logic
     - Add consecutive level counter to game state
     - Implement unlock trigger after 5 levels
     - _Requirements: 6.4_
   
-  - [ ] 14.3 Write property test for pet unlocking
+  - [x] 14.3 Write property test for pet unlocking
     - **Property 21: Five consecutive levels unlock pet**
     - **Validates: Requirements 6.4**
   
-  - [ ] 14.4 Build PetDisplay widget
+  - [x] 14.4 Build PetDisplay widget
     - Render pet with idle animation
     - Add companion display on world map
     - _Requirements: 6.4_
   
-  - [ ] 14.5 Build PetCollectionScreen
+  - [x] 14.5 Build PetCollectionScreen
     - Display grid of all pets
     - Show locked/unlocked states
     - Implement pet selection
