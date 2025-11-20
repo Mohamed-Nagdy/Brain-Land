@@ -518,37 +518,37 @@ This implementation plan breaks down the BrainLand game development into discret
     - Add completion detection
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 17. Shape Valley zone
-  - [ ] 17.1 Create shape models
+- [x] 17. Shape Valley zone
+  - [x] 17.1 Create shape models
     - Implement Shape model with type and color
     - Create ShapeLevel model with sorting rules
     - _Requirements: 5.1_
   
-  - [ ] 17.2 Create Shape Valley providers
+  - [x] 17.2 Create Shape Valley providers
     - Implement ShapeGameProvider
     - Add drag-and-drop state management
     - Implement placement validation
     - _Requirements: 5.2, 5.3_
   
-  - [ ] 17.3 Write property tests for shape game
+  - [x] 17.3 Write property tests for shape game
     - **Property 16: Correct shape placement snaps and provides feedback**
     - **Property 17: Incorrect shape placement returns shape**
     - **Property 18: All shapes sorted completes level**
     - **Validates: Requirements 5.2, 5.3, 5.4**
   
-  - [ ] 17.4 Build DraggableShape widget
+  - [x] 17.4 Build DraggableShape widget
     - Create shape with drag functionality
     - Add shadow during drag
     - Implement snap-to-position
     - _Requirements: 5.2_
   
-  - [ ] 17.5 Build ShapeTarget widget
+  - [x] 17.5 Build ShapeTarget widget
     - Create drop target zones
     - Add highlight on drag over
     - Implement validation feedback
     - _Requirements: 5.2, 5.3_
   
-  - [ ] 17.6 Build ShapeGameScreen
+  - [x] 17.6 Build ShapeGameScreen
     - Display shapes to sort
     - Show target zones
     - Implement drag-and-drop logic
