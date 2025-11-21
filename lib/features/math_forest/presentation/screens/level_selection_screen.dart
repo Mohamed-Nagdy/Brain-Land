@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../shared/widgets/gradient_background.dart';
+import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
 import '../../models/math_level.dart';
 import '../../providers/math_storage_provider.dart';
@@ -70,6 +71,10 @@ class LevelSelectionScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+
+              // Banner Ad
+              const BannerAdWidget(),
+              const SizedBox(height: 8),
             ],
           ),
         ),

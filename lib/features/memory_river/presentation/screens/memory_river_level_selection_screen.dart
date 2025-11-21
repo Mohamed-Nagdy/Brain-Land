@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/text_styles.dart';
+import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
 import '../../providers/memory_game_provider.dart';
 import '../widgets/winding_memory_path.dart';
@@ -77,6 +78,10 @@ class MemoryRiverLevelSelectionScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+
+              // Banner Ad
+              const BannerAdWidget(),
+              const SizedBox(height: 8),
             ],
           ),
         ),

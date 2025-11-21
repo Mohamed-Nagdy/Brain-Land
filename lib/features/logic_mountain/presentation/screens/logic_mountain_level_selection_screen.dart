@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
 import '../../providers/logic_game_provider.dart';
 import '../widgets/winding_logic_path.dart';
@@ -114,6 +115,10 @@ class LogicMountainLevelSelectionScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
+
+                // Banner Ad
+                const BannerAdWidget(),
+                const SizedBox(height: 8),
               ],
             ),
           ),
