@@ -460,13 +460,13 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: [
-              // Settings button
-              _buildFancyFAB(
-                emoji: '⚙️',
-                label: 'Settings',
-                colors: [const Color(0xFF667EEA), const Color(0xFF764BA2)],
-                onTap: () => context.push('/settings'),
-              ),
+              // // Settings button
+              // _buildFancyFAB(
+              //   emoji: '⚙️',
+              //   label: 'Settings',
+              //   colors: [const Color(0xFF667EEA), const Color(0xFF764BA2)],
+              //   onTap: () => context.push('/settings'),
+              // ),
               // Daily Rewards button (center)
               _buildFancyFAB(
                 emoji: '🎁',
