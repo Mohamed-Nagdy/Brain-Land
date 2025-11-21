@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/models/zone.dart';
+import '../../../../shared/services/analytics_service.dart';
 import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../ads/widgets/rewarded_ad_button.dart';
 import '../../../progress/providers/progress_provider.dart';
@@ -26,6 +27,9 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
   void initState() {
     super.initState();
     AudioManager.instance.playMusic(MusicTrack.mainMenu.path);
+
+    // Log screen view
+    AnalyticsService.instance.setCurrentScreen(screenName: 'world_map');
 
     // Cloud animation
     _cloudController = AnimationController(

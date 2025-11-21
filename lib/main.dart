@@ -9,7 +9,10 @@ import 'core/utils/audio_manager.dart';
 import 'features/ads/services/ad_manager.dart';
 import 'features/ads/services/app_open_ad_service.dart';
 import 'firebase_options.dart';
+import 'shared/services/analytics_service.dart';
+import 'shared/services/messaging_service.dart';
 import 'shared/services/storage_service.dart';
+import 'shared/services/tracking_service.dart';
 
 // Global app open ad service
 final appOpenAdService = AppOpenAdService();
@@ -29,6 +32,18 @@ void main() async {
 
   // Initialize AdManager (handles AdMob initialization internally)
   await AdManager.instance.initialize();
+
+  // Initialize Firebase Messaging
+  await MessagingService.instance.initialize();
+
+  // Initialize Tracking Service (ATT for iOS)
+  await TrackingService.instance.initialize();
+
+  // Initialize Analytics (log app open)
+  await AnalyticsService.instance.logEvent(
+    name: 'app_opened',
+    parameters: {'timestamp': DateTime.now().toIso8601String()},
+  );
 
   // Preload app open ad
   await appOpenAdService.loadAd();
