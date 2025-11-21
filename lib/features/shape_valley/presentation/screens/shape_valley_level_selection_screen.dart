@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
@@ -22,14 +23,7 @@ class ShapeValleyLevelSelectionScreen extends ConsumerWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF9C27B0), // Purple
-              Color(0xFF6A1B9A), // Deep Purple
-            ],
-          ),
+          gradient: AppColors.shapeValleyGradient,
         ),
         child: SafeArea(
           child: Column(

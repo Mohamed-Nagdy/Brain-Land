@@ -17,7 +17,7 @@ class AppColors {
   static const mathForest = Color(0xFF4CAF50);
   static const logicMountain = Color(0xFF2196F3);
   static const memoryRiver = Color(0xFF9C27B0);
-  static const shapeValley = Color(0xFFFF9800);
+  static const shapeValley = Color(0xFFFF6B9D);
 
   // Primary gradient colors
   static const primaryGradient = LinearGradient(
@@ -63,16 +63,16 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
-  // Shape Valley Zone Colors
-  static const shapeValleyOrange = Color(0xFFFF9800);
-  static const shapeValleyLight = Color(0xFFFFB74D);
-  static const shapeValleyDark = Color(0xFFF57C00);
+  // Shape Valley Zone Colors (Coral/Pink theme)
+  static const shapeValleyOrange = Color(0xFFFF6B9D); // Coral Pink
+  static const shapeValleyLight = Color(0xFFFF8FAB); // Light Coral
+  static const shapeValleyDark = Color(0xFFE91E63); // Deep Pink
   static const shapeValleyGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFF9C27B0), // Purple
-      Color(0xFF6A1B9A), // Deep Purple
+      Color(0xFFFF6B9D), // Coral Pink
+      Color(0xFFE91E63), // Deep Pink
     ],
   );
 

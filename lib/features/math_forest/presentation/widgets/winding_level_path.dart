@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../models/math_level.dart';
 
+/// Winding path widget for Math Forest level selection
 class WindingLevelPath extends StatefulWidget {
   final List<MathLevel> levels;
   final int levelsCompleted;
@@ -68,7 +68,7 @@ class _WindingLevelPathState extends State<WindingLevelPath> {
             painter: PathPainter(
               itemCount: widget.levels.length,
               itemHeight: 120.0,
-              pathColor: const Color(0xFF8D6E63), // Brown dirt path
+              pathColor: const Color(0xFF81C784), // Forest green
               width: constraints.maxWidth,
             ),
             child: SizedBox(
@@ -114,6 +114,7 @@ class _WindingLevelPathState extends State<WindingLevelPath> {
   }
 }
 
+/// Custom painter for the winding path
 class PathPainter extends CustomPainter {
   final int itemCount;
   final double itemHeight;
@@ -130,49 +131,56 @@ class PathPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = pathColor
+      ..color = pathColor.withValues(alpha: 0.3)
+      ..strokeWidth = 8
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 40.0
       ..strokeCap = StrokeCap.round;
 
     final path = Path();
+    final centerX = width / 2;
 
-    // Start from the bottom (first level)
-    final startY = (itemCount - 1) * itemHeight + 60;
-    final startXOffset = math.sin(0) * (width * 0.35);
-    path.moveTo(width / 2 + startXOffset, startY);
+    // Start from bottom
+    path.moveTo(centerX, size.height);
 
-    for (int i = 1; i < itemCount; i++) {
+    // Draw winding path
+    for (int i = 0; i < itemCount; i++) {
       final y = (itemCount - 1 - i) * itemHeight + 60;
       final xOffset = math.sin(i * 0.8) * (width * 0.35);
-      final x = width / 2 + xOffset;
+      final x = centerX + xOffset;
 
-      // Draw quadratic bezier to next point for smoothness
-      final prevY = (itemCount - 1 - (i - 1)) * itemHeight + 60;
-      final prevXOffset = math.sin((i - 1) * 0.8) * (width * 0.35);
-      final prevX = width / 2 + prevXOffset;
+      if (i == 0) {
+        path.lineTo(x, y);
+      } else {
+        final prevY = (itemCount - i) * itemHeight + 60;
+        final prevXOffset = math.sin((i - 1) * 0.8) * (width * 0.35);
+        final prevX = centerX + prevXOffset;
 
-      final controlX = (prevX + x) / 2;
-      final controlY = (prevY + y) / 2;
-
-      path.quadraticBezierTo(controlX, controlY, x, y);
+        // Smooth curve between points
+        final controlY = (y + prevY) / 2;
+        path.quadraticBezierTo(prevX, controlY, x, y);
+      }
     }
 
-    // Draw path border/shadow
-    final borderPaint = Paint()
-      ..color = Colors.black.withValues(alpha: 0.2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 48.0
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawPath(path, borderPaint);
     canvas.drawPath(path, paint);
+
+    // Draw leaves along the path
+    final leafPaint = Paint()
+      ..color = pathColor.withValues(alpha: 0.2)
+      ..style = PaintingStyle.fill;
+
+    for (int i = 0; i < itemCount; i += 3) {
+      final y = (itemCount - 1 - i) * itemHeight + 60;
+      final xOffset = math.sin(i * 0.8) * (width * 0.35);
+      final x = centerX + xOffset + 15;
+      canvas.drawCircle(Offset(x, y), 4, leafPaint);
+    }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(PathPainter oldDelegate) => false;
 }
 
+/// Individual level node widget
 class _LevelNode extends StatelessWidget {
   final MathLevel level;
   final bool isUnlocked;
@@ -189,11 +197,12 @@ class _LevelNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isUnlocked ? onTap : null,
       child: Container(
         width: 80,
         height: 80,
         decoration: BoxDecoration(
+          shape: BoxShape.circle,
           gradient: isUnlocked
               ? level.isCompleted
                     ? const LinearGradient(
@@ -217,95 +226,60 @@ class _LevelNode extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Color(0xFF6D4C41), // Brown
-                          Color(0xFF5D4037), // Dark Brown
+                          Color(0xFF66BB6A), // Light Green
+                          Color(0xFF43A047), // Medium Green
                         ],
                       )
               : LinearGradient(
                   colors: [Colors.grey.shade400, Colors.grey.shade600],
                 ),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isCurrent ? Colors.white : const Color(0xFF5D4037),
-            width: isCurrent ? 4 : 2,
-          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: isUnlocked
+                  ? const Color(0xFF4CAF50).withValues(alpha: 0.4)
+                  : Colors.black26,
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
           ],
+          border: Border.all(
+            color: isCurrent
+                ? Colors.yellow
+                : Colors.white.withValues(alpha: 0.3),
+            width: isCurrent ? 4 : 2,
+          ),
         ),
         child: Stack(
-          alignment: Alignment.center,
           children: [
-            // Wood rings pattern
-            if (isUnlocked)
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFF5D4037).withValues(alpha: 0.3),
-                    width: 2,
+            // Level number
+            Center(
+              child: Text(
+                '${level.levelNumber}',
+                style: AppTextStyles.heading3.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            // Stars
+            if (level.starsEarned > 0)
+              Positioned(
+                bottom: 4,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    level.starsEarned,
+                    (index) =>
+                        const Icon(Icons.star, color: Colors.amber, size: 12),
                   ),
                 ),
               ),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (!isUnlocked)
-                  const Icon(Icons.lock, color: Colors.white54, size: 32)
-                else ...[
-                  Text(
-                    '${level.levelNumber}',
-                    style: AppTextStyles.heading3.copyWith(
-                      color: Colors.white,
-                      fontSize: 24,
-                      shadows: [
-                        const Shadow(
-                          color: Colors.black45,
-                          blurRadius: 2,
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (level.starsEarned > 0)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(3, (index) {
-                        return Icon(
-                          index < level.starsEarned
-                              ? Icons.star
-                              : Icons.star_border,
-                          color: index < level.starsEarned
-                              ? Colors.amber
-                              : Colors.white38,
-                          size: 12,
-                        );
-                      }),
-                    ),
-                ],
-              ],
-            ),
-
-            // Checkmark if completed
-            if (level.isCompleted)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: AppColors.successGreen,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.check, color: Colors.white, size: 12),
-                ),
+            // Lock icon
+            if (!isUnlocked)
+              const Center(
+                child: Icon(Icons.lock, color: Colors.white, size: 32),
               ),
           ],
         ),

@@ -17,12 +17,14 @@ class MemoryCardWidget extends StatefulWidget {
   final MemoryCard card;
   final VoidCallback onTap;
   final bool isEnabled;
+  final bool isPeeking;
 
   const MemoryCardWidget({
     super.key,
     required this.card,
     required this.onTap,
     this.isEnabled = true,
+    this.isPeeking = false,
   });
 
   @override
@@ -49,8 +51,8 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget>
       ),
     );
 
-    // Set initial animation state based on card state
-    if (widget.card.isFaceUp) {
+    // Set initial animation state based on card state or peek
+    if (widget.card.isFaceUp || widget.isPeeking) {
       _flipController.value = 1.0;
     }
   }
@@ -59,12 +61,15 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget>
   void didUpdateWidget(MemoryCardWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Animate flip when card state changes
-    if (oldWidget.card.state != widget.card.state) {
-      if (widget.card.isFaceUp && !oldWidget.card.isFaceUp) {
+    // Animate flip when card state changes or peek state changes
+    final shouldBeFaceUp = widget.card.isFaceUp || widget.isPeeking;
+    final wasFaceUp = oldWidget.card.isFaceUp || oldWidget.isPeeking;
+
+    if (shouldBeFaceUp != wasFaceUp) {
+      if (shouldBeFaceUp) {
         // Flip to face-up
         _flipController.forward();
-      } else if (!widget.card.isFaceUp && oldWidget.card.isFaceUp) {
+      } else {
         // Flip to face-down
         _flipController.reverse();
       }

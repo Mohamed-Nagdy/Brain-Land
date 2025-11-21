@@ -119,19 +119,19 @@ class _FancyButtonState extends State<FancyButton>
         (widget.isSmall
             ? EdgeInsets.symmetric(
                 horizontal: context.responsiveValue(
-                  mobile: 24.0,
-                  tablet: 28.0,
-                  desktop: 32.0,
+                  mobile: 16.0,
+                  tablet: 24.0,
+                  desktop: 28.0,
                 ),
-                vertical: 12,
+                vertical: 8,
               )
             : EdgeInsets.symmetric(
                 horizontal: context.responsiveValue(
-                  mobile: 40.0,
-                  tablet: 48.0,
-                  desktop: 56.0,
+                  mobile: 24.0,
+                  tablet: 32.0,
+                  desktop: 40.0,
                 ),
-                vertical: 16,
+                vertical: 12,
               ));
 
     final textStyle =

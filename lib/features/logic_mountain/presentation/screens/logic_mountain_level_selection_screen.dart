@@ -1,129 +1,134 @@
+import 'package:brain_land/core/constants/game_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/text_styles.dart';
 import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
 import '../../providers/logic_game_provider.dart';
 import '../widgets/winding_logic_path.dart';
 
 /// Logic Mountain Level Selection Screen
-/// Shows 20 levels with purple gradient theme
+/// Shows 1000 levels with purple gradient theme and winding path
 class LogicMountainLevelSelectionScreen extends ConsumerWidget {
   const LogicMountainLevelSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final zoneProgressAsync = ref.watch(zoneProgressProvider('logic_mountain'));
     final levelsAsync = ref.watch(logicLevelsProvider);
+    final zoneProgressAsync = ref.watch(zoneProgressProvider('logic_mountain'));
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.indigo.shade900, Colors.purple.shade900],
-              ),
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF9C27B0), // Purple
+              Color(0xFF6A1B9A), // Dark Purple
+            ],
           ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              _buildHeader(context),
 
-          // Content
-          SafeArea(
-            child: Column(
-              children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
+              // Levels
+              Expanded(
+                child: levelsAsync.when(
+                  data: (levels) {
+                    return zoneProgressAsync.when(
+                      data: (zoneProgress) {
+                        final levelsCompleted =
+                            zoneProgress?.levelsCompleted ?? 0;
+                        return WindingLogicPath(
+                          levels: levels,
+                          levelsCompleted: levelsCompleted,
+                          onLevelTap: (levelId) =>
+                              _navigateToLevel(context, levelId),
+                        );
+                      },
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                      error: (error, stack) => Center(
+                        child: Text(
+                          'Error loading progress: $error',
+                          style: AppTextStyles.bodyLarge.copyWith(
                             color: Colors.white,
                           ),
-                          onPressed: () => context.pop(),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Logic Mountain',
-                              style: Theme.of(context).textTheme.headlineMedium!
-                                  .copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            zoneProgressAsync.when(
-                              data: (progress) => Text(
-                                '${progress?.levelsCompleted ?? 0}/1000 Levels Completed',
-                                style: Theme.of(context).textTheme.bodyMedium!
-                                    .copyWith(color: Colors.white70),
-                              ),
-                              loading: () => const SizedBox(
-                                height: 20,
-                                width: 100,
-                                child: LinearProgressIndicator(),
-                              ),
-                              error: (_, __) => const SizedBox(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    );
+                  },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
                   ),
-                ),
-
-                // Level Grid
-                Expanded(
-                  child: levelsAsync.when(
-                    data: (levels) {
-                      final levelsCompleted =
-                          zoneProgressAsync.value?.levelsCompleted ?? 0;
-
-                      return WindingLogicPath(
-                        levels: levels,
-                        levelsCompleted: levelsCompleted,
-                        onLevelTap: (levelId) {
-                          context.pushNamed(
-                            'logicGame',
-                            pathParameters: {'levelId': levelId},
-                          );
-                        },
-                      );
-                    },
-                    loading: () => const Center(
-                      child: CircularProgressIndicator(color: Colors.white),
-                    ),
-                    error: (error, stack) => Center(
-                      child: Text(
-                        'Error loading levels',
-                        style: const TextStyle(color: Colors.white),
+                  error: (error, stack) => Center(
+                    child: Text(
+                      'Error loading levels: $error',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
+              ),
 
-                // Banner Ad
-                const BannerAdWidget(),
-                const SizedBox(height: 8),
+              // Banner Ad
+              const BannerAdWidget(),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 32),
+            onPressed: () => context.go('/'),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            GameAssets.logicMountainEmoji,
+            style: const TextStyle(fontSize: 48),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Logic Mountain',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Puzzle Challenges',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _navigateToLevel(BuildContext context, String levelId) {
+    context.pushNamed('logicGame', pathParameters: {'levelId': levelId});
   }
 }

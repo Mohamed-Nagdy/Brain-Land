@@ -72,18 +72,40 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
       // Generate cards for the level
       final cards = generator.generateCards(level);
 
-      // Initialize game state with all cards face down
+      // Initialize game state with all cards face UP initially
+      final initialCards = cards
+          .map((c) => c.copyWith(state: CardState.faceUp))
+          .toList();
+
       state = MemoryGameState(
-        status: MemoryGameStatus.playing,
+        status: MemoryGameStatus
+            .playing, // Or a new status like 'preview' if needed, but playing is fine if we block input
         level: level,
-        cards: cards,
+        cards: initialCards,
         timeRemaining: level.timeLimit,
-        startTime: DateTime.now(),
+        startTime: DateTime.now(), // We might want to reset this after preview
       );
 
-      // Start timer if time limit is set
-      if (level.timeLimit > 0) {
-        _startTimer();
+      // Wait for 2 seconds to let user memorize
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Flip cards face down
+      if (mounted) {
+        // Check if notifier is still active
+        final faceDownCards = cards
+            .map((c) => c.copyWith(state: CardState.faceDown))
+            .toList();
+
+        state = state.copyWith(
+          cards: faceDownCards,
+          startTime:
+              DateTime.now(), // Reset start time so preview doesn't count
+        );
+
+        // Start timer if time limit is set
+        if (level.timeLimit > 0) {
+          _startTimer();
+        }
       }
     } catch (e) {
       state = MemoryGameState.error('Failed to start level: $e');

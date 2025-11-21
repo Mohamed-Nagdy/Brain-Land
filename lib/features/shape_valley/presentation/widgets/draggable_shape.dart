@@ -17,6 +17,7 @@ class DraggableShape extends StatefulWidget {
   final Function(String targetId)? onAccepted;
   final bool isEnabled;
   final double size;
+  final bool isHighlighted;
 
   const DraggableShape({
     super.key,
@@ -26,6 +27,7 @@ class DraggableShape extends StatefulWidget {
     this.onAccepted,
     this.isEnabled = true,
     this.size = 80.0,
+    this.isHighlighted = false,
   });
 
   @override
@@ -53,6 +55,17 @@ class _DraggableShapeState extends State<DraggableShape>
   }
 
   @override
+  void didUpdateWidget(DraggableShape oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isHighlighted && !oldWidget.isHighlighted) {
+      _controller.repeat(reverse: true);
+    } else if (!widget.isHighlighted && oldWidget.isHighlighted) {
+      _controller.stop();
+      _controller.reset();
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -61,21 +74,21 @@ class _DraggableShapeState extends State<DraggableShape>
   Color _getShapeColor() {
     switch (widget.shape.color) {
       case ShapeColor.red:
-        return Colors.red;
+        return const Color(0xFFFF6B6B); // Coral Red
       case ShapeColor.blue:
-        return Colors.blue;
+        return const Color(0xFF4ECDC4); // Turquoise Blue
       case ShapeColor.green:
-        return Colors.green;
+        return const Color(0xFF2ECC71); // Emerald Green
       case ShapeColor.yellow:
-        return Colors.yellow;
+        return const Color(0xFFFFD93D); // Sunny Yellow
       case ShapeColor.purple:
-        return Colors.purple;
+        return const Color(0xFF9B59B6); // Amethyst Purple
       case ShapeColor.orange:
-        return Colors.orange;
+        return const Color(0xFFFF9F43); // Tangerine Orange
       case ShapeColor.pink:
-        return Colors.pink;
+        return const Color(0xFFFF8FAB); // Light Pink
       case ShapeColor.cyan:
-        return Colors.cyan;
+        return const Color(0xFF00E5FF); // Bright Cyan
     }
   }
 
@@ -84,9 +97,10 @@ class _DraggableShapeState extends State<DraggableShape>
     final shapeSize =
         widget.size * (widget.shape.size / 2.0); // Scale by size property
 
+    Widget shapeWidget;
     switch (widget.shape.type) {
       case ShapeType.circle:
-        return Container(
+        shapeWidget = Container(
           width: shapeSize,
           height: shapeSize,
           decoration: BoxDecoration(
@@ -107,11 +121,15 @@ class _DraggableShapeState extends State<DraggableShape>
                       offset: const Offset(0, 5),
                     ),
                   ],
+            border: widget.isHighlighted
+                ? Border.all(color: Colors.white, width: 4)
+                : null,
           ),
         );
+        break;
 
       case ShapeType.square:
-        return Container(
+        shapeWidget = Container(
           width: shapeSize,
           height: shapeSize,
           decoration: BoxDecoration(
@@ -132,17 +150,26 @@ class _DraggableShapeState extends State<DraggableShape>
                       offset: const Offset(0, 5),
                     ),
                   ],
+            border: widget.isHighlighted
+                ? Border.all(color: Colors.white, width: 4)
+                : null,
           ),
         );
+        break;
 
       case ShapeType.triangle:
-        return CustomPaint(
+        shapeWidget = CustomPaint(
           size: Size(shapeSize, shapeSize),
-          painter: TrianglePainter(color: color, hasShadow: _isDragging),
+          painter: TrianglePainter(
+            color: color,
+            hasShadow: _isDragging,
+            isHighlighted: widget.isHighlighted,
+          ),
         );
+        break;
 
       case ShapeType.rectangle:
-        return Container(
+        shapeWidget = Container(
           width: shapeSize * 1.5,
           height: shapeSize,
           decoration: BoxDecoration(
@@ -163,33 +190,62 @@ class _DraggableShapeState extends State<DraggableShape>
                       offset: const Offset(0, 5),
                     ),
                   ],
+            border: widget.isHighlighted
+                ? Border.all(color: Colors.white, width: 4)
+                : null,
           ),
         );
+        break;
 
       case ShapeType.star:
-        return CustomPaint(
+        shapeWidget = CustomPaint(
           size: Size(shapeSize, shapeSize),
-          painter: StarPainter(color: color, hasShadow: _isDragging),
+          painter: StarPainter(
+            color: color,
+            hasShadow: _isDragging,
+            isHighlighted: widget.isHighlighted,
+          ),
         );
+        break;
 
       case ShapeType.heart:
-        return CustomPaint(
+        shapeWidget = CustomPaint(
           size: Size(shapeSize, shapeSize),
-          painter: HeartPainter(color: color, hasShadow: _isDragging),
+          painter: HeartPainter(
+            color: color,
+            hasShadow: _isDragging,
+            isHighlighted: widget.isHighlighted,
+          ),
         );
+        break;
 
       case ShapeType.diamond:
-        return CustomPaint(
+        shapeWidget = CustomPaint(
           size: Size(shapeSize, shapeSize),
-          painter: DiamondPainter(color: color, hasShadow: _isDragging),
+          painter: DiamondPainter(
+            color: color,
+            hasShadow: _isDragging,
+            isHighlighted: widget.isHighlighted,
+          ),
         );
+        break;
 
       case ShapeType.hexagon:
-        return CustomPaint(
+        shapeWidget = CustomPaint(
           size: Size(shapeSize, shapeSize),
-          painter: HexagonPainter(color: color, hasShadow: _isDragging),
+          painter: HexagonPainter(
+            color: color,
+            hasShadow: _isDragging,
+            isHighlighted: widget.isHighlighted,
+          ),
         );
+        break;
     }
+
+    if (widget.isHighlighted) {
+      return ScaleTransition(scale: _scaleAnimation, child: shapeWidget);
+    }
+    return shapeWidget;
   }
 
   @override
@@ -233,8 +289,13 @@ class _DraggableShapeState extends State<DraggableShape>
 class TrianglePainter extends CustomPainter {
   final Color color;
   final bool hasShadow;
+  final bool isHighlighted;
 
-  TrianglePainter({required this.color, this.hasShadow = false});
+  TrianglePainter({
+    required this.color,
+    this.hasShadow = false,
+    this.isHighlighted = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -250,6 +311,14 @@ class TrianglePainter extends CustomPainter {
     }
 
     canvas.drawPath(_getTrianglePath(size), paint);
+
+    if (isHighlighted) {
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4;
+      canvas.drawPath(_getTrianglePath(size), borderPaint);
+    }
   }
 
   Path _getTrianglePath(Size size) {
@@ -263,15 +332,22 @@ class TrianglePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(TrianglePainter oldDelegate) =>
-      color != oldDelegate.color || hasShadow != oldDelegate.hasShadow;
+      color != oldDelegate.color ||
+      hasShadow != oldDelegate.hasShadow ||
+      isHighlighted != oldDelegate.isHighlighted;
 }
 
 /// Custom painter for star shape
 class StarPainter extends CustomPainter {
   final Color color;
   final bool hasShadow;
+  final bool isHighlighted;
 
-  StarPainter({required this.color, this.hasShadow = false});
+  StarPainter({
+    required this.color,
+    this.hasShadow = false,
+    this.isHighlighted = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -287,6 +363,14 @@ class StarPainter extends CustomPainter {
     }
 
     canvas.drawPath(_getStarPath(size), paint);
+
+    if (isHighlighted) {
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4;
+      canvas.drawPath(_getStarPath(size), borderPaint);
+    }
   }
 
   Path _getStarPath(Size size) {
@@ -314,15 +398,22 @@ class StarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(StarPainter oldDelegate) =>
-      color != oldDelegate.color || hasShadow != oldDelegate.hasShadow;
+      color != oldDelegate.color ||
+      hasShadow != oldDelegate.hasShadow ||
+      isHighlighted != oldDelegate.isHighlighted;
 }
 
 /// Custom painter for heart shape
 class HeartPainter extends CustomPainter {
   final Color color;
   final bool hasShadow;
+  final bool isHighlighted;
 
-  HeartPainter({required this.color, this.hasShadow = false});
+  HeartPainter({
+    required this.color,
+    this.hasShadow = false,
+    this.isHighlighted = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -338,6 +429,14 @@ class HeartPainter extends CustomPainter {
     }
 
     canvas.drawPath(_getHeartPath(size), paint);
+
+    if (isHighlighted) {
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4;
+      canvas.drawPath(_getHeartPath(size), borderPaint);
+    }
   }
 
   Path _getHeartPath(Size size) {
@@ -379,15 +478,22 @@ class HeartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HeartPainter oldDelegate) =>
-      color != oldDelegate.color || hasShadow != oldDelegate.hasShadow;
+      color != oldDelegate.color ||
+      hasShadow != oldDelegate.hasShadow ||
+      isHighlighted != oldDelegate.isHighlighted;
 }
 
 /// Custom painter for diamond shape
 class DiamondPainter extends CustomPainter {
   final Color color;
   final bool hasShadow;
+  final bool isHighlighted;
 
-  DiamondPainter({required this.color, this.hasShadow = false});
+  DiamondPainter({
+    required this.color,
+    this.hasShadow = false,
+    this.isHighlighted = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -403,6 +509,14 @@ class DiamondPainter extends CustomPainter {
     }
 
     canvas.drawPath(_getDiamondPath(size), paint);
+
+    if (isHighlighted) {
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4;
+      canvas.drawPath(_getDiamondPath(size), borderPaint);
+    }
   }
 
   Path _getDiamondPath(Size size) {
@@ -417,15 +531,22 @@ class DiamondPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(DiamondPainter oldDelegate) =>
-      color != oldDelegate.color || hasShadow != oldDelegate.hasShadow;
+      color != oldDelegate.color ||
+      hasShadow != oldDelegate.hasShadow ||
+      isHighlighted != oldDelegate.isHighlighted;
 }
 
 /// Custom painter for hexagon shape
 class HexagonPainter extends CustomPainter {
   final Color color;
   final bool hasShadow;
+  final bool isHighlighted;
 
-  HexagonPainter({required this.color, this.hasShadow = false});
+  HexagonPainter({
+    required this.color,
+    this.hasShadow = false,
+    this.isHighlighted = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -441,6 +562,14 @@ class HexagonPainter extends CustomPainter {
     }
 
     canvas.drawPath(_getHexagonPath(size), paint);
+
+    if (isHighlighted) {
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4;
+      canvas.drawPath(_getHexagonPath(size), borderPaint);
+    }
   }
 
   Path _getHexagonPath(Size size) {
@@ -466,7 +595,9 @@ class HexagonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HexagonPainter oldDelegate) =>
-      color != oldDelegate.color || hasShadow != oldDelegate.hasShadow;
+      color != oldDelegate.color ||
+      hasShadow != oldDelegate.hasShadow ||
+      isHighlighted != oldDelegate.isHighlighted;
 }
 
 // Helper functions for trigonometry

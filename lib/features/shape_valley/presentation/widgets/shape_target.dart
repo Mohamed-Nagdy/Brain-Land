@@ -95,24 +95,22 @@ class _ShapeTargetWidgetState extends State<ShapeTargetWidget>
       return AppColors.shapeValleyOrange;
     }
     if (widget.target.isFilled) {
-      return AppColors.successGreen.withValues(alpha: 0.5);
+      return AppColors.successGreen;
     }
-    return AppColors.shapeValleyLight;
+    return Colors.grey.shade300; // Visible border for empty state
   }
 
   Color _getBackgroundColor() {
     if (_showFeedback) {
       return _isCorrect
-          ? AppColors.successGreen.withValues(alpha: 0.2)
-          : AppColors.errorRed.withValues(alpha: 0.2);
+          ? AppColors.successGreen.withValues(alpha: 0.1)
+          : AppColors.errorRed.withValues(alpha: 0.1);
     }
     if (_isHovering || widget.isHighlighted) {
-      return AppColors.shapeValleyOrange.withValues(alpha: 0.3);
+      return AppColors.shapeValleyOrange.withValues(alpha: 0.1);
     }
-    if (widget.target.isFilled) {
-      return AppColors.successGreen.withValues(alpha: 0.1);
-    }
-    return AppColors.shapeValleyLight.withValues(alpha: 0.2);
+    // Solid white background as requested
+    return Colors.white;
   }
 
   @override
@@ -157,9 +155,17 @@ class _ShapeTargetWidgetState extends State<ShapeTargetWidget>
                 height: 120,
                 decoration: BoxDecoration(
                   color: _getBackgroundColor(),
-                  border: Border.all(color: _getBorderColor(), width: 3),
-                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: _getBorderColor(),
+                    width: 3, // Thicker border
+                  ),
+                  borderRadius: BorderRadius.circular(20),
                   boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
                     if (_isHovering || widget.isHighlighted)
                       BoxShadow(
                         color: AppColors.shapeValleyOrange.withValues(
@@ -180,7 +186,7 @@ class _ShapeTargetWidgetState extends State<ShapeTargetWidget>
                         child: DraggableShape(
                           shape: widget.placedShape!,
                           isEnabled: false,
-                          size: 60,
+                          size: 70, // Slightly larger
                         ),
                       )
                     else
@@ -192,15 +198,16 @@ class _ShapeTargetWidgetState extends State<ShapeTargetWidget>
                           children: [
                             Icon(
                               _getTargetIcon(),
-                              size: 40,
-                              color: AppColors.shapeValleyOrange,
+                              size: 48, // Larger icon
+                              color: AppColors.shapeValleyDark, // Darker color
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 8),
                             Text(
                               widget.target.label,
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.textPrimary, // Darker text
+                                fontWeight: FontWeight.w800, // Bolder
+                                height: 1.2,
                               ),
                               textAlign: TextAlign.center,
                               maxLines: 2,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/models/zone.dart';
 import '../../../../shared/services/analytics_service.dart';
@@ -427,7 +428,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
       case 'memory_river':
         return [const Color(0xFF00BCD4), const Color(0xFF0097A7)];
       case 'shape_valley':
-        return [const Color(0xFF9C27B0), const Color(0xFF6A1B9A)];
+        return AppColors.shapeValleyGradient.colors;
       default:
         return [Colors.grey, Colors.grey.shade700];
     }

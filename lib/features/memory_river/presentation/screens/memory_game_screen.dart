@@ -1,21 +1,20 @@
+import 'dart:async';
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/audio_manager.dart';
+import '../../../../features/ads/services/interstitial_ad_service.dart';
+import '../../../../shared/widgets/fancy_button.dart';
+import '../../models/memory_card.dart';
 import '../../models/memory_game_state.dart';
 import '../../providers/memory_game_provider.dart';
 import '../widgets/memory_card_widget.dart';
 
-/// Memory Game Screen where players match pairs of cards
-/// Features:
-/// - Grid of memory cards
-/// - Card selection and flip logic
-/// - Match/mismatch animations
-/// - Moves counter
-/// - Timer display (if time limit exists)
-/// - Completion detection
 class MemoryGameScreen extends ConsumerStatefulWidget {
   final String levelId;
 
@@ -25,85 +24,225 @@ class MemoryGameScreen extends ConsumerStatefulWidget {
   ConsumerState<MemoryGameScreen> createState() => _MemoryGameScreenState();
 }
 
-class _MemoryGameScreenState extends ConsumerState<MemoryGameScreen> {
+class _MemoryGameScreenState extends ConsumerState<MemoryGameScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _bubbleController;
+  Timer? _timer;
+  final InterstitialAdService _interstitialAdService = InterstitialAdService();
+
   @override
   void initState() {
     super.initState();
+    // Start bubble animation
+    _bubbleController = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    )..repeat();
+
+    // Load Ads
+    _interstitialAdService.loadAd();
+
     // Start the level when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(memoryGameProvider(widget.levelId).notifier).startLevel();
+      _startTimer();
     });
+  }
+
+  @override
+  void dispose() {
+    _bubbleController.dispose();
+    _timer?.cancel();
+    _interstitialAdService.dispose();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final gameState = ref.read(memoryGameProvider(widget.levelId));
+      if (gameState.status == MemoryGameStatus.playing) {
+        // Just trigger rebuild to update timeSpent
+        setState(() {});
+      }
+    });
+  }
+
+  Future<void> _handleCardTap(MemoryCard card) async {
+    final notifier = ref.read(memoryGameProvider(widget.levelId).notifier);
+    notifier.selectCard(card.id);
   }
 
   @override
   Widget build(BuildContext context) {
     final gameState = ref.watch(memoryGameProvider(widget.levelId));
 
-    // Listen for level completion and navigate
+    // Listen for game completion
     ref.listen<MemoryGameState>(memoryGameProvider(widget.levelId), (
       previous,
       next,
-    ) {
+    ) async {
       if (next.status == MemoryGameStatus.completed &&
           previous?.status != MemoryGameStatus.completed) {
+        _timer?.cancel();
+        AudioManager.instance.playSound('level_complete.mp3');
+
+        // Show Ad before level complete dialog
+        await _interstitialAdService.show();
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            _navigateToLevelComplete();
+            _showLevelCompleteDialog(next);
           }
         });
       }
     });
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Animated background
-          Container(
-            decoration: BoxDecoration(gradient: AppColors.memoryRiverGradient),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.blue.shade300, Colors.blue.shade800],
           ),
-          // Floating water droplets animation
-          ...List.generate(8, (index) => _buildFloatingDroplet(index)),
-          // Game content
-          SafeArea(
-            child: gameState.status == MemoryGameStatus.loading
-                ? _buildLoadingState()
-                : gameState.status == MemoryGameStatus.error
-                ? _buildErrorState(gameState.errorMessage ?? 'Unknown error')
-                : gameState.status == MemoryGameStatus.playing ||
-                      gameState.status == MemoryGameStatus.paused
-                ? _buildGameState(gameState)
-                : _buildInitialState(),
-          ),
-        ],
+        ),
+        child: Stack(
+          children: [
+            // Rising Bubbles Animation
+            _buildBubbles(),
+
+            // Game content
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildHeader(gameState),
+                  Expanded(
+                    child: gameState.status == MemoryGameStatus.loading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : gameState.status == MemoryGameStatus.error
+                        ? _buildErrorState(
+                            gameState.errorMessage ?? 'Unknown error',
+                          )
+                        : gameState.status == MemoryGameStatus.playing ||
+                              gameState.status == MemoryGameStatus.paused ||
+                              gameState.status == MemoryGameStatus.completed
+                        ? _buildGrid(gameState)
+                        : _buildInitialState(),
+                  ),
+                  _buildFooter(gameState),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildLoadingState() {
-    return const Center(child: CircularProgressIndicator(color: Colors.white));
+  Widget _buildBubbles() {
+    return AnimatedBuilder(
+      animation: _bubbleController,
+      builder: (context, child) {
+        return Stack(
+          children: List.generate(10, (index) {
+            final random = math.Random(index);
+            final size = random.nextDouble() * 30 + 10;
+            final speed = random.nextDouble() * 0.5 + 0.5;
+            final initialX =
+                random.nextDouble() * MediaQuery.of(context).size.width;
+            final y =
+                MediaQuery.of(context).size.height *
+                (1 - ((_bubbleController.value * speed + index * 0.1) % 1));
+
+            return Positioned(
+              left: initialX,
+              top: y,
+              child: Opacity(
+                opacity: 0.3,
+                child: Container(
+                  width: size,
+                  height: size,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.4),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.2),
+                        blurRadius: 4,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  Widget _buildInitialState() {
+    return const SizedBox.shrink();
   }
 
   Widget _buildErrorState(String error) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
+      child: Container(
+        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.white),
+            const Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: AppColors.errorRed,
+            ),
             const SizedBox(height: 16),
             Text(
               'Oops!',
-              style: AppTextStyles.heading1.copyWith(color: Colors.white),
+              style: AppTextStyles.heading2.copyWith(
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               error,
-              style: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
+              ),
               onPressed: () => context.pop(),
               child: const Text('Go Back'),
             ),
@@ -113,142 +252,48 @@ class _MemoryGameScreenState extends ConsumerState<MemoryGameScreen> {
     );
   }
 
-  Widget _buildInitialState() {
-    return const Center(child: CircularProgressIndicator(color: Colors.white));
-  }
-
-  Widget _buildGameState(MemoryGameState gameState) {
-    if (gameState.level == null) {
-      return _buildErrorState('Level not found');
-    }
-
-    return Column(
-      children: [
-        // Header with stats and pause button
-        _buildHeader(gameState),
-
-        const SizedBox(height: 16),
-
-        // Memory cards grid
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildCardsGrid(gameState),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
   Widget _buildHeader(MemoryGameState gameState) {
-    return Container(
-      margin: const EdgeInsets.all(12.0),
+    return Padding(
       padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withValues(alpha: 0.3),
-            Colors.white.withValues(alpha: 0.15),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.4),
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Back button with fun design
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.3),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-              onPressed: () => _showExitDialog(),
-            ),
+          IconButton(
+            icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            onPressed: () => context.pop(),
           ),
-
-          // Stats in playful bubbles
-          Expanded(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildStatBubble(
-                  emoji: '✋',
-                  label: 'Moves',
-                  value: '${gameState.moves}',
-                  color: const Color(0xFFFF6B9D),
+                const Icon(Icons.timer, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  _formatTime(gameState.timeSpent),
+                  style: AppTextStyles.heading3.copyWith(color: Colors.white),
                 ),
-                const SizedBox(width: 12),
-                _buildStatBubble(
-                  emoji: '💝',
-                  label: 'Pairs',
-                  value:
-                      '${gameState.matchedPairs}/${gameState.level!.totalPairs}',
-                  color: const Color(0xFFFFA726),
-                ),
-                if (gameState.level!.timeLimit > 0) ...[
-                  const SizedBox(width: 12),
-                  _buildStatBubble(
-                    emoji: '⏱️',
-                    label: 'Time',
-                    value: _formatTime(gameState.timeRemaining),
-                    color: gameState.timeRemaining <= 10
-                        ? const Color(0xFFFF5252)
-                        : const Color(0xFF66BB6A),
-                    pulse: gameState.timeRemaining <= 10,
-                  ),
-                ],
               ],
             ),
           ),
-
-          // Pause button with fun design
           Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.3),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.star, color: Colors.yellow),
+                const SizedBox(width: 8),
+                Text(
+                  '${gameState.matchedPairs}',
+                  style: AppTextStyles.heading3.copyWith(color: Colors.white),
                 ),
               ],
-            ),
-            child: IconButton(
-              icon: Icon(
-                gameState.status == MemoryGameStatus.paused
-                    ? Icons.play_arrow_rounded
-                    : Icons.pause_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-              onPressed: () => _togglePause(),
             ),
           ),
         ],
@@ -256,193 +301,53 @@ class _MemoryGameScreenState extends ConsumerState<MemoryGameScreen> {
     );
   }
 
-  Widget _buildStatBubble({
-    required String emoji,
-    required String label,
-    required String value,
-    required Color color,
-    bool pulse = false,
-  }) {
-    Widget bubble = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [color, color.withValues(alpha: 0.7)],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.4),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
+  Widget _buildGrid(MemoryGameState gameState) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final crossAxisCount = _getCrossAxisCount(gameState.cards.length);
+        final aspectRatio = _getAspectRatio(crossAxisCount, constraints);
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: aspectRatio,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 24)),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  color: Colors.black26,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (pulse) {
-      return TweenAnimationBuilder<double>(
-        tween: Tween(begin: 1.0, end: 1.1),
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-        builder: (context, value, child) {
-          return Transform.scale(scale: value, child: child);
-        },
-        onEnd: () {
-          if (mounted) setState(() {});
-        },
-        child: bubble,
-      );
-    }
-
-    return bubble;
-  }
-
-  Widget _buildCardsGrid(MemoryGameState gameState) {
-    final level = gameState.level!;
-    final cards = gameState.cards;
-
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: level.gridColumns,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: cards.length,
-      itemBuilder: (context, index) {
-        final card = cards[index];
-        return MemoryCardWidget(
-          card: card,
-          onTap: () => _handleCardTap(card.id),
-          isEnabled:
-              gameState.status == MemoryGameStatus.playing &&
-              !gameState.hasTwoCardsSelected,
+          itemCount: gameState.cards.length,
+          itemBuilder: (context, index) {
+            final card = gameState.cards[index];
+            return MemoryCardWidget(
+              card: card,
+              onTap: () => _handleCardTap(card),
+              isPeeking: false,
+            );
+          },
         );
       },
     );
   }
 
-  void _handleCardTap(String cardId) {
-    ref.read(memoryGameProvider(widget.levelId).notifier).selectCard(cardId);
-  }
-
-  void _togglePause() {
-    final notifier = ref.read(memoryGameProvider(widget.levelId).notifier);
-    final state = ref.read(memoryGameProvider(widget.levelId));
-
-    if (state.status == MemoryGameStatus.paused) {
-      notifier.resumeGame();
-    } else {
-      notifier.pauseGame();
-      _showPauseDialog();
-    }
-  }
-
-  void _showPauseDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF42A5F5), Color(0xFF1E88E5)],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Text('⏸️', style: TextStyle(fontSize: 32)),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text(
-                'Take a Break!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E88E5),
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: const Text(
-          'Rest your brain! Resume when you\'re ready to continue 🧠✨',
-          style: TextStyle(fontSize: 16, color: Colors.black87),
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              backgroundColor: Colors.grey.shade200,
-            ),
+  Widget _buildFooter(MemoryGameState gameState) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FancyButton(
+            text: 'Restart',
             onPressed: () {
-              context.pop();
-              context.pop(); // Exit game screen
-            },
-            child: const Text(
-              'Exit',
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              backgroundColor: const Color(0xFF66BB6A),
-              elevation: 4,
-            ),
-            onPressed: () {
-              context.pop();
               ref
                   .read(memoryGameProvider(widget.levelId).notifier)
-                  .resumeGame();
+                  .startLevel();
+              _startTimer();
             },
-            child: const Text(
-              '▶️ Resume',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            icon: Icons.refresh,
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade400, Colors.orange.shade700],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
         ],
@@ -450,176 +355,155 @@ class _MemoryGameScreenState extends ConsumerState<MemoryGameScreen> {
     );
   }
 
-  void _showExitDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFF6B9D), Color(0xFFFF5252)],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Text('👋', style: TextStyle(fontSize: 32)),
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text(
-                'Leaving?',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFFF5252),
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: const Text(
-          'Your progress will be lost if you leave now. Are you sure? 🤔',
-          style: TextStyle(fontSize: 16, color: Colors.black87),
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              backgroundColor: Colors.grey.shade200,
-            ),
-            onPressed: () => context.pop(),
-            child: const Text(
-              'Stay',
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              backgroundColor: const Color(0xFFFF5252),
-              elevation: 4,
-            ),
-            onPressed: () {
-              context.pop();
-              context.pop();
-            },
-            child: const Text(
-              'Leave',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-    );
+  int _getCrossAxisCount(int itemCount) {
+    if (itemCount <= 6) return 2;
+    if (itemCount <= 12) return 3;
+    return 4;
   }
 
-  void _navigateToLevelComplete() {
-    final gameState = ref.read(memoryGameProvider(widget.levelId));
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Row(
-          children: [
-            const Text('🎉', style: TextStyle(fontSize: 32)),
-            const SizedBox(width: 12),
-            const Text('Level Complete!'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                3,
-                (index) => Icon(
-                  Icons.star,
-                  color: index < (gameState.level?.starsEarned ?? 0)
-                      ? Colors.amber
-                      : Colors.grey.shade300,
-                  size: 48,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text('Moves: ${gameState.moves}', style: AppTextStyles.bodyLarge),
-            Text(
-              'Time: ${_formatTime(gameState.timeSpent)}',
-              style: AppTextStyles.bodyMedium,
-            ),
-            Text(
-              'Pairs: ${gameState.matchedPairs}',
-              style: AppTextStyles.bodyMedium,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.pop(); // Close dialog
-              context.pop(); // Exit game
-            },
-            child: const Text('Back'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.pop(); // Close dialog
-              context.pop(); // Exit game
-              // Navigate to next level
-              final nextLevelNumber = (gameState.level?.levelNumber ?? 0) + 1;
-              context.pushNamed(
-                'memoryGame',
-                pathParameters: {'levelId': 'memory_$nextLevelNumber'},
-              );
-            },
-            child: const Text('Next Level'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFloatingDroplet(int index) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(seconds: 3 + index),
-      builder: (context, value, child) {
-        return Positioned(
-          left: (index * 50.0) % MediaQuery.of(context).size.width,
-          top: -20 + (value * (MediaQuery.of(context).size.height + 40)),
-          child: Opacity(
-            opacity: 0.3,
-            child: Text(
-              '💧',
-              style: TextStyle(fontSize: 20 + (index % 3) * 10),
-            ),
-          ),
-        );
-      },
-      onEnd: () {
-        if (mounted) {
-          setState(() {});
-        }
-      },
-    );
+  double _getAspectRatio(int crossAxisCount, BoxConstraints constraints) {
+    // Calculate roughly to keep cards somewhat square or standard card ratio
+    return 0.75; // 3:4 ratio
   }
 
   String _formatTime(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  void _showLevelCompleteDialog(MemoryGameState state) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('🎉', style: TextStyle(fontSize: 80)),
+              const SizedBox(height: 16),
+              Text(
+                'Level Complete!',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.heading2.copyWith(
+                  color: AppColors.memoryRiverPurple,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Stats Container
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Text('Pairs', style: AppTextStyles.bodySmall),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${state.matchedPairs}',
+                          style: AppTextStyles.heading3.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 1,
+                      height: 40,
+                      color: Colors.grey.shade300,
+                    ),
+                    Column(
+                      children: [
+                        Text('Time', style: AppTextStyles.bodySmall),
+                        const SizedBox(height: 4),
+                        Text(
+                          _formatTime(state.timeSpent),
+                          style: AppTextStyles.heading3.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 24),
+
+              // Stars
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) {
+                  final stars = state.level?.starsEarned ?? 0;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Icon(
+                      index < stars ? Icons.star : Icons.star_border,
+                      color: AppColors.starGold,
+                      size: 48,
+                    ),
+                  );
+                }),
+              ),
+
+              SizedBox(height: 32),
+
+              // Action Buttons
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  FancyButton(
+                    text: 'Next Level',
+                    onPressed: () {
+                      context.pop(); // Close dialog
+                      context.pop(); // Go back to level selection
+                      // Ideally navigate to next level directly, but for now back to map is safe
+                    },
+                    icon: Icons.arrow_forward_rounded,
+                    gradient: AppColors.memoryRiverGradient,
+                  ),
+                  const SizedBox(height: 12),
+                  FancyButton(
+                    text: 'Play Again',
+                    onPressed: () {
+                      context.pop(); // Close dialog
+                      ref
+                          .read(memoryGameProvider(widget.levelId).notifier)
+                          .startLevel();
+                      _startTimer();
+                    },
+                    icon: Icons.refresh,
+                    gradient: LinearGradient(
+                      colors: [Colors.orange.shade400, Colors.orange.shade700],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

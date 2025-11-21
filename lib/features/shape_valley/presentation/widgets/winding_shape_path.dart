@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../models/shape_level.dart';
 
@@ -68,7 +69,7 @@ class _WindingShapePathState extends State<WindingShapePath> {
             painter: PathPainter(
               itemCount: widget.levels.length,
               itemHeight: 120.0,
-              pathColor: const Color(0xFF9C27B0), // Purple
+              pathColor: AppColors.shapeValleyLight,
               width: constraints.maxWidth,
             ),
             child: SizedBox(
@@ -229,18 +230,14 @@ class _LevelNode extends StatelessWidget {
                           Color(0xFF1976D2),
                         ],
                       )
-                    : const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Color(0xFF9C27B0), Color(0xFF6A1B9A)],
-                      )
+                    : AppColors.shapeValleyGradient
               : LinearGradient(
                   colors: [Colors.grey.shade400, Colors.grey.shade600],
                 ),
           boxShadow: [
             BoxShadow(
               color: isUnlocked
-                  ? const Color(0xFF9C27B0).withValues(alpha: 0.4)
+                  ? AppColors.shapeValley.withValues(alpha: 0.4)
                   : Colors.black26,
               blurRadius: 8,
               offset: const Offset(0, 4),

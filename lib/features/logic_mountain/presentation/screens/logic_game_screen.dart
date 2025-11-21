@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../features/ads/services/interstitial_ad_service.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../models/logic_game_state.dart';
 import '../../models/pattern_problem.dart';
@@ -27,6 +28,7 @@ class _LogicGameScreenState extends ConsumerState<LogicGameScreen>
     with TickerProviderStateMixin {
   PatternElement? _selectedAnswer;
   bool _showHint = false;
+  final InterstitialAdService _adService = InterstitialAdService();
 
   // Animation controllers
   late AnimationController _backgroundController;
@@ -36,6 +38,9 @@ class _LogicGameScreenState extends ConsumerState<LogicGameScreen>
   @override
   void initState() {
     super.initState();
+
+    // Load Interstitial Ad
+    _adService.loadAd();
 
     // Background animation
     _backgroundController = AnimationController(
@@ -64,6 +69,7 @@ class _LogicGameScreenState extends ConsumerState<LogicGameScreen>
   void dispose() {
     _backgroundController.dispose();
     _confettiController.dispose();
+    _adService.dispose();
     super.dispose();
   }
 
@@ -83,10 +89,14 @@ class _LogicGameScreenState extends ConsumerState<LogicGameScreen>
     ref.listen<LogicGameState>(logicGameProvider(widget.levelId), (
       previous,
       next,
-    ) {
+    ) async {
       if (next.status == LogicGameStatus.completed &&
           previous?.status != LogicGameStatus.completed) {
         _spawnConfetti();
+
+        // Show Ad before level complete dialog
+        await _adService.show();
+
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) {
             _navigateToLevelComplete();

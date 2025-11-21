@@ -1,18 +1,16 @@
+import 'package:brain_land/core/constants/game_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../../../../shared/widgets/gradient_background.dart';
 import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
-import '../../models/math_level.dart';
 import '../../providers/math_storage_provider.dart';
 import '../widgets/winding_level_path.dart';
 
-/// Level Selection Screen for Math Forest zone
-/// Displays a grid of level cards with stars earned and unlock status
+/// Math Forest Level Selection Screen
+/// Shows 1000 levels with green gradient theme and winding path
 class LevelSelectionScreen extends ConsumerWidget {
   const LevelSelectionScreen({super.key});
 
@@ -22,15 +20,24 @@ class LevelSelectionScreen extends ConsumerWidget {
     final zoneProgressAsync = ref.watch(zoneProgressProvider('math_forest'));
 
     return Scaffold(
-      body: GradientBackground(
-        gradient: AppColors.mathForestGradient,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF4CAF50), // Green
+              Color(0xFF2E7D32), // Dark Green
+            ],
+          ),
+        ),
         child: SafeArea(
           child: Column(
             children: [
               // Header
               _buildHeader(context),
 
-              // Levels Grid
+              // Levels
               Expanded(
                 child: levelsAsync.when(
                   data: (levels) {
@@ -38,11 +45,11 @@ class LevelSelectionScreen extends ConsumerWidget {
                       data: (zoneProgress) {
                         final levelsCompleted =
                             zoneProgress?.levelsCompleted ?? 0;
-                        debugPrint('DEBUG: levelsCompleted=$levelsCompleted');
-                        return _buildLevelsGrid(
-                          context,
-                          levels,
-                          levelsCompleted,
+                        return WindingLevelPath(
+                          levels: levels,
+                          levelsCompleted: levelsCompleted,
+                          onLevelTap: (levelId) =>
+                              _navigateToLevel(context, levelId),
                         );
                       },
                       loading: () => const Center(
@@ -87,47 +94,37 @@ class LevelSelectionScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          // Back button
           IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 32),
             onPressed: () => context.go('/'),
-            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
           ),
-          const SizedBox(width: 8),
-          // Title
-          Expanded(
+          const SizedBox(width: 12),
+          Text(
+            GameAssets.mathForestEmoji,
+            style: const TextStyle(fontSize: 48),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Math Forest',
-                  style: AppTextStyles.heading1.copyWith(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Choose a level to play',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.white.withValues(alpha: 0.9),
-                  ),
+                  'Number Adventures',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildLevelsGrid(
-    BuildContext context,
-    List<MathLevel> levels,
-    int levelsCompleted,
-  ) {
-    return WindingLevelPath(
-      levels: levels,
-      levelsCompleted: levelsCompleted,
-      onLevelTap: (levelId) => _navigateToLevel(context, levelId),
     );
   }
 

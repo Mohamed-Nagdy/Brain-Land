@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../features/ads/services/interstitial_ad_service.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/gradient_background.dart';
 import '../../models/math_game_state.dart';
@@ -36,6 +37,7 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
   int? _selectedAnswer;
   bool? _isCorrect;
   bool _showCelebration = false;
+  final InterstitialAdService _adService = InterstitialAdService();
 
   @override
   void initState() {
@@ -43,10 +45,19 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
     // Play Math Forest zone music
     AudioManager.instance.playMusic(MusicTrack.mathForest.path);
 
+    // Load Interstitial Ad
+    _adService.loadAd();
+
     // Start the level when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(mathGameProvider(widget.levelId).notifier).startLevel();
     });
+  }
+
+  @override
+  void dispose() {
+    _adService.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,9 +68,12 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
     ref.listen<MathGameState>(mathGameProvider(widget.levelId), (
       previous,
       next,
-    ) {
+    ) async {
       if (next.status == GameStatus.completed &&
           previous?.status != GameStatus.completed) {
+        // Show Ad before level complete dialog
+        await _adService.show();
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             _navigateToLevelComplete();
