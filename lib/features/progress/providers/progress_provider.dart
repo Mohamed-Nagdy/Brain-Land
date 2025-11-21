@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/models/player_progress.dart';
 import '../../../shared/models/zone_progress.dart';
+import '../services/debug_progress_helper.dart';
 import '../services/progress_storage_service.dart';
 
 part 'progress_provider.g.dart';
@@ -12,6 +13,13 @@ part 'progress_provider.g.dart';
 @riverpod
 ProgressStorageService progressStorageService(ProgressStorageServiceRef ref) {
   return ProgressStorageService();
+}
+
+/// Provider for DebugProgressHelper (only in debug mode)
+@riverpod
+DebugProgressHelper? debugProgressHelper(DebugProgressHelperRef ref) {
+  final helper = DebugProgressHelper(ref.read(progressStorageServiceProvider));
+  return helper.isDebugMode ? helper : null;
 }
 
 /// Progress state notifier

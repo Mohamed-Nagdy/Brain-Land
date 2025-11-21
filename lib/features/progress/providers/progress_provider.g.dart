@@ -26,6 +26,25 @@ final progressStorageServiceProvider =
 
 typedef ProgressStorageServiceRef
     = AutoDisposeProviderRef<ProgressStorageService>;
+String _$debugProgressHelperHash() =>
+    r'e06d54537880a3503b843b0c0efc0a9f5c140066';
+
+/// Provider for DebugProgressHelper (only in debug mode)
+///
+/// Copied from [debugProgressHelper].
+@ProviderFor(debugProgressHelper)
+final debugProgressHelperProvider =
+    AutoDisposeProvider<DebugProgressHelper?>.internal(
+  debugProgressHelper,
+  name: r'debugProgressHelperProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugProgressHelperHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DebugProgressHelperRef = AutoDisposeProviderRef<DebugProgressHelper?>;
 String _$totalStarsHash() => r'b8a9b84d3ad437db1f86d910aaa029d327a51e54';
 
 /// Provider for total stars

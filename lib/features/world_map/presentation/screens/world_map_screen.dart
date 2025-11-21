@@ -83,6 +83,9 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
 
           // Animated character
           _buildAnimatedCharacter(),
+
+          // Floating action buttons
+          _buildFloatingActionButtons(context),
         ],
       ),
     );
@@ -450,6 +453,105 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
       default:
         return '❓';
     }
+  }
+
+  Widget _buildFloatingActionButtons(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Settings button
+              _buildFancyFAB(
+                emoji: '⚙️',
+                label: 'Settings',
+                colors: [const Color(0xFF667EEA), const Color(0xFF764BA2)],
+                onTap: () => context.push('/settings'),
+              ),
+              // Daily Rewards button (center)
+              _buildFancyFAB(
+                emoji: '🎁',
+                label: 'Rewards',
+                colors: [const Color(0xFFFFD700), const Color(0xFFFFC371)],
+                onTap: () => context.pushNamed("dailyReward"),
+              ),
+              // Progress button
+              _buildFancyFAB(
+                emoji: '📊',
+                label: 'Progress',
+                colors: [const Color(0xFFF093FB), const Color(0xFFF5576C)],
+                onTap: () => context.push('/progress'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFancyFAB({
+    required String emoji,
+    required String label,
+    required List<Color> colors,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.elasticOut,
+        builder: (context, value, child) {
+          return Transform.scale(
+            scale: value,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: colors,
+                ),
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors[0].withValues(alpha: 0.5),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(emoji, style: const TextStyle(fontSize: 24)),
+                  const SizedBox(width: 8),
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   void _navigateToZone(BuildContext context, String zoneId) {

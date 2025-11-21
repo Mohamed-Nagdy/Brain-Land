@@ -225,6 +225,12 @@ class ProgressStorageService {
 
   /// Create default progress for new players
   PlayerProgress _createDefaultProgress() {
+    // In debug mode, use sample data for testing
+    if (const bool.fromEnvironment('dart.vm.product') == false) {
+      return _createSampleProgress();
+    }
+
+    // Production: empty progress
     final now = DateTime.now();
     return PlayerProgress(
       playerId: 'player_${now.millisecondsSinceEpoch}',
@@ -238,6 +244,73 @@ class ProgressStorageService {
       lastLoginDate: now,
       totalPlayTime: 0,
       createdAt: now,
+      updatedAt: now,
+    );
+  }
+
+  /// Create sample progress for testing/development
+  /// Only used in debug mode
+  PlayerProgress _createSampleProgress() {
+    final now = DateTime.now();
+    return PlayerProgress(
+      playerId: 'player_${now.millisecondsSinceEpoch}',
+      totalStars: 187,
+      totalCoins: 425,
+      zoneProgress: {
+        'forest': ZoneProgress(
+          zoneId: 'forest',
+          levelsCompleted: 8,
+          totalStars: 72,
+          bestAccuracy: 95,
+          lastPlayedAt: now.subtract(const Duration(hours: 2)),
+        ),
+        'mountain': ZoneProgress(
+          zoneId: 'mountain',
+          levelsCompleted: 5,
+          totalStars: 45,
+          bestAccuracy: 88,
+          lastPlayedAt: now.subtract(const Duration(hours: 5)),
+        ),
+        'river': ZoneProgress(
+          zoneId: 'river',
+          levelsCompleted: 4,
+          totalStars: 36,
+          bestAccuracy: 92,
+          lastPlayedAt: now.subtract(const Duration(days: 1)),
+        ),
+        'desert': ZoneProgress(
+          zoneId: 'desert',
+          levelsCompleted: 3,
+          totalStars: 27,
+          bestAccuracy: 85,
+          lastPlayedAt: now.subtract(const Duration(days: 2)),
+        ),
+        'shape_valley': ZoneProgress(
+          zoneId: 'shape_valley',
+          levelsCompleted: 1,
+          totalStars: 7,
+          bestAccuracy: 78,
+          lastPlayedAt: now.subtract(const Duration(days: 3)),
+        ),
+      },
+      unlockedPets: ['pet_dog', 'pet_cat', 'pet_bird'],
+      unlockedStickers: [
+        'sticker_star',
+        'sticker_heart',
+        'sticker_smile',
+        'sticker_trophy',
+        'sticker_rainbow',
+      ],
+      unlockedAvatarItems: [
+        'hat_wizard',
+        'glasses_cool',
+        'shirt_hero',
+        'shoes_sneakers',
+      ],
+      currentStreak: 4,
+      lastLoginDate: now,
+      totalPlayTime: 2700, // 45 minutes
+      createdAt: now.subtract(const Duration(days: 4)),
       updatedAt: now,
     );
   }
