@@ -263,29 +263,42 @@ class AppRouter {
       key: state.pageKey,
       child: child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        // Slide + Fade transition
-        const begin = Offset(0.0, 0.1);
+        // Enhanced playful transition with scale + slide + fade
+        const begin = Offset(0.0, 0.15);
         const end = Offset.zero;
-        const curve = Curves.easeInOut;
+
+        // Use elastic curve for bouncy, child-friendly feel
+        const curve = Curves.easeOutCubic;
 
         final slideTween = Tween(
           begin: begin,
           end: end,
         ).chain(CurveTween(curve: curve));
+
         final fadeTween = Tween<double>(
           begin: 0.0,
           end: 1.0,
-        ).chain(CurveTween(curve: curve));
+        ).chain(CurveTween(curve: Curves.easeIn));
+
+        // Add subtle scale for more dynamic feel
+        final scaleTween = Tween<double>(
+          begin: 0.92,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOutBack));
 
         return SlideTransition(
           position: animation.drive(slideTween),
           child: FadeTransition(
             opacity: animation.drive(fadeTween),
-            child: child,
+            child: ScaleTransition(
+              scale: animation.drive(scaleTween),
+              child: child,
+            ),
           ),
         );
       },
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 500),
+      reverseTransitionDuration: const Duration(milliseconds: 350),
     );
   }
 }

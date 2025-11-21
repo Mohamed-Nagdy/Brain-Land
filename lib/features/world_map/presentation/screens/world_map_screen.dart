@@ -451,8 +451,9 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
             children: [
               // Settings button
               _buildFancyFAB(

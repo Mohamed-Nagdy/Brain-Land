@@ -1,188 +1,192 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/colors.dart';
 
 /// AppTextStyles defines the typography system for BrainLand
-/// Includes child-friendly fonts with good readability
+/// Uses Fredoka font for child-friendly readability
 class AppTextStyles {
   // Prevent instantiation
   AppTextStyles._();
 
+  // Base font family
+  static final String _fontFamily = GoogleFonts.fredoka().fontFamily!;
+
   // Headings - Bold and playful
-  static const heading1 = TextStyle(
+  static final heading1 = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     letterSpacing: 0.5,
     height: 1.2,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const heading2 = TextStyle(
+  static final heading2 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     letterSpacing: 0.3,
     height: 1.3,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const heading3 = TextStyle(
+  static final heading3 = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     letterSpacing: 0.2,
     height: 1.3,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const heading4 = TextStyle(
+  static final heading4 = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.4,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Body text - Clear and readable
-  static const bodyLarge = TextStyle(
+  static final bodyLarge = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
     height: 1.5,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const bodyMedium = TextStyle(
+  static final bodyMedium = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
     height: 1.5,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const bodySmall = TextStyle(
+  static final bodySmall = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
     height: 1.5,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Secondary text - Less prominent
-  static const caption = TextStyle(
+  static final caption = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
     height: 1.4,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const overline = TextStyle(
+  static final overline = TextStyle(
     fontSize: 10,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     letterSpacing: 1.5,
     height: 1.6,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Button text - Bold and prominent
-  static const button = TextStyle(
+  static final button = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.bold,
     color: Colors.white,
     letterSpacing: 1.0,
     height: 1.2,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const buttonSmall = TextStyle(
+  static final buttonSmall = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: Colors.white,
     letterSpacing: 0.8,
     height: 1.2,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Numbers in games - Extra large and clear
-  static const gameNumber = TextStyle(
+  static final gameNumber = TextStyle(
     fontSize: 48,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const gameNumberLarge = TextStyle(
+  static final gameNumberLarge = TextStyle(
     fontSize: 64,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const gameNumberSmall = TextStyle(
+  static final gameNumberSmall = TextStyle(
     fontSize: 36,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Special text styles
-  static const title = TextStyle(
+  static final title = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     letterSpacing: 0.5,
     height: 1.2,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const subtitle = TextStyle(
+  static final subtitle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.4,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Score and stats text
-  static const score = TextStyle(
+  static final score = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.0,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const stat = TextStyle(
+  static final stat = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.2,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Label text
-  static const label = TextStyle(
+  static final label = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     letterSpacing: 0.5,
     height: 1.4,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
-  static const labelBold = TextStyle(
+  static final labelBold = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     letterSpacing: 0.5,
     height: 1.4,
-    fontFamily: 'Comic Sans MS',
+    fontFamily: _fontFamily,
   );
 
   // Helper methods for color variations

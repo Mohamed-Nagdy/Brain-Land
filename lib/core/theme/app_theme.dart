@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/app_constants.dart';
 import '../constants/colors.dart';
@@ -23,7 +24,7 @@ class AppTheme {
         error: AppColors.errorRed,
       ),
       useMaterial3: true,
-      fontFamily: 'Comic Sans MS',
+      fontFamily: GoogleFonts.fredoka().fontFamily,
 
       // Background
       scaffoldBackgroundColor: AppColors.background,
