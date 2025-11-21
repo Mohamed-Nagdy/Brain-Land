@@ -6,13 +6,13 @@ part of 'streak_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dailyRewardsHash() => r'fd252a147945e33d9d1993835b100ddccc57eea2';
+String _$dailyRewardsHash() => r'dd475654bf57c85642f33a1ec161e689728ca7ec';
 
-/// Provider for daily rewards (7-day cycle)
+/// Provider for daily rewards (30-day cycle)
 ///
 /// Copied from [dailyRewards].
 @ProviderFor(dailyRewards)
-final dailyRewardsProvider = AutoDisposeProvider<List<DailyReward>>.internal(
+final dailyRewardsProvider = Provider<List<DailyReward>>.internal(
   dailyRewards,
   name: r'dailyRewardsProvider',
   debugGetCreateSourceHash:
@@ -21,14 +21,14 @@ final dailyRewardsProvider = AutoDisposeProvider<List<DailyReward>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef DailyRewardsRef = AutoDisposeProviderRef<List<DailyReward>>;
-String _$todaysRewardHash() => r'2dc7eee29b576e0a59863760e560eafee21ffa91';
+typedef DailyRewardsRef = ProviderRef<List<DailyReward>>;
+String _$todaysRewardHash() => r'7bb07604f2d4109192635b5f7cce96b29cdca8f0';
 
 /// Provider for today's reward based on current streak
 ///
 /// Copied from [todaysReward].
 @ProviderFor(todaysReward)
-final todaysRewardProvider = AutoDisposeFutureProvider<DailyReward?>.internal(
+final todaysRewardProvider = FutureProvider<DailyReward?>.internal(
   todaysReward,
   name: r'todaysRewardProvider',
   debugGetCreateSourceHash:
@@ -37,14 +37,14 @@ final todaysRewardProvider = AutoDisposeFutureProvider<DailyReward?>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef TodaysRewardRef = AutoDisposeFutureProviderRef<DailyReward?>;
-String _$hasLoggedInTodayHash() => r'30fac6cdd2d81e527b5727ba117be9b3529a6d0e';
+typedef TodaysRewardRef = FutureProviderRef<DailyReward?>;
+String _$hasLoggedInTodayHash() => r'1471781944ebf9245789bff844cea6cc29999784';
 
 /// Provider to check if user has logged in today
 ///
 /// Copied from [hasLoggedInToday].
 @ProviderFor(hasLoggedInToday)
-final hasLoggedInTodayProvider = AutoDisposeFutureProvider<bool>.internal(
+final hasLoggedInTodayProvider = FutureProvider<bool>.internal(
   hasLoggedInToday,
   name: r'hasLoggedInTodayProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -54,15 +54,14 @@ final hasLoggedInTodayProvider = AutoDisposeFutureProvider<bool>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef HasLoggedInTodayRef = AutoDisposeFutureProviderRef<bool>;
-String _$streakCalendarHash() => r'b9abceb63c66b9d69385ee9867b1dc03b30ed019';
+typedef HasLoggedInTodayRef = FutureProviderRef<bool>;
+String _$streakCalendarHash() => r'd754f69514423f8ec8e025f0145476bc10517a76';
 
 /// Provider for streak calendar (last 7 days)
 ///
 /// Copied from [streakCalendar].
 @ProviderFor(streakCalendar)
-final streakCalendarProvider =
-    AutoDisposeFutureProvider<List<DateTime>>.internal(
+final streakCalendarProvider = FutureProvider<List<DateTime>>.internal(
   streakCalendar,
   name: r'streakCalendarProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -72,8 +71,8 @@ final streakCalendarProvider =
   allTransitiveDependencies: null,
 );
 
-typedef StreakCalendarRef = AutoDisposeFutureProviderRef<List<DateTime>>;
-String _$isDateInStreakHash() => r'339736ce69cd0e4d286be20841b86502015310f8';
+typedef StreakCalendarRef = FutureProviderRef<List<DateTime>>;
+String _$isDateInStreakHash() => r'e6f9acf28c412dfe74ce8d8e93a725a691da3254';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -149,7 +148,7 @@ class IsDateInStreakFamily extends Family<AsyncValue<bool>> {
 /// Provider to check if a specific date is in the streak
 ///
 /// Copied from [isDateInStreak].
-class IsDateInStreakProvider extends AutoDisposeFutureProvider<bool> {
+class IsDateInStreakProvider extends FutureProvider<bool> {
   /// Provider to check if a specific date is in the streak
   ///
   /// Copied from [isDateInStreak].
@@ -203,7 +202,7 @@ class IsDateInStreakProvider extends AutoDisposeFutureProvider<bool> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<bool> createElement() {
+  FutureProviderElement<bool> createElement() {
     return _IsDateInStreakProviderElement(this);
   }
 
@@ -221,20 +220,20 @@ class IsDateInStreakProvider extends AutoDisposeFutureProvider<bool> {
   }
 }
 
-mixin IsDateInStreakRef on AutoDisposeFutureProviderRef<bool> {
+mixin IsDateInStreakRef on FutureProviderRef<bool> {
   /// The parameter `date` of this provider.
   DateTime get date;
 }
 
-class _IsDateInStreakProviderElement
-    extends AutoDisposeFutureProviderElement<bool> with IsDateInStreakRef {
+class _IsDateInStreakProviderElement extends FutureProviderElement<bool>
+    with IsDateInStreakRef {
   _IsDateInStreakProviderElement(super.provider);
 
   @override
   DateTime get date => (origin as IsDateInStreakProvider).date;
 }
 
-String _$streakNotifierHash() => r'ed3ca971ea8d413ec086c57cb8212a87cb977bd5';
+String _$streakNotifierHash() => r'2d9bfabbdab1748fe61b6a627ed73a6c3083cff9';
 
 /// Streak state notifier
 ///

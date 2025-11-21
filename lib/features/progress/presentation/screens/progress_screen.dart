@@ -104,10 +104,6 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                           _buildZoneProgressSection(progress),
                           const SizedBox(height: 24),
 
-                          // Unlocked items section
-                          _buildUnlockedItemsSection(progress),
-                          const SizedBox(height: 24),
-
                           // Achievement badges section
                           _buildAchievementsSection(progress),
                           const SizedBox(height: 24),
@@ -466,136 +462,6 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildUnlockedItemsSection(progress) {
-    final totalItems =
-        progress.unlockedPets.length +
-        progress.unlockedStickers.length +
-        progress.unlockedAvatarItems.length;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withValues(alpha: 0.9),
-            Colors.white.withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Text('🎁', style: TextStyle(fontSize: 32)),
-              SizedBox(width: 12),
-              Text(
-                'Unlocked Items',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2D3436),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildItemRow(
-            '🐾 Pets',
-            progress.unlockedPets.length,
-            const Color(0xFF9B59B6),
-          ),
-          const SizedBox(height: 12),
-          _buildItemRow(
-            '😊 Stickers',
-            progress.unlockedStickers.length,
-            const Color(0xFFE91E63),
-          ),
-          const SizedBox(height: 12),
-          _buildItemRow(
-            '👕 Avatar Items',
-            progress.unlockedAvatarItems.length,
-            const Color(0xFF3498DB),
-          ),
-          const Divider(height: 24, thickness: 2),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Total Items 🎉',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2D3436),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF43E97B), Color(0xFF38F9D7)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  '$totalItems',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildItemRow(String label, int count, Color color) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
-          ),
-          child: Text(
-            '$count',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildAchievementsSection(progress) {
     final achievements = [
       _Achievement(
@@ -620,14 +486,10 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         colors: [const Color(0xFFFF6B6B), const Color(0xFFFF8E53)],
       ),
       _Achievement(
-        name: 'Collector',
-        description: 'Unlock 10 items',
-        emoji: '🎁',
-        isUnlocked:
-            (progress.unlockedPets.length +
-                progress.unlockedStickers.length +
-                progress.unlockedAvatarItems.length) >=
-            10,
+        name: 'Coin Master',
+        description: 'Collect 1000 coins',
+        emoji: '🪙',
+        isUnlocked: progress.totalCoins >= 1000,
         colors: [const Color(0xFF9B59B6), const Color(0xFFE91E63)],
       ),
     ];

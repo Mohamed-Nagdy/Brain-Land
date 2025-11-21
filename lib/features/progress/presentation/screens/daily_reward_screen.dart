@@ -330,7 +330,7 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
               Text('📅', style: TextStyle(fontSize: 28)),
               SizedBox(width: 12),
               Text(
-                '7-Day Reward Calendar',
+                '30-Day Reward Calendar',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -654,7 +654,7 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
                   ),
 
                 // Streak bonus indicator
-                if (reward.day == 7)
+                if (reward.day == 30)
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Container(
@@ -674,7 +674,7 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
                           Text('🔥', style: TextStyle(fontSize: 20)),
                           SizedBox(width: 8),
                           Text(
-                            'Weekly Streak Bonus!',
+                            'Monthly Streak Bonus!',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

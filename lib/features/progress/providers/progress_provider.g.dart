@@ -7,14 +7,14 @@ part of 'progress_provider.dart';
 // **************************************************************************
 
 String _$progressStorageServiceHash() =>
-    r'80dca1559565b5203dfd47d6a002a8f82b02259b';
+    r'ad5614c6e4edfa1e3ad8758dfdece20ea78eef18';
 
 /// Provider for ProgressStorageService
 ///
 /// Copied from [progressStorageService].
 @ProviderFor(progressStorageService)
 final progressStorageServiceProvider =
-    AutoDisposeProvider<ProgressStorageService>.internal(
+    Provider<ProgressStorageService>.internal(
   progressStorageService,
   name: r'progressStorageServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,17 +24,15 @@ final progressStorageServiceProvider =
   allTransitiveDependencies: null,
 );
 
-typedef ProgressStorageServiceRef
-    = AutoDisposeProviderRef<ProgressStorageService>;
+typedef ProgressStorageServiceRef = ProviderRef<ProgressStorageService>;
 String _$debugProgressHelperHash() =>
-    r'e06d54537880a3503b843b0c0efc0a9f5c140066';
+    r'89150b9c9e02b1bf688dd3ae8f9ed9afcf7c4f5a';
 
 /// Provider for DebugProgressHelper (only in debug mode)
 ///
 /// Copied from [debugProgressHelper].
 @ProviderFor(debugProgressHelper)
-final debugProgressHelperProvider =
-    AutoDisposeProvider<DebugProgressHelper?>.internal(
+final debugProgressHelperProvider = Provider<DebugProgressHelper?>.internal(
   debugProgressHelper,
   name: r'debugProgressHelperProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -44,14 +42,14 @@ final debugProgressHelperProvider =
   allTransitiveDependencies: null,
 );
 
-typedef DebugProgressHelperRef = AutoDisposeProviderRef<DebugProgressHelper?>;
-String _$totalStarsHash() => r'b8a9b84d3ad437db1f86d910aaa029d327a51e54';
+typedef DebugProgressHelperRef = ProviderRef<DebugProgressHelper?>;
+String _$totalStarsHash() => r'10467fe0f45319698ae1bd6e12da2472e6937e22';
 
 /// Provider for total stars
 ///
 /// Copied from [totalStars].
 @ProviderFor(totalStars)
-final totalStarsProvider = AutoDisposeFutureProvider<int>.internal(
+final totalStarsProvider = FutureProvider<int>.internal(
   totalStars,
   name: r'totalStarsProvider',
   debugGetCreateSourceHash:
@@ -60,14 +58,14 @@ final totalStarsProvider = AutoDisposeFutureProvider<int>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef TotalStarsRef = AutoDisposeFutureProviderRef<int>;
-String _$totalCoinsHash() => r'163d6b4e9d0466aa9c6e66bb43f1ec831339331e';
+typedef TotalStarsRef = FutureProviderRef<int>;
+String _$totalCoinsHash() => r'9ce207026ea3605eede9887c7ca6ed5b788e7535';
 
 /// Provider for total coins
 ///
 /// Copied from [totalCoins].
 @ProviderFor(totalCoins)
-final totalCoinsProvider = AutoDisposeFutureProvider<int>.internal(
+final totalCoinsProvider = FutureProvider<int>.internal(
   totalCoins,
   name: r'totalCoinsProvider',
   debugGetCreateSourceHash:
@@ -76,14 +74,14 @@ final totalCoinsProvider = AutoDisposeFutureProvider<int>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef TotalCoinsRef = AutoDisposeFutureProviderRef<int>;
-String _$currentStreakHash() => r'9cc29439db51020d0c8c33769a9735b0575bae33';
+typedef TotalCoinsRef = FutureProviderRef<int>;
+String _$currentStreakHash() => r'1045b295a850d907d1022a4b7a5d8e246110ab2a';
 
 /// Provider for current streak
 ///
 /// Copied from [currentStreak].
 @ProviderFor(currentStreak)
-final currentStreakProvider = AutoDisposeFutureProvider<int>.internal(
+final currentStreakProvider = FutureProvider<int>.internal(
   currentStreak,
   name: r'currentStreakProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -93,8 +91,8 @@ final currentStreakProvider = AutoDisposeFutureProvider<int>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef CurrentStreakRef = AutoDisposeFutureProviderRef<int>;
-String _$zoneProgressHash() => r'a3f933b57a577fc95ed5d6d41f5bda1d3ed016be';
+typedef CurrentStreakRef = FutureProviderRef<int>;
+String _$zoneProgressHash() => r'109923e2bdef8e7fb773f2215b69c2670e1908ba';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -170,7 +168,7 @@ class ZoneProgressFamily extends Family<AsyncValue<ZoneProgress?>> {
 /// Provider for zone progress
 ///
 /// Copied from [zoneProgress].
-class ZoneProgressProvider extends AutoDisposeFutureProvider<ZoneProgress?> {
+class ZoneProgressProvider extends FutureProvider<ZoneProgress?> {
   /// Provider for zone progress
   ///
   /// Copied from [zoneProgress].
@@ -224,7 +222,7 @@ class ZoneProgressProvider extends AutoDisposeFutureProvider<ZoneProgress?> {
   }
 
   @override
-  AutoDisposeFutureProviderElement<ZoneProgress?> createElement() {
+  FutureProviderElement<ZoneProgress?> createElement() {
     return _ZoneProgressProviderElement(this);
   }
 
@@ -242,13 +240,12 @@ class ZoneProgressProvider extends AutoDisposeFutureProvider<ZoneProgress?> {
   }
 }
 
-mixin ZoneProgressRef on AutoDisposeFutureProviderRef<ZoneProgress?> {
+mixin ZoneProgressRef on FutureProviderRef<ZoneProgress?> {
   /// The parameter `zoneId` of this provider.
   String get zoneId;
 }
 
-class _ZoneProgressProviderElement
-    extends AutoDisposeFutureProviderElement<ZoneProgress?>
+class _ZoneProgressProviderElement extends FutureProviderElement<ZoneProgress?>
     with ZoneProgressRef {
   _ZoneProgressProviderElement(super.provider);
 
@@ -257,7 +254,7 @@ class _ZoneProgressProviderElement
 }
 
 String _$zoneCompletionPercentageHash() =>
-    r'0ac30ad448e17cf7c6bb7c0df2ac0931e6c7834b';
+    r'147e3781de8e194b705559a7073c2ef8a5ab9c5f';
 
 /// Provider for zone completion percentage
 ///
@@ -315,8 +312,7 @@ class ZoneCompletionPercentageFamily extends Family<AsyncValue<double>> {
 /// Provider for zone completion percentage
 ///
 /// Copied from [zoneCompletionPercentage].
-class ZoneCompletionPercentageProvider
-    extends AutoDisposeFutureProvider<double> {
+class ZoneCompletionPercentageProvider extends FutureProvider<double> {
   /// Provider for zone completion percentage
   ///
   /// Copied from [zoneCompletionPercentage].
@@ -376,7 +372,7 @@ class ZoneCompletionPercentageProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<double> createElement() {
+  FutureProviderElement<double> createElement() {
     return _ZoneCompletionPercentageProviderElement(this);
   }
 
@@ -397,7 +393,7 @@ class ZoneCompletionPercentageProvider
   }
 }
 
-mixin ZoneCompletionPercentageRef on AutoDisposeFutureProviderRef<double> {
+mixin ZoneCompletionPercentageRef on FutureProviderRef<double> {
   /// The parameter `zoneId` of this provider.
   String get zoneId;
 
@@ -406,8 +402,7 @@ mixin ZoneCompletionPercentageRef on AutoDisposeFutureProviderRef<double> {
 }
 
 class _ZoneCompletionPercentageProviderElement
-    extends AutoDisposeFutureProviderElement<double>
-    with ZoneCompletionPercentageRef {
+    extends FutureProviderElement<double> with ZoneCompletionPercentageRef {
   _ZoneCompletionPercentageProviderElement(super.provider);
 
   @override
@@ -417,13 +412,13 @@ class _ZoneCompletionPercentageProviderElement
       (origin as ZoneCompletionPercentageProvider).totalLevels;
 }
 
-String _$unlockedPetsHash() => r'55ffcd290137f6f814655e67b0c59a052f213511';
+String _$unlockedPetsHash() => r'05836f8d7c45c77b41d7e0c37d6b1a9871cb3375';
 
 /// Provider for unlocked pets
 ///
 /// Copied from [unlockedPets].
 @ProviderFor(unlockedPets)
-final unlockedPetsProvider = AutoDisposeFutureProvider<List<String>>.internal(
+final unlockedPetsProvider = FutureProvider<List<String>>.internal(
   unlockedPets,
   name: r'unlockedPetsProvider',
   debugGetCreateSourceHash:
@@ -432,15 +427,14 @@ final unlockedPetsProvider = AutoDisposeFutureProvider<List<String>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef UnlockedPetsRef = AutoDisposeFutureProviderRef<List<String>>;
-String _$unlockedStickersHash() => r'36d00d34ed355f656c91f6435f51e16cef9aed97';
+typedef UnlockedPetsRef = FutureProviderRef<List<String>>;
+String _$unlockedStickersHash() => r'190717bc8563c7f12f81ae8fdd7cb51518a0a765';
 
 /// Provider for unlocked stickers
 ///
 /// Copied from [unlockedStickers].
 @ProviderFor(unlockedStickers)
-final unlockedStickersProvider =
-    AutoDisposeFutureProvider<List<String>>.internal(
+final unlockedStickersProvider = FutureProvider<List<String>>.internal(
   unlockedStickers,
   name: r'unlockedStickersProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -450,16 +444,15 @@ final unlockedStickersProvider =
   allTransitiveDependencies: null,
 );
 
-typedef UnlockedStickersRef = AutoDisposeFutureProviderRef<List<String>>;
+typedef UnlockedStickersRef = FutureProviderRef<List<String>>;
 String _$unlockedAvatarItemsHash() =>
-    r'563d869d51e29ed85ad05dc2f507772b9830f8d9';
+    r'fa81487654b8806b9a4727bd29329155b178578b';
 
 /// Provider for unlocked avatar items
 ///
 /// Copied from [unlockedAvatarItems].
 @ProviderFor(unlockedAvatarItems)
-final unlockedAvatarItemsProvider =
-    AutoDisposeFutureProvider<List<String>>.internal(
+final unlockedAvatarItemsProvider = FutureProvider<List<String>>.internal(
   unlockedAvatarItems,
   name: r'unlockedAvatarItemsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -469,14 +462,14 @@ final unlockedAvatarItemsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef UnlockedAvatarItemsRef = AutoDisposeFutureProviderRef<List<String>>;
-String _$formattedPlayTimeHash() => r'304beec54ec9ad6134f03b7cf7d9548a0ac1dc56';
+typedef UnlockedAvatarItemsRef = FutureProviderRef<List<String>>;
+String _$formattedPlayTimeHash() => r'4223c476d39a5a56894fc4a46b99295165a627ae';
 
 /// Provider for total play time (formatted)
 ///
 /// Copied from [formattedPlayTime].
 @ProviderFor(formattedPlayTime)
-final formattedPlayTimeProvider = AutoDisposeFutureProvider<String>.internal(
+final formattedPlayTimeProvider = FutureProvider<String>.internal(
   formattedPlayTime,
   name: r'formattedPlayTimeProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -486,15 +479,15 @@ final formattedPlayTimeProvider = AutoDisposeFutureProvider<String>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef FormattedPlayTimeRef = AutoDisposeFutureProviderRef<String>;
-String _$progressNotifierHash() => r'1d3b9695c4acbd519911aad25279adbea1aabd2d';
+typedef FormattedPlayTimeRef = FutureProviderRef<String>;
+String _$progressNotifierHash() => r'f18541778bdd30d7d2747d6773e9368a68e4605c';
 
 /// Progress state notifier
 ///
 /// Copied from [ProgressNotifier].
 @ProviderFor(ProgressNotifier)
 final progressNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<ProgressNotifier, PlayerProgress>.internal(
+    AsyncNotifierProvider<ProgressNotifier, PlayerProgress>.internal(
   ProgressNotifier.new,
   name: r'progressNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -504,6 +497,6 @@ final progressNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ProgressNotifier = AutoDisposeAsyncNotifier<PlayerProgress>;
+typedef _$ProgressNotifier = AsyncNotifier<PlayerProgress>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

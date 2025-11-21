@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../services/progress_storage_service.dart';
@@ -62,10 +63,10 @@ class StreakNotifier extends _$StreakNotifier {
     }
   }
 
-  /// Check if user should receive a special 7-day reward
-  Future<bool> shouldReceiveWeeklyReward() async {
+  /// Check if user should receive a special 30-day reward
+  Future<bool> shouldReceiveMonthlyReward() async {
     final streak = await future;
-    return streak == 7;
+    return streak == 30;
   }
 
   /// Refresh streak
@@ -74,9 +75,9 @@ class StreakNotifier extends _$StreakNotifier {
   }
 }
 
-/// Provider for daily rewards (7-day cycle)
-@riverpod
-List<DailyReward> dailyRewards(DailyRewardsRef ref) {
+/// Provider for daily rewards (30-day cycle)
+@Riverpod(keepAlive: true)
+List<DailyReward> dailyRewards(Ref ref) {
   return [
     const DailyReward(
       id: 'day_1',
@@ -88,71 +89,255 @@ List<DailyReward> dailyRewards(DailyRewardsRef ref) {
     ),
     const DailyReward(
       id: 'day_2',
-      name: 'Double Coins',
+      name: 'Day 2 Bonus',
       description: 'Keep it up!',
       iconPath: 'assets/icons/coin.png',
-      coinValue: 20,
+      coinValue: 15,
       day: 2,
     ),
     const DailyReward(
       id: 'day_3',
-      name: 'Triple Coins',
+      name: 'Day 3 Reward',
       description: 'You\'re on fire!',
       iconPath: 'assets/icons/coin.png',
-      coinValue: 30,
+      coinValue: 20,
       day: 3,
     ),
     const DailyReward(
       id: 'day_4',
-      name: 'Bonus Coins',
+      name: 'Day 4 Bonus',
       description: 'Amazing streak!',
       iconPath: 'assets/icons/coin.png',
-      coinValue: 40,
+      coinValue: 25,
       day: 4,
     ),
     const DailyReward(
       id: 'day_5',
-      name: 'Super Coins',
-      description: 'Almost there!',
+      name: 'Day 5 Reward',
+      description: 'Almost a week!',
       iconPath: 'assets/icons/coin.png',
-      coinValue: 50,
+      coinValue: 30,
       day: 5,
     ),
     const DailyReward(
       id: 'day_6',
-      name: 'Mega Coins',
+      name: 'Day 6 Bonus',
       description: 'One more day!',
       iconPath: 'assets/icons/coin.png',
-      coinValue: 60,
+      coinValue: 35,
       day: 6,
     ),
     const DailyReward(
       id: 'day_7',
-      name: 'Weekly Surprise Box',
-      description: 'You did it! Special reward!',
+      name: 'Weekly Bonus',
+      description: 'First week complete!',
+      iconPath: 'assets/icons/special_box.png',
+      coinValue: 50,
+      day: 7,
+    ),
+    const DailyReward(
+      id: 'day_8',
+      name: 'Day 8 Reward',
+      description: 'Second week begins!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 40,
+      day: 8,
+    ),
+    const DailyReward(
+      id: 'day_9',
+      name: 'Day 9 Bonus',
+      description: 'Keep going strong!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 45,
+      day: 9,
+    ),
+    const DailyReward(
+      id: 'day_10',
+      name: 'Day 10 Reward',
+      description: 'Double digits!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 50,
+      day: 10,
+    ),
+    const DailyReward(
+      id: 'day_11',
+      name: 'Day 11 Bonus',
+      description: 'Unstoppable!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 55,
+      day: 11,
+    ),
+    const DailyReward(
+      id: 'day_12',
+      name: 'Day 12 Reward',
+      description: 'Incredible streak!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 60,
+      day: 12,
+    ),
+    const DailyReward(
+      id: 'day_13',
+      name: 'Day 13 Bonus',
+      description: 'Lucky day!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 65,
+      day: 13,
+    ),
+    const DailyReward(
+      id: 'day_14',
+      name: 'Two Week Bonus',
+      description: 'Two weeks strong!',
+      iconPath: 'assets/icons/special_box.png',
+      coinValue: 75,
+      day: 14,
+    ),
+    const DailyReward(
+      id: 'day_15',
+      name: 'Day 15 Reward',
+      description: 'Halfway there!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 70,
+      day: 15,
+    ),
+    const DailyReward(
+      id: 'day_16',
+      name: 'Day 16 Bonus',
+      description: 'Amazing dedication!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 75,
+      day: 16,
+    ),
+    const DailyReward(
+      id: 'day_17',
+      name: 'Day 17 Reward',
+      description: 'Keep it up!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 80,
+      day: 17,
+    ),
+    const DailyReward(
+      id: 'day_18',
+      name: 'Day 18 Bonus',
+      description: 'You\'re a champion!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 85,
+      day: 18,
+    ),
+    const DailyReward(
+      id: 'day_19',
+      name: 'Day 19 Reward',
+      description: 'Almost three weeks!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 90,
+      day: 19,
+    ),
+    const DailyReward(
+      id: 'day_20',
+      name: 'Day 20 Bonus',
+      description: 'Twenty days strong!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 95,
+      day: 20,
+    ),
+    const DailyReward(
+      id: 'day_21',
+      name: 'Three Week Bonus',
+      description: 'Three weeks complete!',
       iconPath: 'assets/icons/special_box.png',
       coinValue: 100,
-      day: 7,
+      day: 21,
+    ),
+    const DailyReward(
+      id: 'day_22',
+      name: 'Day 22 Reward',
+      description: 'Final week begins!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 100,
+      day: 22,
+    ),
+    const DailyReward(
+      id: 'day_23',
+      name: 'Day 23 Bonus',
+      description: 'So close!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 105,
+      day: 23,
+    ),
+    const DailyReward(
+      id: 'day_24',
+      name: 'Day 24 Reward',
+      description: 'Almost there!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 110,
+      day: 24,
+    ),
+    const DailyReward(
+      id: 'day_25',
+      name: 'Day 25 Bonus',
+      description: 'Five more days!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 115,
+      day: 25,
+    ),
+    const DailyReward(
+      id: 'day_26',
+      name: 'Day 26 Reward',
+      description: 'You\'re amazing!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 120,
+      day: 26,
+    ),
+    const DailyReward(
+      id: 'day_27',
+      name: 'Day 27 Bonus',
+      description: 'Three more days!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 125,
+      day: 27,
+    ),
+    const DailyReward(
+      id: 'day_28',
+      name: 'Day 28 Reward',
+      description: 'Almost a month!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 130,
+      day: 28,
+    ),
+    const DailyReward(
+      id: 'day_29',
+      name: 'Day 29 Bonus',
+      description: 'One more day!',
+      iconPath: 'assets/icons/coin.png',
+      coinValue: 140,
+      day: 29,
+    ),
+    const DailyReward(
+      id: 'day_30',
+      name: 'Monthly Champion',
+      description: 'You did it! Ultimate reward!',
+      iconPath: 'assets/icons/special_box.png',
+      coinValue: 200,
+      day: 30,
     ),
   ];
 }
 
 /// Provider for today's reward based on current streak
-@riverpod
-Future<DailyReward?> todaysReward(TodaysRewardRef ref) async {
+@Riverpod(keepAlive: true)
+Future<DailyReward?> todaysReward(Ref ref) async {
   final streak = await ref.watch(streakNotifierProvider.future);
   final rewards = ref.watch(dailyRewardsProvider);
 
   if (streak == 0) return null;
 
-  // Get reward for current day (1-7 cycle)
-  final dayIndex = ((streak - 1) % 7);
+  // Get reward for current day (1-30 cycle)
+  final dayIndex = ((streak - 1) % 30);
   return rewards[dayIndex];
 }
 
 /// Provider to check if user has logged in today
-@riverpod
-Future<bool> hasLoggedInToday(HasLoggedInTodayRef ref) async {
+@Riverpod(keepAlive: true)
+Future<bool> hasLoggedInToday(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   final now = DateTime.now();
   final lastLogin = progress.lastLoginDate;
@@ -168,8 +353,8 @@ Future<bool> hasLoggedInToday(HasLoggedInTodayRef ref) async {
 }
 
 /// Provider for streak calendar (last 7 days)
-@riverpod
-Future<List<DateTime>> streakCalendar(StreakCalendarRef ref) async {
+@Riverpod(keepAlive: true)
+Future<List<DateTime>> streakCalendar(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   final streak = progress.currentStreak;
   final lastLogin = progress.lastLoginDate;
@@ -184,8 +369,8 @@ Future<List<DateTime>> streakCalendar(StreakCalendarRef ref) async {
 }
 
 /// Provider to check if a specific date is in the streak
-@riverpod
-Future<bool> isDateInStreak(IsDateInStreakRef ref, DateTime date) async {
+@Riverpod(keepAlive: true)
+Future<bool> isDateInStreak(Ref ref, DateTime date) async {
   final calendar = await ref.watch(streakCalendarProvider.future);
   final checkDate = DateTime(date.year, date.month, date.day);
   return calendar.any((d) => d == checkDate);

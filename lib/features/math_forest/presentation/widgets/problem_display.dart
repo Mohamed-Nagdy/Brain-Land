@@ -73,24 +73,21 @@ class _ProblemDisplayState extends State<ProblemDisplay>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Container(
-          // Container decoration removed for WoodSign integration
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Problem text
-              Text(
-                widget.problem.getQuestion(),
-                style: AppTextStyles.gameNumberLarge.copyWith(
-                  color: widget.textColor ?? Colors.white,
-                ),
-                textAlign: TextAlign.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Problem text
+            Text(
+              widget.problem.getQuestion(),
+              style: AppTextStyles.gameNumberLarge.copyWith(
+                color: widget.textColor ?? Colors.white,
               ),
-              const SizedBox(height: 8),
-              // Difficulty indicator (optional visual feedback)
-              _buildDifficultyIndicator(),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            // Difficulty indicator (optional visual feedback)
+            _buildDifficultyIndicator(),
+          ],
         ),
       ),
     );

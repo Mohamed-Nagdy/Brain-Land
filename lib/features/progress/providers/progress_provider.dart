@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/models/player_progress.dart';
@@ -10,20 +11,20 @@ import '../services/progress_storage_service.dart';
 part 'progress_provider.g.dart';
 
 /// Provider for ProgressStorageService
-@riverpod
-ProgressStorageService progressStorageService(ProgressStorageServiceRef ref) {
+@Riverpod(keepAlive: true)
+ProgressStorageService progressStorageService(Ref ref) {
   return ProgressStorageService();
 }
 
 /// Provider for DebugProgressHelper (only in debug mode)
-@riverpod
-DebugProgressHelper? debugProgressHelper(DebugProgressHelperRef ref) {
+@Riverpod(keepAlive: true)
+DebugProgressHelper? debugProgressHelper(Ref ref) {
   final helper = DebugProgressHelper(ref.read(progressStorageServiceProvider));
   return helper.isDebugMode ? helper : null;
 }
 
 /// Progress state notifier
-@riverpod
+@Riverpod(keepAlive: true)
 class ProgressNotifier extends _$ProgressNotifier {
   @override
   Future<PlayerProgress> build() async {
@@ -176,37 +177,37 @@ class ProgressNotifier extends _$ProgressNotifier {
 }
 
 /// Provider for total stars
-@riverpod
-Future<int> totalStars(TotalStarsRef ref) async {
+@Riverpod(keepAlive: true)
+Future<int> totalStars(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.totalStars;
 }
 
 /// Provider for total coins
-@riverpod
-Future<int> totalCoins(TotalCoinsRef ref) async {
+@Riverpod(keepAlive: true)
+Future<int> totalCoins(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.totalCoins;
 }
 
 /// Provider for current streak
-@riverpod
-Future<int> currentStreak(CurrentStreakRef ref) async {
+@Riverpod(keepAlive: true)
+Future<int> currentStreak(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.currentStreak;
 }
 
 /// Provider for zone progress
-@riverpod
-Future<ZoneProgress?> zoneProgress(ZoneProgressRef ref, String zoneId) async {
+@Riverpod(keepAlive: true)
+Future<ZoneProgress?> zoneProgress(Ref ref, String zoneId) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.zoneProgress[zoneId];
 }
 
 /// Provider for zone completion percentage
-@riverpod
+@Riverpod(keepAlive: true)
 Future<double> zoneCompletionPercentage(
-  ZoneCompletionPercentageRef ref,
+  Ref ref,
   String zoneId,
   int totalLevels,
 ) async {
@@ -217,29 +218,29 @@ Future<double> zoneCompletionPercentage(
 }
 
 /// Provider for unlocked pets
-@riverpod
-Future<List<String>> unlockedPets(UnlockedPetsRef ref) async {
+@Riverpod(keepAlive: true)
+Future<List<String>> unlockedPets(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.unlockedPets;
 }
 
 /// Provider for unlocked stickers
-@riverpod
-Future<List<String>> unlockedStickers(UnlockedStickersRef ref) async {
+@Riverpod(keepAlive: true)
+Future<List<String>> unlockedStickers(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.unlockedStickers;
 }
 
 /// Provider for unlocked avatar items
-@riverpod
-Future<List<String>> unlockedAvatarItems(UnlockedAvatarItemsRef ref) async {
+@Riverpod(keepAlive: true)
+Future<List<String>> unlockedAvatarItems(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   return progress.unlockedAvatarItems;
 }
 
 /// Provider for total play time (formatted)
-@riverpod
-Future<String> formattedPlayTime(FormattedPlayTimeRef ref) async {
+@Riverpod(keepAlive: true)
+Future<String> formattedPlayTime(Ref ref) async {
   final progress = await ref.watch(progressNotifierProvider.future);
   final seconds = progress.totalPlayTime;
   final hours = seconds ~/ 3600;
