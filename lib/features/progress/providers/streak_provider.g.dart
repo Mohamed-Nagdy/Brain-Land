@@ -6,250 +6,311 @@ part of 'streak_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dailyRewardsHash() => r'dd475654bf57c85642f33a1ec161e689728ca7ec';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Streak state notifier
 
-/// Provider for daily rewards (30-day cycle)
-///
-/// Copied from [dailyRewards].
-@ProviderFor(dailyRewards)
-final dailyRewardsProvider = Provider<List<DailyReward>>.internal(
-  dailyRewards,
-  name: r'dailyRewardsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$dailyRewardsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(StreakNotifier)
+const streakProvider = StreakNotifierProvider._();
 
-typedef DailyRewardsRef = ProviderRef<List<DailyReward>>;
-String _$todaysRewardHash() => r'7bb07604f2d4109192635b5f7cce96b29cdca8f0';
-
-/// Provider for today's reward based on current streak
-///
-/// Copied from [todaysReward].
-@ProviderFor(todaysReward)
-final todaysRewardProvider = FutureProvider<DailyReward?>.internal(
-  todaysReward,
-  name: r'todaysRewardProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$todaysRewardHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef TodaysRewardRef = FutureProviderRef<DailyReward?>;
-String _$hasLoggedInTodayHash() => r'1471781944ebf9245789bff844cea6cc29999784';
-
-/// Provider to check if user has logged in today
-///
-/// Copied from [hasLoggedInToday].
-@ProviderFor(hasLoggedInToday)
-final hasLoggedInTodayProvider = FutureProvider<bool>.internal(
-  hasLoggedInToday,
-  name: r'hasLoggedInTodayProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$hasLoggedInTodayHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef HasLoggedInTodayRef = FutureProviderRef<bool>;
-String _$streakCalendarHash() => r'd754f69514423f8ec8e025f0145476bc10517a76';
-
-/// Provider for streak calendar (last 7 days)
-///
-/// Copied from [streakCalendar].
-@ProviderFor(streakCalendar)
-final streakCalendarProvider = FutureProvider<List<DateTime>>.internal(
-  streakCalendar,
-  name: r'streakCalendarProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$streakCalendarHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef StreakCalendarRef = FutureProviderRef<List<DateTime>>;
-String _$isDateInStreakHash() => r'e6f9acf28c412dfe74ce8d8e93a725a691da3254';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// Provider to check if a specific date is in the streak
-///
-/// Copied from [isDateInStreak].
-@ProviderFor(isDateInStreak)
-const isDateInStreakProvider = IsDateInStreakFamily();
-
-/// Provider to check if a specific date is in the streak
-///
-/// Copied from [isDateInStreak].
-class IsDateInStreakFamily extends Family<AsyncValue<bool>> {
-  /// Provider to check if a specific date is in the streak
-  ///
-  /// Copied from [isDateInStreak].
-  const IsDateInStreakFamily();
-
-  /// Provider to check if a specific date is in the streak
-  ///
-  /// Copied from [isDateInStreak].
-  IsDateInStreakProvider call(
-    DateTime date,
-  ) {
-    return IsDateInStreakProvider(
-      date,
-    );
-  }
-
-  @override
-  IsDateInStreakProvider getProviderOverride(
-    covariant IsDateInStreakProvider provider,
-  ) {
-    return call(
-      provider.date,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'isDateInStreakProvider';
-}
-
-/// Provider to check if a specific date is in the streak
-///
-/// Copied from [isDateInStreak].
-class IsDateInStreakProvider extends FutureProvider<bool> {
-  /// Provider to check if a specific date is in the streak
-  ///
-  /// Copied from [isDateInStreak].
-  IsDateInStreakProvider(
-    DateTime date,
-  ) : this._internal(
-          (ref) => isDateInStreak(
-            ref as IsDateInStreakRef,
-            date,
-          ),
-          from: isDateInStreakProvider,
-          name: r'isDateInStreakProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$isDateInStreakHash,
-          dependencies: IsDateInStreakFamily._dependencies,
-          allTransitiveDependencies:
-              IsDateInStreakFamily._allTransitiveDependencies,
-          date: date,
-        );
-
-  IsDateInStreakProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.date,
-  }) : super.internal();
-
-  final DateTime date;
-
-  @override
-  Override overrideWith(
-    FutureOr<bool> Function(IsDateInStreakRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: IsDateInStreakProvider._internal(
-        (ref) => create(ref as IsDateInStreakRef),
-        from: from,
-        name: null,
+/// Streak state notifier
+final class StreakNotifierProvider
+    extends $AsyncNotifierProvider<StreakNotifier, int> {
+  /// Streak state notifier
+  const StreakNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'streakProvider',
+        isAutoDispose: true,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        date: date,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  FutureProviderElement<bool> createElement() {
-    return _IsDateInStreakProviderElement(this);
-  }
+  String debugGetCreateSourceHash() => _$streakNotifierHash();
 
+  @$internal
   @override
-  bool operator ==(Object other) {
-    return other is IsDateInStreakProvider && other.date == date;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, date.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin IsDateInStreakRef on FutureProviderRef<bool> {
-  /// The parameter `date` of this provider.
-  DateTime get date;
-}
-
-class _IsDateInStreakProviderElement extends FutureProviderElement<bool>
-    with IsDateInStreakRef {
-  _IsDateInStreakProviderElement(super.provider);
-
-  @override
-  DateTime get date => (origin as IsDateInStreakProvider).date;
+  StreakNotifier create() => StreakNotifier();
 }
 
 String _$streakNotifierHash() => r'2d9bfabbdab1748fe61b6a627ed73a6c3083cff9';
 
 /// Streak state notifier
-///
-/// Copied from [StreakNotifier].
-@ProviderFor(StreakNotifier)
-final streakNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<StreakNotifier, int>.internal(
-  StreakNotifier.new,
-  name: r'streakNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$streakNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$StreakNotifier = AutoDisposeAsyncNotifier<int>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+abstract class _$StreakNotifier extends $AsyncNotifier<int> {
+  FutureOr<int> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<int>, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<int>, int>,
+              AsyncValue<int>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Provider for daily rewards (30-day cycle)
+
+@ProviderFor(dailyRewards)
+const dailyRewardsProvider = DailyRewardsProvider._();
+
+/// Provider for daily rewards (30-day cycle)
+
+final class DailyRewardsProvider
+    extends
+        $FunctionalProvider<
+          List<DailyReward>,
+          List<DailyReward>,
+          List<DailyReward>
+        >
+    with $Provider<List<DailyReward>> {
+  /// Provider for daily rewards (30-day cycle)
+  const DailyRewardsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dailyRewardsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dailyRewardsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<DailyReward>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<DailyReward> create(Ref ref) {
+    return dailyRewards(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<DailyReward> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<DailyReward>>(value),
+    );
+  }
+}
+
+String _$dailyRewardsHash() => r'dd475654bf57c85642f33a1ec161e689728ca7ec';
+
+/// Provider for today's reward based on current streak
+
+@ProviderFor(todaysReward)
+const todaysRewardProvider = TodaysRewardProvider._();
+
+/// Provider for today's reward based on current streak
+
+final class TodaysRewardProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<DailyReward?>,
+          DailyReward?,
+          FutureOr<DailyReward?>
+        >
+    with $FutureModifier<DailyReward?>, $FutureProvider<DailyReward?> {
+  /// Provider for today's reward based on current streak
+  const TodaysRewardProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'todaysRewardProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$todaysRewardHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<DailyReward?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<DailyReward?> create(Ref ref) {
+    return todaysReward(ref);
+  }
+}
+
+String _$todaysRewardHash() => r'7bb07604f2d4109192635b5f7cce96b29cdca8f0';
+
+/// Provider to check if user has logged in today
+
+@ProviderFor(hasLoggedInToday)
+const hasLoggedInTodayProvider = HasLoggedInTodayProvider._();
+
+/// Provider to check if user has logged in today
+
+final class HasLoggedInTodayProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  /// Provider to check if user has logged in today
+  const HasLoggedInTodayProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasLoggedInTodayProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasLoggedInTodayHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return hasLoggedInToday(ref);
+  }
+}
+
+String _$hasLoggedInTodayHash() => r'1471781944ebf9245789bff844cea6cc29999784';
+
+/// Provider for streak calendar (last 7 days)
+
+@ProviderFor(streakCalendar)
+const streakCalendarProvider = StreakCalendarProvider._();
+
+/// Provider for streak calendar (last 7 days)
+
+final class StreakCalendarProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<DateTime>>,
+          List<DateTime>,
+          FutureOr<List<DateTime>>
+        >
+    with $FutureModifier<List<DateTime>>, $FutureProvider<List<DateTime>> {
+  /// Provider for streak calendar (last 7 days)
+  const StreakCalendarProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'streakCalendarProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$streakCalendarHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<DateTime>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<DateTime>> create(Ref ref) {
+    return streakCalendar(ref);
+  }
+}
+
+String _$streakCalendarHash() => r'd754f69514423f8ec8e025f0145476bc10517a76';
+
+/// Provider to check if a specific date is in the streak
+
+@ProviderFor(isDateInStreak)
+const isDateInStreakProvider = IsDateInStreakFamily._();
+
+/// Provider to check if a specific date is in the streak
+
+final class IsDateInStreakProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  /// Provider to check if a specific date is in the streak
+  const IsDateInStreakProvider._({
+    required IsDateInStreakFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'isDateInStreakProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$isDateInStreakHash();
+
+  @override
+  String toString() {
+    return r'isDateInStreakProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    final argument = this.argument as DateTime;
+    return isDateInStreak(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is IsDateInStreakProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$isDateInStreakHash() => r'e6f9acf28c412dfe74ce8d8e93a725a691da3254';
+
+/// Provider to check if a specific date is in the streak
+
+final class IsDateInStreakFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<bool>, DateTime> {
+  const IsDateInStreakFamily._()
+    : super(
+        retry: null,
+        name: r'isDateInStreakProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// Provider to check if a specific date is in the streak
+
+  IsDateInStreakProvider call(DateTime date) =>
+      IsDateInStreakProvider._(argument: date, from: this);
+
+  @override
+  String toString() => r'isDateInStreakProvider';
+}

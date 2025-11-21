@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../services/progress_storage_service.dart';
@@ -55,7 +54,7 @@ class StreakNotifier extends _$StreakNotifier {
       final wasIncremented = await _service.updateStreak();
       ref.invalidateSelf();
       // Also invalidate progress provider to refresh all data
-      ref.invalidate(progressNotifierProvider);
+      ref.invalidate(progressProvider);
       return wasIncremented;
     } catch (e) {
       log('Failed to update streak: $e');
@@ -325,7 +324,7 @@ List<DailyReward> dailyRewards(Ref ref) {
 /// Provider for today's reward based on current streak
 @Riverpod(keepAlive: true)
 Future<DailyReward?> todaysReward(Ref ref) async {
-  final streak = await ref.watch(streakNotifierProvider.future);
+  final streak = await ref.watch(streakProvider.future);
   final rewards = ref.watch(dailyRewardsProvider);
 
   if (streak == 0) return null;
@@ -338,7 +337,7 @@ Future<DailyReward?> todaysReward(Ref ref) async {
 /// Provider to check if user has logged in today
 @Riverpod(keepAlive: true)
 Future<bool> hasLoggedInToday(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   final now = DateTime.now();
   final lastLogin = progress.lastLoginDate;
 
@@ -355,7 +354,7 @@ Future<bool> hasLoggedInToday(Ref ref) async {
 /// Provider for streak calendar (last 7 days)
 @Riverpod(keepAlive: true)
 Future<List<DateTime>> streakCalendar(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   final streak = progress.currentStreak;
   final lastLogin = progress.lastLoginDate;
 

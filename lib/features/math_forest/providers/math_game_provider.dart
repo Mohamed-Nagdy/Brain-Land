@@ -6,6 +6,7 @@ import 'package:brain_land/features/world_map/providers/world_map_provider.dart'
 import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:brain_land/shared/services/analytics_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
 import '../models/level_result.dart';
@@ -207,7 +208,7 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
     // Sync with global progress provider
     // This is critical because LevelSelectionScreen relies on this provider to unlock levels
     final completedCount = await storage.getCompletedLevelsCount();
-    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentProgress = await ref.read(progressProvider.future);
     final currentZoneProgress =
         currentProgress.zoneProgress['math_forest'] ??
         ZoneProgress(
@@ -224,7 +225,7 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
     );
 
     await ref
-        .read(progressNotifierProvider.notifier)
+        .read(progressProvider.notifier)
         .updateZoneProgress('math_forest', updatedZoneProgress);
 
     // Invalidate providers to ensure UI updates
@@ -236,9 +237,7 @@ class MathGameNotifier extends StateNotifier<MathGameState> {
       // Level was completed successfully
     } else {
       // Level was failed, reset consecutive counter
-      await ref
-          .read(progressNotifierProvider.notifier)
-          .resetConsecutiveLevels();
+      await ref.read(progressProvider.notifier).resetConsecutiveLevels();
     }
 
     // Track level completion event

@@ -615,7 +615,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               final helper = ref.read(debugProgressHelperProvider);
               if (helper != null) {
                 await helper.populateSampleData();
-                ref.invalidate(progressNotifierProvider);
+                ref.invalidate(progressProvider);
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -639,7 +639,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               final helper = ref.read(debugProgressHelperProvider);
               if (helper != null) {
                 await helper.addTestRewards();
-                ref.invalidate(progressNotifierProvider);
+                ref.invalidate(progressProvider);
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -663,7 +663,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               final helper = ref.read(debugProgressHelperProvider);
               if (helper != null) {
                 await helper.resetToEmpty();
-                ref.invalidate(progressNotifierProvider);
+                ref.invalidate(progressProvider);
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../shared/models/player_progress.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/streak_provider.dart';
 import '../widgets/streak_display.dart';
@@ -48,7 +49,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
   @override
   Widget build(BuildContext context) {
-    final progressAsync = ref.watch(progressNotifierProvider);
+    final progressAsync = ref.watch(progressProvider);
     final streakCalendarAsync = ref.watch(streakCalendarProvider);
 
     return Scaffold(
@@ -96,7 +97,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                             loading: () => const Center(
                               child: CircularProgressIndicator(),
                             ),
-                            error: (_, __) => const SizedBox.shrink(),
+                            error: (_, _) => const SizedBox.shrink(),
                           ),
                           const SizedBox(height: 24),
 
@@ -207,7 +208,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildStatsSection(progress) {
+  Widget _buildStatsSection(PlayerProgress progress) {
     return Row(
       children: [
         Expanded(
@@ -339,7 +340,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildZoneProgressSection(progress) {
+  Widget _buildZoneProgressSection(PlayerProgress progress) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -462,7 +463,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildAchievementsSection(progress) {
+  Widget _buildAchievementsSection(PlayerProgress progress) {
     final achievements = [
       _Achievement(
         name: 'First Steps',

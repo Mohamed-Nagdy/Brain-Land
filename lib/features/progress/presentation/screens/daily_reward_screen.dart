@@ -76,7 +76,7 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
   Widget build(BuildContext context) {
     final hasLoggedInTodayAsync = ref.watch(hasLoggedInTodayProvider);
     final todaysRewardAsync = ref.watch(todaysRewardProvider);
-    final streakAsync = ref.watch(streakNotifierProvider);
+    final streakAsync = ref.watch(streakProvider);
     final dailyRewards = ref.watch(dailyRewardsProvider);
 
     return Scaffold(
@@ -115,7 +115,7 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
                         loading: () => const CircularProgressIndicator(
                           color: Colors.white,
                         ),
-                        error: (_, __) => const SizedBox.shrink(),
+                        error: (_, _) => const SizedBox.shrink(),
                       ),
                       const SizedBox(height: 24),
 
@@ -137,13 +137,13 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
                             loading: () => const CircularProgressIndicator(
                               color: Colors.white,
                             ),
-                            error: (_, __) => const SizedBox.shrink(),
+                            error: (_, _) => const SizedBox.shrink(),
                           );
                         },
                         loading: () => const CircularProgressIndicator(
                           color: Colors.white,
                         ),
-                        error: (_, __) => const SizedBox.shrink(),
+                        error: (_, _) => const SizedBox.shrink(),
                       ),
                     ],
                   ),
@@ -350,7 +350,7 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
                 return _buildRewardDay(reward, isCompleted, isToday);
               },
               loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             );
           }),
         ],
@@ -698,12 +698,10 @@ class _DailyRewardScreenState extends ConsumerState<DailyRewardScreen>
     if (todaysReward == null) return;
 
     // Add coins
-    await ref
-        .read(progressNotifierProvider.notifier)
-        .addCoins(todaysReward.coinValue);
+    await ref.read(progressProvider.notifier).addCoins(todaysReward.coinValue);
 
     // Update streak
-    await ref.read(streakNotifierProvider.notifier).updateStreak();
+    await ref.read(streakProvider.notifier).updateStreak();
 
     // Trigger animation
     setState(() {

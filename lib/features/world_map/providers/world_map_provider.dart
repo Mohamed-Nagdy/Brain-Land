@@ -8,7 +8,7 @@ part 'world_map_provider.g.dart';
 
 /// Provider for WorldMapLocalService
 @riverpod
-WorldMapLocalService worldMapLocalService(WorldMapLocalServiceRef ref) {
+WorldMapLocalService worldMapLocalService(Ref ref) {
   return WorldMapLocalService();
 }
 

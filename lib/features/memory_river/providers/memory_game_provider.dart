@@ -4,6 +4,7 @@ import 'package:brain_land/features/progress/providers/progress_provider.dart';
 import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
 import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../models/memory_card.dart';
 import '../models/memory_game_state.dart';
@@ -271,7 +272,7 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
 
     // Sync with global progress provider
     final completedCount = await storage.getCompletedLevelsCount();
-    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentProgress = await ref.read(progressProvider.future);
     final currentZoneProgress =
         currentProgress.zoneProgress['memory_river'] ??
         ZoneProgress(
@@ -288,7 +289,7 @@ class MemoryGameNotifier extends StateNotifier<MemoryGameState> {
     );
 
     await ref
-        .read(progressNotifierProvider.notifier)
+        .read(progressProvider.notifier)
         .updateZoneProgress('memory_river', updatedZoneProgress);
 
     // Invalidate providers to ensure UI updates

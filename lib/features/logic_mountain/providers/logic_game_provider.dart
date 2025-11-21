@@ -4,6 +4,7 @@ import 'package:brain_land/features/progress/providers/progress_provider.dart';
 import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
 import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
 import '../../math_forest/providers/problem_generator_provider.dart';
@@ -210,7 +211,7 @@ class LogicGameNotifier extends StateNotifier<LogicGameState> {
     // Sync with global progress provider
     // This is critical because level selection relies on this provider to unlock levels
     final completedCount = await storage.getCompletedLevelsCount();
-    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentProgress = await ref.read(progressProvider.future);
     final currentZoneProgress =
         currentProgress.zoneProgress['logic_mountain'] ??
         ZoneProgress(
@@ -227,7 +228,7 @@ class LogicGameNotifier extends StateNotifier<LogicGameState> {
     );
 
     await ref
-        .read(progressNotifierProvider.notifier)
+        .read(progressProvider.notifier)
         .updateZoneProgress('logic_mountain', updatedZoneProgress);
 
     // Invalidate providers to ensure UI updates
@@ -237,14 +238,10 @@ class LogicGameNotifier extends StateNotifier<LogicGameState> {
     // Handle consecutive level completion for pet unlocking
     if (starsEarned > 0) {
       // Level was completed successfully
-      await ref
-          .read(progressNotifierProvider.notifier)
-          .incrementConsecutiveLevels();
+      await ref.read(progressProvider.notifier).incrementConsecutiveLevels();
     } else {
       // Level was failed, reset consecutive counter
-      await ref
-          .read(progressNotifierProvider.notifier)
-          .resetConsecutiveLevels();
+      await ref.read(progressProvider.notifier).resetConsecutiveLevels();
     }
 
     // Update state to completed with the updated level

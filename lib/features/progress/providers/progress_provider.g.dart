@@ -6,497 +6,613 @@ part of 'progress_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider for ProgressStorageService
+
+@ProviderFor(progressStorageService)
+const progressStorageServiceProvider = ProgressStorageServiceProvider._();
+
+/// Provider for ProgressStorageService
+
+final class ProgressStorageServiceProvider
+    extends
+        $FunctionalProvider<
+          ProgressStorageService,
+          ProgressStorageService,
+          ProgressStorageService
+        >
+    with $Provider<ProgressStorageService> {
+  /// Provider for ProgressStorageService
+  const ProgressStorageServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'progressStorageServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$progressStorageServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<ProgressStorageService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ProgressStorageService create(Ref ref) {
+    return progressStorageService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ProgressStorageService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ProgressStorageService>(value),
+    );
+  }
+}
+
 String _$progressStorageServiceHash() =>
     r'ad5614c6e4edfa1e3ad8758dfdece20ea78eef18';
 
-/// Provider for ProgressStorageService
-///
-/// Copied from [progressStorageService].
-@ProviderFor(progressStorageService)
-final progressStorageServiceProvider =
-    Provider<ProgressStorageService>.internal(
-  progressStorageService,
-  name: r'progressStorageServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$progressStorageServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Provider for DebugProgressHelper (only in debug mode)
 
-typedef ProgressStorageServiceRef = ProviderRef<ProgressStorageService>;
+@ProviderFor(debugProgressHelper)
+const debugProgressHelperProvider = DebugProgressHelperProvider._();
+
+/// Provider for DebugProgressHelper (only in debug mode)
+
+final class DebugProgressHelperProvider
+    extends
+        $FunctionalProvider<
+          DebugProgressHelper?,
+          DebugProgressHelper?,
+          DebugProgressHelper?
+        >
+    with $Provider<DebugProgressHelper?> {
+  /// Provider for DebugProgressHelper (only in debug mode)
+  const DebugProgressHelperProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'debugProgressHelperProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$debugProgressHelperHash();
+
+  @$internal
+  @override
+  $ProviderElement<DebugProgressHelper?> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  DebugProgressHelper? create(Ref ref) {
+    return debugProgressHelper(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DebugProgressHelper? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DebugProgressHelper?>(value),
+    );
+  }
+}
+
 String _$debugProgressHelperHash() =>
     r'89150b9c9e02b1bf688dd3ae8f9ed9afcf7c4f5a';
 
-/// Provider for DebugProgressHelper (only in debug mode)
-///
-/// Copied from [debugProgressHelper].
-@ProviderFor(debugProgressHelper)
-final debugProgressHelperProvider = Provider<DebugProgressHelper?>.internal(
-  debugProgressHelper,
-  name: r'debugProgressHelperProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$debugProgressHelperHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Progress state notifier
 
-typedef DebugProgressHelperRef = ProviderRef<DebugProgressHelper?>;
-String _$totalStarsHash() => r'10467fe0f45319698ae1bd6e12da2472e6937e22';
+@ProviderFor(ProgressNotifier)
+const progressProvider = ProgressNotifierProvider._();
+
+/// Progress state notifier
+final class ProgressNotifierProvider
+    extends $AsyncNotifierProvider<ProgressNotifier, PlayerProgress> {
+  /// Progress state notifier
+  const ProgressNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'progressProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$progressNotifierHash();
+
+  @$internal
+  @override
+  ProgressNotifier create() => ProgressNotifier();
+}
+
+String _$progressNotifierHash() => r'f18541778bdd30d7d2747d6773e9368a68e4605c';
+
+/// Progress state notifier
+
+abstract class _$ProgressNotifier extends $AsyncNotifier<PlayerProgress> {
+  FutureOr<PlayerProgress> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<PlayerProgress>, PlayerProgress>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<PlayerProgress>, PlayerProgress>,
+              AsyncValue<PlayerProgress>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
 
 /// Provider for total stars
-///
-/// Copied from [totalStars].
-@ProviderFor(totalStars)
-final totalStarsProvider = FutureProvider<int>.internal(
-  totalStars,
-  name: r'totalStarsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$totalStarsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef TotalStarsRef = FutureProviderRef<int>;
-String _$totalCoinsHash() => r'9ce207026ea3605eede9887c7ca6ed5b788e7535';
+@ProviderFor(totalStars)
+const totalStarsProvider = TotalStarsProvider._();
+
+/// Provider for total stars
+
+final class TotalStarsProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  /// Provider for total stars
+  const TotalStarsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'totalStarsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$totalStarsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return totalStars(ref);
+  }
+}
+
+String _$totalStarsHash() => r'10467fe0f45319698ae1bd6e12da2472e6937e22';
 
 /// Provider for total coins
-///
-/// Copied from [totalCoins].
-@ProviderFor(totalCoins)
-final totalCoinsProvider = FutureProvider<int>.internal(
-  totalCoins,
-  name: r'totalCoinsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$totalCoinsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef TotalCoinsRef = FutureProviderRef<int>;
-String _$currentStreakHash() => r'1045b295a850d907d1022a4b7a5d8e246110ab2a';
+@ProviderFor(totalCoins)
+const totalCoinsProvider = TotalCoinsProvider._();
+
+/// Provider for total coins
+
+final class TotalCoinsProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  /// Provider for total coins
+  const TotalCoinsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'totalCoinsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$totalCoinsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return totalCoins(ref);
+  }
+}
+
+String _$totalCoinsHash() => r'9ce207026ea3605eede9887c7ca6ed5b788e7535';
 
 /// Provider for current streak
-///
-/// Copied from [currentStreak].
+
 @ProviderFor(currentStreak)
-final currentStreakProvider = FutureProvider<int>.internal(
-  currentStreak,
-  name: r'currentStreakProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentStreakHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const currentStreakProvider = CurrentStreakProvider._();
 
-typedef CurrentStreakRef = FutureProviderRef<int>;
-String _$zoneProgressHash() => r'109923e2bdef8e7fb773f2215b69c2670e1908ba';
+/// Provider for current streak
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// Provider for zone progress
-///
-/// Copied from [zoneProgress].
-@ProviderFor(zoneProgress)
-const zoneProgressProvider = ZoneProgressFamily();
-
-/// Provider for zone progress
-///
-/// Copied from [zoneProgress].
-class ZoneProgressFamily extends Family<AsyncValue<ZoneProgress?>> {
-  /// Provider for zone progress
-  ///
-  /// Copied from [zoneProgress].
-  const ZoneProgressFamily();
-
-  /// Provider for zone progress
-  ///
-  /// Copied from [zoneProgress].
-  ZoneProgressProvider call(
-    String zoneId,
-  ) {
-    return ZoneProgressProvider(
-      zoneId,
-    );
-  }
-
-  @override
-  ZoneProgressProvider getProviderOverride(
-    covariant ZoneProgressProvider provider,
-  ) {
-    return call(
-      provider.zoneId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'zoneProgressProvider';
-}
-
-/// Provider for zone progress
-///
-/// Copied from [zoneProgress].
-class ZoneProgressProvider extends FutureProvider<ZoneProgress?> {
-  /// Provider for zone progress
-  ///
-  /// Copied from [zoneProgress].
-  ZoneProgressProvider(
-    String zoneId,
-  ) : this._internal(
-          (ref) => zoneProgress(
-            ref as ZoneProgressRef,
-            zoneId,
-          ),
-          from: zoneProgressProvider,
-          name: r'zoneProgressProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$zoneProgressHash,
-          dependencies: ZoneProgressFamily._dependencies,
-          allTransitiveDependencies:
-              ZoneProgressFamily._allTransitiveDependencies,
-          zoneId: zoneId,
-        );
-
-  ZoneProgressProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.zoneId,
-  }) : super.internal();
-
-  final String zoneId;
-
-  @override
-  Override overrideWith(
-    FutureOr<ZoneProgress?> Function(ZoneProgressRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ZoneProgressProvider._internal(
-        (ref) => create(ref as ZoneProgressRef),
-        from: from,
-        name: null,
+final class CurrentStreakProvider
+    extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
+    with $FutureModifier<int>, $FutureProvider<int> {
+  /// Provider for current streak
+  const CurrentStreakProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentStreakProvider',
+        isAutoDispose: false,
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        zoneId: zoneId,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  FutureProviderElement<ZoneProgress?> createElement() {
-    return _ZoneProgressProviderElement(this);
+  String debugGetCreateSourceHash() => _$currentStreakHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<int> create(Ref ref) {
+    return currentStreak(ref);
+  }
+}
+
+String _$currentStreakHash() => r'1045b295a850d907d1022a4b7a5d8e246110ab2a';
+
+/// Provider for zone progress
+
+@ProviderFor(zoneProgress)
+const zoneProgressProvider = ZoneProgressFamily._();
+
+/// Provider for zone progress
+
+final class ZoneProgressProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ZoneProgress?>,
+          ZoneProgress?,
+          FutureOr<ZoneProgress?>
+        >
+    with $FutureModifier<ZoneProgress?>, $FutureProvider<ZoneProgress?> {
+  /// Provider for zone progress
+  const ZoneProgressProvider._({
+    required ZoneProgressFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'zoneProgressProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$zoneProgressHash();
+
+  @override
+  String toString() {
+    return r'zoneProgressProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<ZoneProgress?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<ZoneProgress?> create(Ref ref) {
+    final argument = this.argument as String;
+    return zoneProgress(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ZoneProgressProvider && other.zoneId == zoneId;
+    return other is ZoneProgressProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, zoneId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-mixin ZoneProgressRef on FutureProviderRef<ZoneProgress?> {
-  /// The parameter `zoneId` of this provider.
-  String get zoneId;
-}
+String _$zoneProgressHash() => r'109923e2bdef8e7fb773f2215b69c2670e1908ba';
 
-class _ZoneProgressProviderElement extends FutureProviderElement<ZoneProgress?>
-    with ZoneProgressRef {
-  _ZoneProgressProviderElement(super.provider);
+/// Provider for zone progress
+
+final class ZoneProgressFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<ZoneProgress?>, String> {
+  const ZoneProgressFamily._()
+    : super(
+        retry: null,
+        name: r'zoneProgressProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// Provider for zone progress
+
+  ZoneProgressProvider call(String zoneId) =>
+      ZoneProgressProvider._(argument: zoneId, from: this);
 
   @override
-  String get zoneId => (origin as ZoneProgressProvider).zoneId;
+  String toString() => r'zoneProgressProvider';
+}
+
+/// Provider for zone completion percentage
+
+@ProviderFor(zoneCompletionPercentage)
+const zoneCompletionPercentageProvider = ZoneCompletionPercentageFamily._();
+
+/// Provider for zone completion percentage
+
+final class ZoneCompletionPercentageProvider
+    extends $FunctionalProvider<AsyncValue<double>, double, FutureOr<double>>
+    with $FutureModifier<double>, $FutureProvider<double> {
+  /// Provider for zone completion percentage
+  const ZoneCompletionPercentageProvider._({
+    required ZoneCompletionPercentageFamily super.from,
+    required (String, int) super.argument,
+  }) : super(
+         retry: null,
+         name: r'zoneCompletionPercentageProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$zoneCompletionPercentageHash();
+
+  @override
+  String toString() {
+    return r'zoneCompletionPercentageProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<double> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<double> create(Ref ref) {
+    final argument = this.argument as (String, int);
+    return zoneCompletionPercentage(ref, argument.$1, argument.$2);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ZoneCompletionPercentageProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$zoneCompletionPercentageHash() =>
     r'147e3781de8e194b705559a7073c2ef8a5ab9c5f';
 
 /// Provider for zone completion percentage
-///
-/// Copied from [zoneCompletionPercentage].
-@ProviderFor(zoneCompletionPercentage)
-const zoneCompletionPercentageProvider = ZoneCompletionPercentageFamily();
 
-/// Provider for zone completion percentage
-///
-/// Copied from [zoneCompletionPercentage].
-class ZoneCompletionPercentageFamily extends Family<AsyncValue<double>> {
-  /// Provider for zone completion percentage
-  ///
-  /// Copied from [zoneCompletionPercentage].
-  const ZoneCompletionPercentageFamily();
-
-  /// Provider for zone completion percentage
-  ///
-  /// Copied from [zoneCompletionPercentage].
-  ZoneCompletionPercentageProvider call(
-    String zoneId,
-    int totalLevels,
-  ) {
-    return ZoneCompletionPercentageProvider(
-      zoneId,
-      totalLevels,
-    );
-  }
-
-  @override
-  ZoneCompletionPercentageProvider getProviderOverride(
-    covariant ZoneCompletionPercentageProvider provider,
-  ) {
-    return call(
-      provider.zoneId,
-      provider.totalLevels,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'zoneCompletionPercentageProvider';
-}
-
-/// Provider for zone completion percentage
-///
-/// Copied from [zoneCompletionPercentage].
-class ZoneCompletionPercentageProvider extends FutureProvider<double> {
-  /// Provider for zone completion percentage
-  ///
-  /// Copied from [zoneCompletionPercentage].
-  ZoneCompletionPercentageProvider(
-    String zoneId,
-    int totalLevels,
-  ) : this._internal(
-          (ref) => zoneCompletionPercentage(
-            ref as ZoneCompletionPercentageRef,
-            zoneId,
-            totalLevels,
-          ),
-          from: zoneCompletionPercentageProvider,
-          name: r'zoneCompletionPercentageProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$zoneCompletionPercentageHash,
-          dependencies: ZoneCompletionPercentageFamily._dependencies,
-          allTransitiveDependencies:
-              ZoneCompletionPercentageFamily._allTransitiveDependencies,
-          zoneId: zoneId,
-          totalLevels: totalLevels,
-        );
-
-  ZoneCompletionPercentageProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.zoneId,
-    required this.totalLevels,
-  }) : super.internal();
-
-  final String zoneId;
-  final int totalLevels;
-
-  @override
-  Override overrideWith(
-    FutureOr<double> Function(ZoneCompletionPercentageRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ZoneCompletionPercentageProvider._internal(
-        (ref) => create(ref as ZoneCompletionPercentageRef),
-        from: from,
-        name: null,
+final class ZoneCompletionPercentageFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<double>, (String, int)> {
+  const ZoneCompletionPercentageFamily._()
+    : super(
+        retry: null,
+        name: r'zoneCompletionPercentageProvider',
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        zoneId: zoneId,
-        totalLevels: totalLevels,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  /// Provider for zone completion percentage
+
+  ZoneCompletionPercentageProvider call(String zoneId, int totalLevels) =>
+      ZoneCompletionPercentageProvider._(
+        argument: (zoneId, totalLevels),
+        from: this,
+      );
 
   @override
-  FutureProviderElement<double> createElement() {
-    return _ZoneCompletionPercentageProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ZoneCompletionPercentageProvider &&
-        other.zoneId == zoneId &&
-        other.totalLevels == totalLevels;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, zoneId.hashCode);
-    hash = _SystemHash.combine(hash, totalLevels.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
+  String toString() => r'zoneCompletionPercentageProvider';
 }
 
-mixin ZoneCompletionPercentageRef on FutureProviderRef<double> {
-  /// The parameter `zoneId` of this provider.
-  String get zoneId;
+/// Provider for unlocked pets
 
-  /// The parameter `totalLevels` of this provider.
-  int get totalLevels;
-}
+@ProviderFor(unlockedPets)
+const unlockedPetsProvider = UnlockedPetsProvider._();
 
-class _ZoneCompletionPercentageProviderElement
-    extends FutureProviderElement<double> with ZoneCompletionPercentageRef {
-  _ZoneCompletionPercentageProviderElement(super.provider);
+/// Provider for unlocked pets
+
+final class UnlockedPetsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// Provider for unlocked pets
+  const UnlockedPetsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unlockedPetsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
-  String get zoneId => (origin as ZoneCompletionPercentageProvider).zoneId;
+  String debugGetCreateSourceHash() => _$unlockedPetsHash();
+
+  @$internal
   @override
-  int get totalLevels =>
-      (origin as ZoneCompletionPercentageProvider).totalLevels;
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return unlockedPets(ref);
+  }
 }
 
 String _$unlockedPetsHash() => r'05836f8d7c45c77b41d7e0c37d6b1a9871cb3375';
 
-/// Provider for unlocked pets
-///
-/// Copied from [unlockedPets].
-@ProviderFor(unlockedPets)
-final unlockedPetsProvider = FutureProvider<List<String>>.internal(
-  unlockedPets,
-  name: r'unlockedPetsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$unlockedPetsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Provider for unlocked stickers
 
-typedef UnlockedPetsRef = FutureProviderRef<List<String>>;
-String _$unlockedStickersHash() => r'190717bc8563c7f12f81ae8fdd7cb51518a0a765';
+@ProviderFor(unlockedStickers)
+const unlockedStickersProvider = UnlockedStickersProvider._();
 
 /// Provider for unlocked stickers
-///
-/// Copied from [unlockedStickers].
-@ProviderFor(unlockedStickers)
-final unlockedStickersProvider = FutureProvider<List<String>>.internal(
-  unlockedStickers,
-  name: r'unlockedStickersProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$unlockedStickersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef UnlockedStickersRef = FutureProviderRef<List<String>>;
+final class UnlockedStickersProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// Provider for unlocked stickers
+  const UnlockedStickersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unlockedStickersProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$unlockedStickersHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return unlockedStickers(ref);
+  }
+}
+
+String _$unlockedStickersHash() => r'190717bc8563c7f12f81ae8fdd7cb51518a0a765';
+
+/// Provider for unlocked avatar items
+
+@ProviderFor(unlockedAvatarItems)
+const unlockedAvatarItemsProvider = UnlockedAvatarItemsProvider._();
+
+/// Provider for unlocked avatar items
+
+final class UnlockedAvatarItemsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  /// Provider for unlocked avatar items
+  const UnlockedAvatarItemsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unlockedAvatarItemsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$unlockedAvatarItemsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return unlockedAvatarItems(ref);
+  }
+}
+
 String _$unlockedAvatarItemsHash() =>
     r'fa81487654b8806b9a4727bd29329155b178578b';
 
-/// Provider for unlocked avatar items
-///
-/// Copied from [unlockedAvatarItems].
-@ProviderFor(unlockedAvatarItems)
-final unlockedAvatarItemsProvider = FutureProvider<List<String>>.internal(
-  unlockedAvatarItems,
-  name: r'unlockedAvatarItemsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$unlockedAvatarItemsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+/// Provider for total play time (formatted)
 
-typedef UnlockedAvatarItemsRef = FutureProviderRef<List<String>>;
-String _$formattedPlayTimeHash() => r'4223c476d39a5a56894fc4a46b99295165a627ae';
+@ProviderFor(formattedPlayTime)
+const formattedPlayTimeProvider = FormattedPlayTimeProvider._();
 
 /// Provider for total play time (formatted)
-///
-/// Copied from [formattedPlayTime].
-@ProviderFor(formattedPlayTime)
-final formattedPlayTimeProvider = FutureProvider<String>.internal(
-  formattedPlayTime,
-  name: r'formattedPlayTimeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$formattedPlayTimeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef FormattedPlayTimeRef = FutureProviderRef<String>;
-String _$progressNotifierHash() => r'f18541778bdd30d7d2747d6773e9368a68e4605c';
+final class FormattedPlayTimeProvider
+    extends $FunctionalProvider<AsyncValue<String>, String, FutureOr<String>>
+    with $FutureModifier<String>, $FutureProvider<String> {
+  /// Provider for total play time (formatted)
+  const FormattedPlayTimeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'formattedPlayTimeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
-/// Progress state notifier
-///
-/// Copied from [ProgressNotifier].
-@ProviderFor(ProgressNotifier)
-final progressNotifierProvider =
-    AsyncNotifierProvider<ProgressNotifier, PlayerProgress>.internal(
-  ProgressNotifier.new,
-  name: r'progressNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$progressNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+  @override
+  String debugGetCreateSourceHash() => _$formattedPlayTimeHash();
 
-typedef _$ProgressNotifier = AsyncNotifier<PlayerProgress>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+  @$internal
+  @override
+  $FutureProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String> create(Ref ref) {
+    return formattedPlayTime(ref);
+  }
+}
+
+String _$formattedPlayTimeHash() => r'4223c476d39a5a56894fc4a46b99295165a627ae';

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/models/player_progress.dart';
@@ -179,28 +178,28 @@ class ProgressNotifier extends _$ProgressNotifier {
 /// Provider for total stars
 @Riverpod(keepAlive: true)
 Future<int> totalStars(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.totalStars;
 }
 
 /// Provider for total coins
 @Riverpod(keepAlive: true)
 Future<int> totalCoins(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.totalCoins;
 }
 
 /// Provider for current streak
 @Riverpod(keepAlive: true)
 Future<int> currentStreak(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.currentStreak;
 }
 
 /// Provider for zone progress
 @Riverpod(keepAlive: true)
 Future<ZoneProgress?> zoneProgress(Ref ref, String zoneId) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.zoneProgress[zoneId];
 }
 
@@ -211,7 +210,7 @@ Future<double> zoneCompletionPercentage(
   String zoneId,
   int totalLevels,
 ) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   final zoneProgress = progress.zoneProgress[zoneId];
   if (zoneProgress == null) return 0.0;
   return (zoneProgress.levelsCompleted / totalLevels * 100);
@@ -220,28 +219,28 @@ Future<double> zoneCompletionPercentage(
 /// Provider for unlocked pets
 @Riverpod(keepAlive: true)
 Future<List<String>> unlockedPets(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.unlockedPets;
 }
 
 /// Provider for unlocked stickers
 @Riverpod(keepAlive: true)
 Future<List<String>> unlockedStickers(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.unlockedStickers;
 }
 
 /// Provider for unlocked avatar items
 @Riverpod(keepAlive: true)
 Future<List<String>> unlockedAvatarItems(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   return progress.unlockedAvatarItems;
 }
 
 /// Provider for total play time (formatted)
 @Riverpod(keepAlive: true)
 Future<String> formattedPlayTime(Ref ref) async {
-  final progress = await ref.watch(progressNotifierProvider.future);
+  final progress = await ref.watch(progressProvider.future);
   final seconds = progress.totalPlayTime;
   final hours = seconds ~/ 3600;
   final minutes = (seconds % 3600) ~/ 60;

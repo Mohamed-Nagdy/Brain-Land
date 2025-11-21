@@ -42,7 +42,7 @@ class _RewardedAdButtonState extends ConsumerState<RewardedAdButton> {
     final success = await _adService.show(
       onRewarded: (amount) async {
         // Add coins to user's progress
-        final notifier = ref.read(progressNotifierProvider.notifier);
+        final notifier = ref.read(progressProvider.notifier);
         await notifier.addCoins(amount);
 
         // Show success message

@@ -235,7 +235,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
             starsAsync.when(
               data: (stars) => stars.toString(),
               loading: () => '...',
-              error: (_, __) => '0',
+              error: (_, _) => '0',
             ),
             const Color(0xFFFFA726),
           ),
@@ -245,7 +245,7 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
             coinsAsync.when(
               data: (coins) => coins.toString(),
               loading: () => '...',
-              error: (_, __) => '0',
+              error: (_, _) => '0',
             ),
             const Color(0xFFFFD700),
           ),

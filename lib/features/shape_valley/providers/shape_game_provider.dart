@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
 import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../core/utils/difficulty_calculator.dart';
 import '../../progress/providers/progress_provider.dart';
@@ -274,7 +275,7 @@ class ShapeGameNotifier extends StateNotifier<ShapeGameState> {
 
     // Sync with global progress provider
     final completedCount = await storage.getCompletedLevelsCount();
-    final currentProgress = await ref.read(progressNotifierProvider.future);
+    final currentProgress = await ref.read(progressProvider.future);
     final currentZoneProgress =
         currentProgress.zoneProgress['shape_valley'] ??
         ZoneProgress(
@@ -291,7 +292,7 @@ class ShapeGameNotifier extends StateNotifier<ShapeGameState> {
     );
 
     await ref
-        .read(progressNotifierProvider.notifier)
+        .read(progressProvider.notifier)
         .updateZoneProgress('shape_valley', updatedZoneProgress);
 
     // Invalidate providers to ensure UI updates
@@ -300,13 +301,9 @@ class ShapeGameNotifier extends StateNotifier<ShapeGameState> {
 
     // Handle consecutive level completion
     if (starsEarned > 0) {
-      await ref
-          .read(progressNotifierProvider.notifier)
-          .incrementConsecutiveLevels();
+      await ref.read(progressProvider.notifier).incrementConsecutiveLevels();
     } else {
-      await ref
-          .read(progressNotifierProvider.notifier)
-          .resetConsecutiveLevels();
+      await ref.read(progressProvider.notifier).resetConsecutiveLevels();
     }
 
     // Update state to completed with updated level
