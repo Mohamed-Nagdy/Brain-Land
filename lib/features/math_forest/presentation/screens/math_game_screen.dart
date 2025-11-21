@@ -12,6 +12,7 @@ import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/gradient_background.dart';
 import '../../models/math_game_state.dart';
 import '../../providers/math_game_provider.dart';
+import '../widgets/hint_button.dart';
 import '../widgets/problem_display.dart';
 import '../widgets/timer_widget.dart';
 
@@ -137,26 +138,32 @@ class _MathGameScreenState extends ConsumerState<MathGameScreen> {
       return _buildLandscapeLayout(gameState, problem);
     }
 
-    return Column(
-      children: [
-        // Header with timer, counter, and pause button
-        _buildHeader(gameState),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Header with timer, counter, and pause button
+          _buildHeader(gameState),
 
-        SizedBox(height: context.responsiveSpacing * 2),
+          SizedBox(height: context.responsiveSpacing * 2),
 
-        // Problem display
-        Padding(
-          padding: context.responsiveHorizontalPadding,
-          child: WoodSign(child: ProblemDisplay(problem: problem)),
-        ),
+          // Problem display
+          Padding(
+            padding: context.responsiveHorizontalPadding,
+            child: WoodSign(child: ProblemDisplay(problem: problem)),
+          ),
 
-        const Spacer(),
+          // Hint button
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: HintButton(correctAnswer: problem.correctAnswer),
+          ),
 
-        // Answer bubbles grid
-        _buildAnswerBubbles(problem.options),
+          // Answer bubbles grid
+          _buildAnswerBubbles(problem.options),
 
-        SizedBox(height: context.responsiveSpacing * 3),
-      ],
+          SizedBox(height: context.responsiveSpacing * 3),
+        ],
+      ),
     );
   }
 

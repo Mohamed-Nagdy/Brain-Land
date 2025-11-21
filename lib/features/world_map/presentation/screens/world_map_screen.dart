@@ -1,12 +1,12 @@
-import 'dart:math' as math;
-
-import 'package:brain_land/core/utils/audio_manager.dart';
-import 'package:brain_land/features/progress/providers/progress_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/models/zone.dart';
+import '../../../ads/widgets/banner_ad_widget.dart';
+import '../../../ads/widgets/rewarded_ad_button.dart';
+import '../../../progress/providers/progress_provider.dart';
 import '../../providers/world_map_provider.dart';
 
 /// Modern World Map Screen with child-friendly UI
@@ -69,6 +69,9 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
                 // Modern header
                 _buildModernHeader(totalStarsAsync, totalCoinsAsync),
 
+                // Rewarded Ad Button (Watch for Coins)
+                RewardedAdButton(),
+
                 // Zones grid
                 Expanded(
                   child: zonesAsync.when(
@@ -77,12 +80,12 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
                     error: (e, s) => _buildError(e.toString()),
                   ),
                 ),
+
+                // Banner Ad at bottom
+                const BannerAdWidget(),
               ],
             ),
           ),
-
-          // Animated character
-          _buildAnimatedCharacter(),
 
           // Floating action buttons
           _buildFloatingActionButtons(context),
@@ -398,20 +401,6 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
     );
   }
 
-  Widget _buildAnimatedCharacter() {
-    return AnimatedBuilder(
-      animation: _characterController,
-      builder: (context, child) {
-        final bounce = math.sin(_characterController.value * math.pi) * 10;
-        return Positioned(
-          bottom: 120 + bounce,
-          right: 30,
-          child: const Text('🚀', style: TextStyle(fontSize: 48)),
-        );
-      },
-    );
-  }
-
   Widget _buildLoading() {
     return const Center(child: CircularProgressIndicator(color: Colors.white));
   }
@@ -456,8 +445,8 @@ class _WorldMapScreenState extends ConsumerState<WorldMapScreen>
   }
 
   Widget _buildFloatingActionButtons(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
+    return Positioned(
+      bottom: 70,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),

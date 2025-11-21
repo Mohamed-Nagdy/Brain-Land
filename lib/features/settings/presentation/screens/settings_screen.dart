@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/audio_manager.dart';
+import '../../../ads/widgets/banner_ad_widget.dart';
 import '../../../progress/providers/progress_provider.dart';
 
 /// Settings Screen for audio and app preferences
@@ -130,6 +131,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                         const SizedBox(height: 20),
                         _buildDebugSection(),
                       ],
+
+                      // Banner ad at bottom
+                      const SizedBox(height: 20),
+                      const BannerAdWidget(),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),

@@ -9,6 +9,8 @@ import '../../../../core/utils/audio_manager.dart';
 import '../../../../shared/widgets/fancy_button.dart';
 import '../../../../shared/widgets/fancy_card.dart';
 import '../../../../shared/widgets/gradient_background.dart';
+import '../../../ads/services/ad_manager.dart';
+import '../../../ads/services/interstitial_ad_service.dart';
 import '../../models/math_game_state.dart';
 import '../../providers/math_game_provider.dart';
 import '../widgets/celebration_widget.dart';
@@ -38,6 +40,9 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
   late Animation<double> _fadeAnimation;
   bool _isChestOpen = false;
 
+  // Interstitial ad service
+  final InterstitialAdService _interstitialAdService = InterstitialAdService();
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +69,9 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
     // Start animation
     _animationController.forward();
 
+    // Preload interstitial ad
+    _interstitialAdService.loadAd();
+
     // Open chest after a delay
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
@@ -77,6 +85,7 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _interstitialAdService.dispose();
     super.dispose();
   }
 
@@ -305,16 +314,23 @@ class _LevelCompleteScreenState extends ConsumerState<LevelCompleteScreen>
     return '${minutes.toString().padLeft(1, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  void _handleNextLevel() {
+  void _handleNextLevel() async {
     // Extract level number from levelId (e.g., "math_level_1" -> 1)
     final levelNumber = int.tryParse(widget.levelId.split('_').last) ?? 1;
     final nextLevelId = 'math_level_${levelNumber + 1}';
+
+    // Check if we should show an interstitial ad
+    if (AdManager.instance.shouldShowInterstitialAd()) {
+      await _interstitialAdService.show();
+    }
 
     // Reset current game state
     ref.read(mathGameProvider(widget.levelId).notifier).resetGame();
 
     // Navigate to next level
-    context.go('/math-forest/game/$nextLevelId');
+    if (mounted) {
+      context.go('/math-forest/game/$nextLevelId');
+    }
   }
 
   void _handleRetry() {
