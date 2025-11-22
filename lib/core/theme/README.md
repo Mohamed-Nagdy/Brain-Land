@@ -54,7 +54,7 @@ This directory contains the design system implementation for BrainLand, includin
 
 ### Using Colors
 ```dart
-import 'package:adventure_world/core/constants/colors.dart';
+import 'package:brain_land/core/constants/colors.dart';
 
 Container(
   decoration: BoxDecoration(
@@ -65,7 +65,7 @@ Container(
 
 ### Using Typography
 ```dart
-import 'package:adventure_world/core/theme/text_styles.dart';
+import 'package:brain_land/core/theme/text_styles.dart';
 
 Text(
   'Welcome to BrainLand!',
@@ -75,7 +75,7 @@ Text(
 
 ### Using FancyButton
 ```dart
-import 'package:adventure_world/shared/widgets/fancy_button.dart';
+import 'package:brain_land/shared/widgets/fancy_button.dart';
 
 FancyButton(
   text: 'Start Game',
@@ -87,7 +87,7 @@ FancyButton(
 
 ### Using Responsive Utilities
 ```dart
-import 'package:adventure_world/core/utils/responsive_utils.dart';
+import 'package:brain_land/core/utils/responsive_utils.dart';
 
 final padding = context.responsivePadding;
 final columns = context.gridColumnCount;

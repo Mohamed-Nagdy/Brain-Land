@@ -1,4 +1,4 @@
-import 'package:adventure_world/core/constants/game_assets.dart';
+import 'package:brain_land/core/constants/game_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -29,6 +30,9 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      return SizedBox.shrink();
+    }
     if (!_adService.isLoaded || _adService.bannerAd == null) {
       // Show placeholder while loading
       return const SizedBox(

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:adventure_world/features/progress/providers/progress_provider.dart';
-import 'package:adventure_world/features/world_map/providers/world_map_provider.dart';
-import 'package:adventure_world/shared/models/zone_progress.dart';
+import 'package:brain_land/features/progress/providers/progress_provider.dart';
+import 'package:brain_land/features/world_map/providers/world_map_provider.dart';
+import 'package:brain_land/shared/models/zone_progress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 

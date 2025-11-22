@@ -1,4 +1,4 @@
-import 'package:adventure_world/core/utils/responsive_utils.dart';
+import 'package:brain_land/core/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

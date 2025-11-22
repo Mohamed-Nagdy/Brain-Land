@@ -1,4 +1,4 @@
-package com.mohamednagdy.adventureworld
+package com.mohamednagdy.brainland
 
 import io.flutter.embedding.android.FlutterActivity
 

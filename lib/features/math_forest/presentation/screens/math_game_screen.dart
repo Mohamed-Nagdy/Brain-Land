@@ -1,7 +1,7 @@
-import 'package:adventure_world/core/utils/audio_manager.dart';
-import 'package:adventure_world/core/utils/responsive_utils.dart';
-import 'package:adventure_world/features/math_forest/presentation/widgets/celebration_widget.dart';
-import 'package:adventure_world/features/math_forest/presentation/widgets/forest_widgets.dart';
+import 'package:brain_land/core/utils/audio_manager.dart';
+import 'package:brain_land/core/utils/responsive_utils.dart';
+import 'package:brain_land/features/math_forest/presentation/widgets/celebration_widget.dart';
+import 'package:brain_land/features/math_forest/presentation/widgets/forest_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

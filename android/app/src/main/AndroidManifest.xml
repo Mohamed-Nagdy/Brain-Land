@@ -9,7 +9,7 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
     
     <application
-        android:label="Adventure World"
+        android:label="Brain Land"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher">

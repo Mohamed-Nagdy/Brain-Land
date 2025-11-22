@@ -1,4 +1,4 @@
-import 'package:adventure_world/core/utils/audio_manager.dart';
+import 'package:brain_land/core/utils/audio_manager.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/animations.dart';
