@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:31249678994:android:4679d176be3e9f41ef9c4b",
+        "mobilesdk_app_id": "1:31249678994:android:2877e0210c582263ef9c4b",
         "android_client_info": {
-          "package_name": "com.mohamednagdy.adventureworld"
+          "package_name": "com.mohamednagdy.brain_land"
         }
       },
       "oauth_client": [],
@@ -26,9 +26,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:31249678994:android:2877e0210c582263ef9c4b",
+        "mobilesdk_app_id": "1:31249678994:android:6a027efee2207f85ef9c4b",
         "android_client_info": {
-          "package_name": "com.mohamednagdy.brain_land"
+          "package_name": "com.mohamednagdy.brainland"
         }
       },
       "oauth_client": [],
