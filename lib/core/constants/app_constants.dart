@@ -4,7 +4,7 @@ class AppConstants {
   AppConstants._();
 
   // Game Configuration
-  static const String appName = 'MagicMind';
+  static const String appName = 'Adventure World';
   static const String appVersion = '1.0.0';
 
   // Zone Configuration

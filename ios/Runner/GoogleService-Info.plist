@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.mohamednagdy.brainLand</string>
+	<string>com.mohamednagdy.adventureworld</string>
 	<key>PROJECT_ID</key>
 	<string>brain-land</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:31249678994:ios:50219bd982e4356fef9c4b</string>
+	<string>1:31249678994:ios:425d340642931bdeef9c4b</string>
 </dict>
 </plist>

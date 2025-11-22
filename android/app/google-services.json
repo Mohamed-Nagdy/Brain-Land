@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:31249678994:android:4679d176be3e9f41ef9c4b",
+        "android_client_info": {
+          "package_name": "com.mohamednagdy.adventureworld"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgz2VZQk-IO7c7Z0DR5VtUHPgWH2JDl9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:31249678994:android:2877e0210c582263ef9c4b",
         "android_client_info": {
           "package_name": "com.mohamednagdy.brain_land"

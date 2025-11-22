@@ -1,7 +1,7 @@
-import 'package:brain_land/features/memory_river/models/memory_level.dart';
-import 'package:brain_land/features/shape_valley/models/shape.dart';
-import 'package:brain_land/features/shape_valley/models/shape_level.dart';
-import 'package:brain_land/shared/models/pet.dart';
+import 'package:adventure_world/features/memory_river/models/memory_level.dart';
+import 'package:adventure_world/features/shape_valley/models/shape.dart';
+import 'package:adventure_world/features/shape_valley/models/shape_level.dart';
+import 'package:adventure_world/shared/models/pet.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../core/constants/app_constants.dart';

@@ -1,7 +1,7 @@
-import 'package:brain_land/features/logic_mountain/presentation/screens/logic_game_screen.dart';
-import 'package:brain_land/features/logic_mountain/presentation/screens/logic_mountain_level_selection_screen.dart';
-import 'package:brain_land/features/memory_river/presentation/screens/memory_river_level_selection_screen.dart';
-import 'package:brain_land/features/shape_valley/presentation/screens/shape_valley_level_selection_screen.dart';
+import 'package:adventure_world/features/logic_mountain/presentation/screens/logic_game_screen.dart';
+import 'package:adventure_world/features/logic_mountain/presentation/screens/logic_mountain_level_selection_screen.dart';
+import 'package:adventure_world/features/memory_river/presentation/screens/memory_river_level_selection_screen.dart';
+import 'package:adventure_world/features/shape_valley/presentation/screens/shape_valley_level_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

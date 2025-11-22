@@ -158,7 +158,7 @@ lib/
 1. Clone the repository
 ```bash
 git clone <repository-url>
-cd brain_land
+cd adventure_world
 ```
 
 2. Install dependencies

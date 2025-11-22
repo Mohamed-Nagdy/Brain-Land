@@ -1,6 +1,6 @@
 {
-    "name": "brain_land",
-    "short_name": "brain_land",
+    "name": "Adventure World",
+    "short_name": "Adventure World",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

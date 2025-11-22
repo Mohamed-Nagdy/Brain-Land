@@ -1,6 +1,6 @@
 import 'dart:io';
 
-/// Ad unit IDs for MagicMind app
+/// Ad unit IDs for Adventure World app
 /// Separate IDs for Android and iOS platforms
 class AdConstants {
   AdConstants._();

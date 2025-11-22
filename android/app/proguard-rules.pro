@@ -13,4 +13,4 @@
 -keep class com.google.firebase.** { *; }
 
 # Prevent obfuscating Flutter's main entry point
--keep class com.mohamednagdy.brain_land.MainActivity { *; }
+-keep class com.mohamednagdy.adventure_world.MainActivity { *; }
