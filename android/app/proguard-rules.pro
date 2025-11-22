@@ -13,4 +13,8 @@
 -keep class com.google.firebase.** { *; }
 
 # Prevent obfuscating Flutter's main entry point
--keep class com.mohamednagdy.brain_land.MainActivity { *; }
+-keep class com.mohamednagdy.brainland.MainActivity { *; }
+
+# Ignore missing Play Core classes (unused deferred components)
+-dontwarn com.google.android.play.core.**
+-dontwarn io.flutter.embedding.engine.deferredcomponents.**
