@@ -1,0 +1,162 @@
+{
+  "breakBody": {
+    "expected": "تمدّد واشرب قليلًا من الماء، ثم عُد!",
+    "heard": "تمدد واشرب قليلا من الناء  في المعود",
+    "score": 0.84
+  },
+  "breakTitle": {
+    "expected": "وقت استراحة قصيرة",
+    "heard": "وقت استراحة قصيرة",
+    "score": 1.0
+  },
+  "chapterComplete": {
+    "expected": "أكملتَ الفصل! ربحتَ وسامًا.",
+    "heard": "أكملت الفصل، ربحت وسعماً",
+    "score": 0.95
+  },
+  "hintCountTogether": {
+    "expected": "لنعدّ معًا.",
+    "heard": "لنوأ الدمان",
+    "score": 0.32
+  },
+  "hintMemory": {
+    "expected": "انظر بسرعة وتذكّر!",
+    "heard": "واندلو بصراطي ما تتذكر",
+    "score": 0.53
+  },
+  "hintPattern": {
+    "expected": "النمط يتكرّر هكذا.",
+    "heard": "نمط يتكدر هكذا",
+    "score": 0.87
+  },
+  "hintRemoveOne": {
+    "expected": "أخفيتُ إجابة خاطئة.",
+    "heard": "أخذت إيجابة تنحطيها",
+    "score": 0.67
+  },
+  "hintShape": {
+    "expected": "هنا مكانه.",
+    "heard": "ونا مكنة",
+    "score": 0.82
+  },
+  "instrAdd": {
+    "expected": "اجمعها معًا. كم صارت؟",
+    "heard": "ازمعوها معا كم صارت؟  ولا كثالة من على الاتيك ان اجمعوها",
+    "score": 0.47
+  },
+  "instrCount": {
+    "expected": "كم عددها؟",
+    "heard": "كم حددها.",
+    "score": 0.88
+  },
+  "instrMemory": {
+    "expected": "اعثر على البطاقات المتشابهة.",
+    "heard": "أعثر على البطاقات المتشابهة",
+    "score": 1.0
+  },
+  "instrMissing": {
+    "expected": "كم ينقص لنملأ الإطار؟",
+    "heard": "كم ينقص لنملع الإطار",
+    "score": 0.95
+  },
+  "instrMissingNumber": {
+    "expected": "ما العدد الناقص؟",
+    "heard": "لنعرض النقص",
+    "score": 0.62
+  },
+  "instrMore": {
+    "expected": "أيّ مجموعة أكثر؟",
+    "heard": "أي مجموعة أكثر؟",
+    "score": 1.0
+  },
+  "instrPattern": {
+    "expected": "ماذا يأتي بعد ذلك؟",
+    "heard": "ما بقي أجي بعد ذلك",
+    "score": 0.8
+  },
+  "instrPatternGap": {
+    "expected": "ما الناقص؟",
+    "heard": "من ناقص؟",
+    "score": 0.75
+  },
+  "instrShape": {
+    "expected": "ضع كل شكل في بيته.",
+    "heard": "بع كل الشكلين في بيت",
+    "score": 0.81
+  },
+  "instrSolve": {
+    "expected": "حُلّ المسألة!",
+    "heard": "حل المسألة",
+    "score": 1.0
+  },
+  "instrTakeAway": {
+    "expected": "ذهب بعضها. كم بقي؟",
+    "heard": "ذهب بعضها. كم بقي؟",
+    "score": 1.0
+  },
+  "missionComplete": {
+    "expected": "أنجزتَ المهمة!",
+    "heard": "عن جست المهمة",
+    "score": 0.8
+  },
+  "mistakeAddedInstead": {
+    "expected": "نحن نطرح، لا نجمع.",
+    "heard": "نحن نكلو حلانة جمعة",
+    "score": 0.69
+  },
+  "mistakeCompare": {
+    "expected": "انظر مرة أخرى: أيّ مجموعة أكبر؟",
+    "heard": "انظر مرة اخرى اي مجموعة اكبر",
+    "score": 1.0
+  },
+  "mistakeCountAgain": {
+    "expected": "عُدّ مرة أخرى، واحدًا واحدًا.",
+    "heard": "عد مرةً أخرى واحدًا واحدًا.",
+    "score": 1.0
+  },
+  "mistakeMemory": {
+    "expected": "ليستا متشابهتين. تذكّر مكانهما!",
+    "heard": "لستا متشابهتين  تذكر مكانهما",
+    "score": 0.96
+  },
+  "mistakePattern": {
+    "expected": "انظر إلى ما يتكرّر.",
+    "heard": "اندور الاماية تقرر",
+    "score": 0.69
+  },
+  "mistakeShape": {
+    "expected": "هذا البيت لشكل آخر.",
+    "heard": "هذا البيت ريسكلينا أهر",
+    "score": 0.75
+  },
+  "mistakeSubtractedInstead": {
+    "expected": "نحن نجمع، لا نطرح.",
+    "heard": "نحن نجمع لنضرح",
+    "score": 0.87
+  },
+  "mistakeTryAgain": {
+    "expected": "اقتربت! حاول مرة أخرى.",
+    "heard": "حاول مرة أخرى",
+    "score": 0.79
+  },
+  "praise1": {
+    "expected": "أحسنت!",
+    "heard": "أحسنتك",
+    "score": 0.91
+  },
+  "praise2": {
+    "expected": "رائع!",
+    "heard": "رائع",
+    "score": 1.0
+  },
+  "praise3": {
+    "expected": "تفكير ممتاز!",
+    "heard": "تفكير منتاز",
+    "score": 0.91
+  },
+  "welcome": {
+    "expected": "مرحبًا! أنا المستكشف. اضغط على عالم لنبدأ!",
+    "heard": "مرحباً أنا المستكشف  ابغط على عالم اللي نبدأ",
+    "score": 0.91
+  }
+}

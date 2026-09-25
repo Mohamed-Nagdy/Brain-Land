@@ -1,0 +1,57 @@
+{
+  "_note": "Single source for store text. Checked by tools/export_listings.py (limits) — nothing here is uploaded automatically.",
+  "app": "Brain Land 1.1.0 (2)",
+  "android": {
+    "en-US": {
+      "title": "Brain Land: Puzzle Adventure",
+      "short_description": "Four puzzle worlds: count, spot patterns, match pairs and sort shapes.",
+      "full_description": "Brain Land is a puzzle adventure with a friendly brain explorer and four worlds to visit.\n\nMATH FOREST — count acorns, see which group has more, add and take away with objects, fill a ten frame, then solve written sums up to 100.\nLOGIC MOUNTAIN — find what comes next in colour, shape, size and number patterns.\nMEMORY RIVER — turn over cards and match the animal pairs, from 2 pairs up to 8.\nSHAPE VALLEY — drag or tap each shape into its home, including turned, big and small shapes.\n\nHOW IT PLAYS\n• Short missions of a few puzzles each.\n• 10,000 missions in every world. Each world opens with a hand-made first chapter; later chapters are generated and checked, and get harder step by step.\n• The explorer explains each puzzle, reacts to mistakes with a tip, and offers free hints any time.\n• Nobody fails: every finished mission earns 1 to 3 stars, and each chapter of 10 missions earns a medal.\n• After every few missions the explorer suggests a short break.\n\nFOR GROWN-UPS\n• Arabic and English, with right-to-left and left-to-right layouts, and a choice of 123 or ١٢٣ digits.\n• Settings for sound effects, voice guide and reduced motion sit behind a grown-up check, as do all links out of the game.\n• No accounts and no personal information. Progress stays on the device.\n• This free version shows ads between missions, never during a puzzle. Ads are requested as child-directed: no personalised ads and no advertising ID.\n\nMade by ATHRYZA Technologies.",
+      "release_notes": "A new Brain Land: a brain-explorer guide, new artwork and sounds, hand-made first chapters, 10,000 missions per world, free hints, Arabic and English, a parents' area and fewer, gentler ads."
+    },
+    "ar": {
+      "title": "Brain Land: مغامرة الألغاز",
+      "short_description": "أربعة عوالم من الألغاز: عُدّ واكتشف الأنماط وطابِق البطاقات ورتّب الأشكال.",
+      "full_description": "Brain Land مغامرة ألغاز مع مستكشف ودود وأربعة عوالم للزيارة.\n\nغابة الأرقام — عُدّ ثمار البلوط، واعرف أيّ مجموعة أكثر، واجمع واطرح بالأشياء، واملأ إطار العشرة، ثم حُلّ مسائل مكتوبة حتى 100.\nجبل الأنماط — اكتشف ماذا يأتي بعد ذلك في أنماط الألوان والأشكال والأحجام والأرقام.\nنهر الذاكرة — اقلب البطاقات وطابِق أزواج الحيوانات، من زوجين حتى 8 أزواج.\nوادي الأشكال — اسحب كل شكل أو اضغطه ليصل إلى بيته، ومنها الأشكال المقلوبة والكبيرة والصغيرة.\n\nطريقة اللعب\n• مهام قصيرة من بضعة ألغاز.\n• 10,000 مهمة في كل عالم. يبدأ كل عالم بفصل أول مصمَّم يدويًا، والفصول التالية مولَّدة ومفحوصة وتزداد صعوبتها خطوة بخطوة.\n• يشرح المستكشف كل لغز، ويقدّم نصيحة عند الخطأ، وتلميحات مجانية في أي وقت.\n• لا خسارة: كل مهمة تُنجز تمنح من نجمة إلى 3 نجوم، وكل فصل من 10 مهام يمنح وسامًا.\n• بعد بضع مهام يقترح المستكشف استراحة قصيرة.\n\nللأهل\n• العربية والإنجليزية، باتجاه من اليمين إلى اليسار ومن اليسار إلى اليمين، مع اختيار شكل الأرقام ١٢٣ أو 123.\n• إعدادات المؤثرات الصوتية والإرشاد الصوتي وتقليل الحركة خلف تحقّق خاص بالكبار، وكذلك كل رابط يخرج من اللعبة.\n• بلا حسابات وبلا معلومات شخصية. يبقى التقدّم على الجهاز.\n• تعرض هذه النسخة المجانية إعلانات بين المهام، ولا تعرضها أثناء اللغز أبدًا. تُطلب الإعلانات كإعلانات موجّهة للأطفال: بلا إعلانات مخصّصة وبلا معرّف إعلاني.\n\nمن تطوير أثريزا للتكنولوجيا.",
+      "release_notes": "Brain Land جديدة: مستكشف يرافق الطفل، ورسوم وأصوات جديدة، وفصول أولى مصمَّمة يدويًا، و10,000 مهمة في كل عالم، وتلميحات مجانية، والعربية والإنجليزية، ومنطقة للأهل، وإعلانات أقل وألطف."
+    }
+  },
+  "ios": {
+    "en-US": {
+      "name": "Brain Land: Puzzle Adventure",
+      "subtitle": "Math, patterns, memory, shapes",
+      "promotional_text": "Four puzzle worlds with a friendly brain explorer: count and add, spot patterns, match pairs and sort shapes. No ads, no tracking, no accounts.",
+      "keywords": "kids,puzzle,math,counting,patterns,memory,shapes,matching,logic,preschool,arabic",
+      "description": "Brain Land is a puzzle adventure with a friendly brain explorer and four worlds to visit.\n\nMATH FOREST — count acorns, see which group has more, add and take away with objects, fill a ten frame, then solve written sums up to 100.\nLOGIC MOUNTAIN — find what comes next in colour, shape, size and number patterns.\nMEMORY RIVER — turn over cards and match the animal pairs, from 2 pairs up to 8.\nSHAPE VALLEY — drag or tap each shape into its home, including turned, big and small shapes.\n\nHOW IT PLAYS\n• Short missions of a few puzzles each.\n• 10,000 missions in every world. Each world opens with a hand-made first chapter; later chapters are generated and checked, and get harder step by step.\n• The explorer explains each puzzle, reacts to mistakes with a tip, and offers free hints any time.\n• Nobody fails: every finished mission earns 1 to 3 stars, and each chapter of 10 missions earns a medal.\n• After every few missions the explorer suggests a short break.\n\nFOR GROWN-UPS\n• Arabic and English, with right-to-left and left-to-right layouts, and a choice of 123 or ١٢٣ digits.\n• Settings for sound effects, voice guide and reduced motion sit behind a grown-up check, as do all links out of the game.\n• No ads, no analytics, no tracking and no accounts. Progress stays on the device.\n\nMade by ATHRYZA Technologies.",
+      "release_notes": "A new Brain Land: a brain-explorer guide, new artwork and sounds, hand-made first chapters, 10,000 missions per world, free hints, Arabic and English, a parents' area — and no ads or tracking.",
+      "support_url": "https://athryza.com/en/contact",
+      "marketing_url": "https://athryza.com/en/work/brain-land",
+      "privacy_url": "https://athryza.com/en/privacy#brain-land"
+    },
+    "ar-SA": {
+      "name": "Brain Land: مغامرة الألغاز",
+      "subtitle": "أرقام وأنماط وذاكرة وأشكال",
+      "promotional_text": "أربعة عوالم من الألغاز مع مستكشف ودود: عُدّ واجمع، واكتشف الأنماط، وطابِق البطاقات، ورتّب الأشكال. بلا إعلانات وبلا تتبّع وبلا حسابات.",
+      "keywords": "أطفال,ألغاز,رياضيات,عد,أنماط,ذاكرة,أشكال,مطابقة,منطق",
+      "description": "Brain Land مغامرة ألغاز مع مستكشف ودود وأربعة عوالم للزيارة.\n\nغابة الأرقام — عُدّ ثمار البلوط، واعرف أيّ مجموعة أكثر، واجمع واطرح بالأشياء، واملأ إطار العشرة، ثم حُلّ مسائل مكتوبة حتى 100.\nجبل الأنماط — اكتشف ماذا يأتي بعد ذلك في أنماط الألوان والأشكال والأحجام والأرقام.\nنهر الذاكرة — اقلب البطاقات وطابِق أزواج الحيوانات، من زوجين حتى 8 أزواج.\nوادي الأشكال — اسحب كل شكل أو اضغطه ليصل إلى بيته، ومنها الأشكال المقلوبة والكبيرة والصغيرة.\n\nطريقة اللعب\n• مهام قصيرة من بضعة ألغاز.\n• 10,000 مهمة في كل عالم. يبدأ كل عالم بفصل أول مصمَّم يدويًا، والفصول التالية مولَّدة ومفحوصة وتزداد صعوبتها خطوة بخطوة.\n• يشرح المستكشف كل لغز، ويقدّم نصيحة عند الخطأ، وتلميحات مجانية في أي وقت.\n• لا خسارة: كل مهمة تُنجز تمنح من نجمة إلى 3 نجوم، وكل فصل من 10 مهام يمنح وسامًا.\n• بعد بضع مهام يقترح المستكشف استراحة قصيرة.\n\nللأهل\n• العربية والإنجليزية، باتجاه من اليمين إلى اليسار ومن اليسار إلى اليمين، مع اختيار شكل الأرقام ١٢٣ أو 123.\n• إعدادات المؤثرات الصوتية والإرشاد الصوتي وتقليل الحركة خلف تحقّق خاص بالكبار، وكذلك كل رابط يخرج من اللعبة.\n• بلا إعلانات، وبلا أدوات تحليل، وبلا تتبّع، وبلا حسابات. يبقى التقدّم على الجهاز.\n\nمن تطوير أثريزا للتكنولوجيا.",
+      "release_notes": "Brain Land جديدة: مستكشف يرافق الطفل، ورسوم وأصوات جديدة، وفصول أولى مصمَّمة يدويًا، و10,000 مهمة في كل عالم، وتلميحات مجانية، والعربية والإنجليزية، ومنطقة للأهل، وبلا إعلانات أو تتبّع.",
+      "support_url": "https://athryza.com/ar/contact",
+      "marketing_url": "https://athryza.com/ar/work/brain-land",
+      "privacy_url": "https://athryza.com/ar/privacy#brain-land"
+    }
+  },
+  "positioning": {
+    "google_play": {
+      "category": "Educational (Games › Educational)",
+      "target_audience": "Ages 5 & under and 6–8 (Families policy applies)",
+      "contains_ads": true,
+      "privacy_url": "https://athryza.com/en/privacy#brain-land"
+    },
+    "app_store": {
+      "primary_category": "Education",
+      "secondary_category": "Games › Puzzle",
+      "kids_category": "Recommended: Kids, Ages 6–8 (possible now that iOS has no third-party ads or analytics)",
+      "age_rating": "4+",
+      "app_privacy": "Data Not Collected"
+    }
+  }
+}

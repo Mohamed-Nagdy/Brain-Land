@@ -1,0 +1,42 @@
+{
+  "01_map": {
+    "en": "Four worlds of puzzle missions",
+    "ar": "أربعة عوالم من مهام الألغاز"
+  },
+  "02_math_question": {
+    "en": "Count, add and take away in Math Forest",
+    "ar": "عُدّ واجمع واطرح في غابة الأرقام"
+  },
+  "04_math_hint": {
+    "en": "Kind tips for mistakes, free hints any time",
+    "ar": "نصائح لطيفة عند الخطأ وتلميحات مجانية دائمًا"
+  },
+  "08_logic_hint": {
+    "en": "Spot what repeats on Logic Mountain",
+    "ar": "اكتشف ما يتكرّر في جبل الأنماط"
+  },
+  "12_memory_progress": {
+    "en": "Match the pairs in Memory River",
+    "ar": "طابِق البطاقات في نهر الذاكرة"
+  },
+  "15_shape_progress": {
+    "en": "Drag or tap each shape to its home",
+    "ar": "اسحب كل شكل أو اضغطه ليصل إلى بيته"
+  },
+  "13_memory_done": {
+    "en": "Stars for every mission, and a reminder to rest",
+    "ar": "نجوم لكل مهمة، وتذكير بالاستراحة"
+  },
+  "17_world_path": {
+    "en": "10,000 missions in every world",
+    "ar": "10,000 مهمة في كل عالم"
+  },
+  "19_parent_gate": {
+    "en": "Settings and links sit behind a grown-up check",
+    "ar": "الإعدادات والروابط خلف تحقّق للكبار"
+  },
+  "07_pause": {
+    "en": "Pause any time, pick up where you left off",
+    "ar": "توقّف متى شئت وتابِع من حيث توقّفت"
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "breakBody": {
+    "expected": "Stretch, drink some water, then come back!",
+    "heard": "Stretch, drink some water, then come back.",
+    "score": 1.0
+  },
+  "breakTitle": {
+    "expected": "Time for a little break",
+    "heard": "time for a little break.",
+    "score": 1.0
+  },
+  "chapterComplete": {
+    "expected": "Chapter complete! You earned a medal.",
+    "heard": "Chapter complete, you earned a medal.",
+    "score": 1.0
+  },
+  "hintCountTogether": {
+    "expected": "Let's count together.",
+    "heard": "Let's count together.",
+    "score": 1.0
+  },
+  "hintMemory": {
+    "expected": "Peek! Remember them.",
+    "heard": "peak, remember them.",
+    "score": 0.94
+  },
+  "hintPattern": {
+    "expected": "The pattern repeats like this.",
+    "heard": "The pattern repeats like this.",
+    "score": 1.0
+  },
+  "hintRemoveOne": {
+    "expected": "I hid one wrong answer.",
+    "heard": "I hid one wrong answer.",
+    "score": 1.0
+  },
+  "hintShape": {
+    "expected": "Here is where it goes.",
+    "heard": "Here is where it goes.",
+    "score": 1.0
+  },
+  "instrAdd": {
+    "expected": "Put them together. How many?",
+    "heard": "Put them together.  How many?",
+    "score": 0.98
+  },
+  "instrCount": {
+    "expected": "How many do you see?",
+    "heard": "How many do you see?",
+    "score": 1.0
+  },
+  "instrMemory": {
+    "expected": "Find the matching pairs.",
+    "heard": "Find the matching pairs.",
+    "score": 1.0
+  },
+  "instrMissing": {
+    "expected": "How many more to fill the frame?",
+    "heard": "How many more to fill the frame?",
+    "score": 1.0
+  },
+  "instrMissingNumber": {
+    "expected": "What number is missing?",
+    "heard": "What number is missing?",
+    "score": 1.0
+  },
+  "instrMore": {
+    "expected": "Which group has more?",
+    "heard": "Which group has more?",
+    "score": 1.0
+  },
+  "instrPattern": {
+    "expected": "What comes next?",
+    "heard": "What comes next?",
+    "score": 1.0
+  },
+  "instrPatternGap": {
+    "expected": "What is missing?",
+    "heard": "what is missing.",
+    "score": 1.0
+  },
+  "instrShape": {
+    "expected": "Put each shape in its home.",
+    "heard": "put each shape in its home.",
+    "score": 1.0
+  },
+  "instrSolve": {
+    "expected": "Solve it!",
+    "heard": "solve it.",
+    "score": 1.0
+  },
+  "instrTakeAway": {
+    "expected": "Some go away. How many are left?",
+    "heard": "Some go away.  How many are left?",
+    "score": 0.98
+  },
+  "missionComplete": {
+    "expected": "Mission complete!",
+    "heard": "Mission complete!",
+    "score": 1.0
+  },
+  "mistakeAddedInstead": {
+    "expected": "We are taking away, not adding.",
+    "heard": "We are taking away, not adding.",
+    "score": 1.0
+  },
+  "mistakeCompare": {
+    "expected": "Look again: which group is bigger?",
+    "heard": "Look again. Which group is bigger?",
+    "score": 1.0
+  },
+  "mistakeCountAgain": {
+    "expected": "Count again, one by one.",
+    "heard": "Count again, one by one.",
+    "score": 1.0
+  },
+  "mistakeMemory": {
+    "expected": "Not a pair. Remember where they are!",
+    "heard": "Not a pair.  Remember where they are.",
+    "score": 0.99
+  },
+  "mistakePattern": {
+    "expected": "Look at what repeats.",
+    "heard": "Look at what repeats.",
+    "score": 1.0
+  },
+  "mistakeShape": {
+    "expected": "That home is for another shape.",
+    "heard": "That home is for another shape.",
+    "score": 1.0
+  },
+  "mistakeSubtractedInstead": {
+    "expected": "We are adding, not taking away.",
+    "heard": "We are adding, not taking away.",
+    "score": 1.0
+  },
+  "mistakeTryAgain": {
+    "expected": "Almost! Try again.",
+    "heard": "Almost try again.",
+    "score": 1.0
+  },
+  "praise1": {
+    "expected": "Great job!",
+    "heard": "great job.",
+    "score": 1.0
+  },
+  "praise2": {
+    "expected": "You got it!",
+    "heard": "You got it.",
+    "score": 1.0
+  },
+  "praise3": {
+    "expected": "Super thinking!",
+    "heard": "Super thinking.",
+    "score": 1.0
+  },
+  "welcome": {
+    "expected": "Hi! I'm the brain explorer. Tap a world to start!",
+    "heard": "Hi, I'm the Brain Explorer. Tap a world to start.",
+    "score": 1.0
+  }
+}

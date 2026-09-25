@@ -1,0 +1,122 @@
+{
+  "@@locale": "en",
+  "appTitle": "Brain Land",
+  "worldMath": "Math Forest",
+  "worldLogic": "Logic Mountain",
+  "worldMemory": "Memory River",
+  "worldShape": "Shape Valley",
+  "missionNumber": "Mission {number}",
+  "@missionNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "instrCount": "How many do you see?",
+  "instrMore": "Which group has more?",
+  "instrAdd": "Put them together. How many?",
+  "instrTakeAway": "Some go away. How many are left?",
+  "instrMissing": "How many more to fill the frame?",
+  "instrMissingNumber": "What number is missing?",
+  "instrSolve": "Solve it!",
+  "instrPattern": "What comes next?",
+  "instrPatternGap": "What is missing?",
+  "instrMemory": "Find the matching pairs.",
+  "instrShape": "Put each shape in its home.",
+  "praise1": "Great job!",
+  "praise2": "You got it!",
+  "praise3": "Super thinking!",
+  "mistakeTryAgain": "Almost! Try again.",
+  "mistakeCountAgain": "Count again, one by one.",
+  "mistakeAddedInstead": "We are taking away, not adding.",
+  "mistakeSubtractedInstead": "We are adding, not taking away.",
+  "mistakeCompare": "Look again: which group is bigger?",
+  "mistakePattern": "Look at what repeats.",
+  "mistakeMemory": "Not a pair. Remember where they are!",
+  "mistakeShape": "That home is for another shape.",
+  "hintCountTogether": "Let's count together.",
+  "hintRemoveOne": "I hid one wrong answer.",
+  "hintPattern": "The pattern repeats like this.",
+  "hintMemory": "Peek! Remember them.",
+  "hintShape": "Here is where it goes.",
+  "missionComplete": "Mission complete!",
+  "chapterComplete": "Chapter complete! You earned a medal.",
+  "next": "Next",
+  "map": "Map",
+  "playAgain": "Play again",
+  "breakTitle": "Time for a little break",
+  "breakBody": "Stretch, drink some water, then come back!",
+  "keepPlaying": "Keep playing",
+  "paused": "Paused",
+  "resume": "Continue",
+  "welcome": "Hi! I'm the brain explorer. Tap a world to start!",
+  "parentsArea": "For parents",
+  "gateTitle": "Grown-ups only",
+  "gatePrompt": "Tap these numbers: {words}",
+  "@gatePrompt": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "gateWrong": "Not quite. Try again.",
+  "soundEffects": "Sound effects",
+  "voiceGuide": "Voice guide",
+  "reduceMotion": "Reduce motion",
+  "language": "Language",
+  "numerals": "Number style",
+  "resetProgress": "Reset progress",
+  "resetConfirm": "This erases all stars and medals on this device.",
+  "cancel": "Cancel",
+  "confirm": "Erase",
+  "privacyPolicy": "Privacy policy",
+  "aboutGame": "Four worlds of short puzzle missions: counting and adding, patterns, memory and shapes. Each world starts with a 10-mission chapter.",
+  "aboutAdsAndroid": "This free version shows a few ads between missions, never during a puzzle. Ads are requested as child-directed: no personalized ads and no advertising ID.",
+  "aboutAdsIos": "No ads, no tracking and no accounts.",
+  "madeBy": "Made by ATHRYZA Technologies",
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "adLabel": "Ad",
+  "a11yHint": "Hint",
+  "a11yPause": "Pause",
+  "a11yReplay": "Hear it again",
+  "a11yBack": "Back",
+  "a11yLocked": "Locked",
+  "a11yStars": "{count} of 3 stars",
+  "@a11yStars": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "a11yMedal": "Medal",
+  "a11yCard": "Card",
+  "a11yGroupA": "First group",
+  "a11yGroupB": "Second group",
+  "close": "Close",
+  "chapterNumber": "Chapter {number}",
+  "shapeCircle": "circle",
+  "shapeSquare": "square",
+  "shapeTriangle": "triangle",
+  "shapeStar": "star",
+  "shapeHeart": "heart",
+  "shapeDiamond": "diamond",
+  "shapeHexagon": "hexagon",
+  "shapeRectangle": "rectangle",
+  "@chapterNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  }
+}
