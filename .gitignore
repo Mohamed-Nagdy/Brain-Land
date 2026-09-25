@@ -44,11 +44,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Signing secrets — never commit
-android/key.properties
-*.jks
-*.keystore
-
 # Store captures and framed outputs are regenerated (see marketing/store-assets/README.md)
 marketing/store-assets/raw/
 marketing/store-assets/android/
