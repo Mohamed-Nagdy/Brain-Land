@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../ads/ads.dart';
 import '../../app.dart';
 import '../../core/art.dart';
 import '../../core/theme.dart';
@@ -110,10 +109,7 @@ class ParentsScreen extends ConsumerWidget {
                 _Card(
                   children: [
                     _Row(icon: Ico.info, label: l.aboutGame),
-                    _Row(
-                      icon: Ico.parents,
-                      label: Ads.supported ? l.aboutAdsAndroid : l.aboutAdsIos,
-                    ),
+                    _Row(icon: Ico.parents, label: l.aboutAds),
                     _Row(
                       icon: Ico.next,
                       label: l.privacyPolicy,

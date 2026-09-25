@@ -53,3 +53,6 @@ android/key.properties
 marketing/store-assets/raw/
 marketing/store-assets/android/
 marketing/store-assets/ios/
+
+# Raw gameplay footage is large; its sha256 is in marketing-captures/*/capture-log.json
+marketing-captures/**/*.mp4

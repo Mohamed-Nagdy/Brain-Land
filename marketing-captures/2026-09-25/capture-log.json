@@ -1,0 +1,94 @@
+{
+  "product": "brain-land",
+  "app": "Brain Land 1.1.0 (2), branch feat/brainland-redesign, debug build via flutter drive (integration_test/app_test.dart)",
+  "device": "iPhone 18 Pro Max simulator, iOS 27.0, 1320x2868",
+  "date": "2026-09-25",
+  "ads": "Built with --dart-define=BRAINLAND_NO_ADS=true: no ads appear in any capture (owner rule).",
+  "data": "Fresh install; only the game's own content and stars earned during the automated run. No personal data.",
+  "video": {
+    "file": "video/ar-mission-tour-01.mp4",
+    "segments": {
+      "0.9-1.8": "map (Arabic)",
+      "2.0-16.5": "Math Forest mission 1: wrong answer, hint, five answers",
+      "17": "mission complete",
+      "20": "pause",
+      "21-34.5": "Logic Mountain mission 1: wrong answer, hint, five patterns",
+      "38-47.5": "Memory River: peek, mismatch, pairs",
+      "49-50": "break reminder",
+      "51-66": "Shape Valley: wrong home, placing shapes",
+      "66.5": "mission complete",
+      "68-73": "grown-up check"
+    },
+    "note": "Recorded with xcrun simctl io recordVideo during the Arabic capture run. The first 59 s of the raw recording (an earlier English run with a test ad banner) were cut and discarded."
+  },
+  "files": [
+    {
+      "file": "screens/ar-01_map.png",
+      "sha256": "6fa5259f2e725d854b237b197dfd9329e02a144895bec55984d9c91316e4a553"
+    },
+    {
+      "file": "screens/ar-02_math_question.png",
+      "sha256": "78ff318b3ed2e479fcb89c278524e15c906c258941c69926d0b73a2c4522af1b"
+    },
+    {
+      "file": "screens/ar-04_math_hint.png",
+      "sha256": "455f0f50fbc4a0fffe19220294b4b7ca1df009fac536102ffff6e885a16e31db"
+    },
+    {
+      "file": "screens/ar-08_logic_hint.png",
+      "sha256": "c48c18fa06f17ea730d10d3c5da8be25fc6b8fb18db1be4d2608b0ddc39da111"
+    },
+    {
+      "file": "screens/ar-12_memory_progress.png",
+      "sha256": "f81803efeb053d7f95c20fd17d7fe11f606f7bd60a717a6e886dfcaf52183566"
+    },
+    {
+      "file": "screens/ar-13_memory_done.png",
+      "sha256": "8c7f0fcabe53c8d65db7bfe76f2e8d6de30747b271229e6d1565b4afc7334a98"
+    },
+    {
+      "file": "screens/ar-15_shape_progress.png",
+      "sha256": "95e30ab60b355b6fd1587073564fa2bce550dabd144c4c32678424fe7249bb8d"
+    },
+    {
+      "file": "screens/ar-17_world_path.png",
+      "sha256": "5fbf426ec7f4a125381e8a502a216cb26dd955cee92177e15650a7dc29ae86e2"
+    },
+    {
+      "file": "screens/en-01_map.png",
+      "sha256": "c6f15469d26726b3d3c204ac95d17a6d7a50744b6a870b4b8f90bf50dd6cdd66"
+    },
+    {
+      "file": "screens/en-02_math_question.png",
+      "sha256": "9866f7cb65e971ab89b71eeba5e3b46531e418bcd26cd09fdf2c227b2bf0e3b6"
+    },
+    {
+      "file": "screens/en-04_math_hint.png",
+      "sha256": "6e9342a280059fbe8381ce0ee6196ae83fae403824756908849dcd0e4b8a717a"
+    },
+    {
+      "file": "screens/en-08_logic_hint.png",
+      "sha256": "5f5d003c31b9f6ab5b6ebbf7db3102081794b714277f1891088cadf6c70688d3"
+    },
+    {
+      "file": "screens/en-12_memory_progress.png",
+      "sha256": "fcae1fdda268eca763da150cf73bb9c5b091a43f41ddf1ea7a6227be4b7a05b3"
+    },
+    {
+      "file": "screens/en-13_memory_done.png",
+      "sha256": "4bf54143e43bf410c8155eb74eae0f9968f84daf5f962a7ae3861cf2b1fbdc30"
+    },
+    {
+      "file": "screens/en-15_shape_progress.png",
+      "sha256": "c554b8aa97a0b19583ef6d7984b374fbd4c9eaa94c344501fa8605e500fcb718"
+    },
+    {
+      "file": "screens/en-17_world_path.png",
+      "sha256": "64104a4e5d9793209d54aa59bbfeb5dfb8c9318a716a5a16696fc9d4f25bd81f"
+    },
+    {
+      "file": "video/ar-mission-tour-01.mp4",
+      "sha256": "3d7ddbd79a29c707ff45f89e4784f622f72951a3f45863fa632761e8d25e749b"
+    }
+  ]
+}

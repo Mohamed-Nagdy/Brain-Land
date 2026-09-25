@@ -51,7 +51,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final progress = ref.watch(progressProvider);
     final welcomed = ref.watch(settingsProvider).welcomed;
     final eastern = ref.watch(settingsProvider).easternDigits;
-    final tablet = MediaQuery.sizeOf(context).shortestSide > 600;
+    final size = MediaQuery.sizeOf(context);
+    final tablet = size.shortestSide > 600;
+    // Landscape: all four worlds in one row, so none sits below the fold.
+    final landscape = size.width > size.height;
     return Scaffold(
       body: SceneBackground(
         child: SafeArea(
@@ -60,7 +63,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               Expanded(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 820),
+                    constraints: BoxConstraints(
+                      maxWidth: landscape ? 1100 : 820,
+                    ),
                     child: CustomScrollView(
                       slivers: [
                         SliverPadding(
@@ -133,10 +138,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                             horizontal: Space.m,
                           ),
                           sliver: SliverGrid.count(
-                            crossAxisCount: 2,
+                            crossAxisCount: landscape ? 4 : 2,
                             mainAxisSpacing: Space.m,
                             crossAxisSpacing: Space.m,
-                            childAspectRatio: tablet ? 1.05 : .82,
+                            childAspectRatio: landscape
+                                ? .9
+                                : (tablet ? 1.05 : .82),
                             children: [
                               for (final w in World.values)
                                 _WorldCard(

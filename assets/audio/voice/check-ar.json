@@ -1,8 +1,8 @@
 {
   "breakBody": {
     "expected": "تمدّد واشرب قليلًا من الماء، ثم عُد!",
-    "heard": "تمدد واشرب قليلا من الناء  في المعود",
-    "score": 0.84
+    "heard": "وتمدد واشرب قليلاً من الماء، ثم عد.",
+    "score": 0.98
   },
   "breakTitle": {
     "expected": "وقت استراحة قصيرة",
@@ -16,13 +16,13 @@
   },
   "hintCountTogether": {
     "expected": "لنعدّ معًا.",
-    "heard": "لنوأ الدمان",
-    "score": 0.32
+    "heard": "دينوها انتوماعا",
+    "score": 0.43
   },
   "hintMemory": {
     "expected": "انظر بسرعة وتذكّر!",
-    "heard": "واندلو بصراطي ما تتذكر",
-    "score": 0.53
+    "heard": "أنظر بسرعة وتذكر",
+    "score": 1.0
   },
   "hintPattern": {
     "expected": "النمط يتكرّر هكذا.",
@@ -31,8 +31,8 @@
   },
   "hintRemoveOne": {
     "expected": "أخفيتُ إجابة خاطئة.",
-    "heard": "أخذت إيجابة تنحطيها",
-    "score": 0.67
+    "heard": "اكفيتوا اجابة انخاطئة",
+    "score": 0.84
   },
   "hintShape": {
     "expected": "هنا مكانه.",
@@ -41,8 +41,8 @@
   },
   "instrAdd": {
     "expected": "اجمعها معًا. كم صارت؟",
-    "heard": "ازمعوها معا كم صارت؟  ولا كثالة من على الاتيك ان اجمعوها",
-    "score": 0.47
+    "heard": "اجمعوها من كم ثورت",
+    "score": 0.78
   },
   "instrCount": {
     "expected": "كم عددها؟",
@@ -61,8 +61,8 @@
   },
   "instrMissingNumber": {
     "expected": "ما العدد الناقص؟",
-    "heard": "لنعرض النقص",
-    "score": 0.62
+    "heard": "من عدد النقص",
+    "score": 0.81
   },
   "instrMore": {
     "expected": "أيّ مجموعة أكثر؟",
@@ -71,8 +71,8 @@
   },
   "instrPattern": {
     "expected": "ماذا يأتي بعد ذلك؟",
-    "heard": "ما بقي أجي بعد ذلك",
-    "score": 0.8
+    "heard": "ماذا يأتي بعد ذلك؟",
+    "score": 1.0
   },
   "instrPatternGap": {
     "expected": "ما الناقص؟",
@@ -101,8 +101,8 @@
   },
   "mistakeAddedInstead": {
     "expected": "نحن نطرح، لا نجمع.",
-    "heard": "نحن نكلو حلانة جمعة",
-    "score": 0.69
+    "heard": "نحن نطرح لنسمع",
+    "score": 0.87
   },
   "mistakeCompare": {
     "expected": "انظر مرة أخرى: أيّ مجموعة أكبر؟",
@@ -121,13 +121,13 @@
   },
   "mistakePattern": {
     "expected": "انظر إلى ما يتكرّر.",
-    "heard": "اندور الاماية تقرر",
-    "score": 0.69
+    "heard": "وانظر إلىنا يتكرر",
+    "score": 0.88
   },
   "mistakeShape": {
     "expected": "هذا البيت لشكل آخر.",
-    "heard": "هذا البيت ريسكلينا أهر",
-    "score": 0.75
+    "heard": "هذا البيت لساكين آخر",
+    "score": 0.84
   },
   "mistakeSubtractedInstead": {
     "expected": "نحن نجمع، لا نطرح.",
@@ -136,8 +136,8 @@
   },
   "mistakeTryAgain": {
     "expected": "اقتربت! حاول مرة أخرى.",
-    "heard": "حاول مرة أخرى",
-    "score": 0.79
+    "heard": "اقتربت، حاول مرة أخرى",
+    "score": 1.0
   },
   "praise1": {
     "expected": "أحسنت!",

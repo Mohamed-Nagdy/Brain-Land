@@ -90,9 +90,19 @@ void main() {
       'android/app/src/main/AndroidManifest.xml',
     ).readAsStringSync();
     expect(manifest.contains('android.permission.POST_NOTIFICATIONS'), isFalse);
-    expect(manifest.contains('permission.AD_ID" tools:node="remove"'), isTrue);
+    for (final permission in [
+      'gms.permission.AD_ID',
+      'ACCESS_ADSERVICES_AD_ID',
+      'ACCESS_ADSERVICES_ATTRIBUTION',
+      'ACCESS_ADSERVICES_TOPICS',
+    ]) {
+      expect(
+        manifest.contains('$permission" tools:node="remove"'),
+        isTrue,
+        reason: permission,
+      );
+    }
     final plist = File('ios/Runner/Info.plist').readAsStringSync();
     expect(plist.contains('NSUserTrackingUsageDescription'), isFalse);
-    expect(plist.contains('GADApplicationIdentifier'), isFalse);
   });
 }

@@ -8,7 +8,7 @@ import 'data/legacy_import.dart';
 import 'data/store.dart';
 
 /// No permission prompts, tracking or network calls at launch: open local
-/// storage, load the sound list and show the map. Ads (Android only) start
+/// storage, load the sound list and show the map. Ads start
 /// after the first screen is up.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

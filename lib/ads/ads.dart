@@ -8,8 +8,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../core/theme.dart';
 import '../l10n/app_localizations.dart';
 
-/// Ads run on Android only, as child-directed AdMob requests (Play Families
-/// policy). iOS ships without the ads SDK (App Store guideline 5.1.4).
+/// Ads run on Android and iOS as child-directed AdMob requests
+/// (`AgeRestrictedTreatment.child`, rating G, non-personalized, no advertising
+/// ID and no tracking prompt).
 ///
 /// Placements: one banner on the map and world screens, and an occasional
 /// interstitial when a player leaves a finished mission. Never on launch,
@@ -22,21 +23,34 @@ class Ads {
   /// `--dart-define=BRAINLAND_NO_ADS=true` builds without ads (automated capture runs).
   static const _off = bool.fromEnvironment('BRAINLAND_NO_ADS');
 
-  static bool get supported => !_off && !kIsWeb && Platform.isAndroid;
+  static bool get supported =>
+      !_off && !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
   // Google's public test units outside release builds, so testing never serves live ads.
-  static const _bannerUnit = kReleaseMode
-      ? 'ca-app-pub-4708111807522818/5829967240'
-      : 'ca-app-pub-3940256099942544/6300978111';
-  static const _interstitialUnit = kReleaseMode
-      ? 'ca-app-pub-4708111807522818/2391632728'
-      : 'ca-app-pub-3940256099942544/1033173712';
+  static String get _bannerUnit => !kReleaseMode
+      ? (Platform.isIOS
+            ? 'ca-app-pub-3940256099942544/2934735716'
+            : 'ca-app-pub-3940256099942544/6300978111')
+      : (Platform.isIOS
+            ? 'ca-app-pub-4708111807522818/1284109772'
+            : 'ca-app-pub-4708111807522818/5829967240');
+  static String get _interstitialUnit => !kReleaseMode
+      ? (Platform.isIOS
+            ? 'ca-app-pub-3940256099942544/4411468910'
+            : 'ca-app-pub-3940256099942544/1033173712')
+      : (Platform.isIOS
+            ? 'ca-app-pub-4708111807522818/7657946433'
+            : 'ca-app-pub-4708111807522818/2391632728');
 
   static const _request = AdRequest(nonPersonalizedAds: true);
 
   final pacing = AdPacing();
   InterstitialAd? _interstitial;
   bool _started = false;
+  final _ready = Completer<void>();
+
+  /// Completes once the SDK is initialized with the child-directed configuration.
+  Future<void> get ready => _ready.future;
 
   /// Called once the first screen is up, never before it.
   Future<void> start() async {
@@ -49,6 +63,7 @@ class Ads {
       ),
     );
     await MobileAds.instance.initialize();
+    _ready.complete();
     _loadInterstitial();
   }
 
@@ -128,13 +143,19 @@ class _BannerSlotState extends State<BannerSlot> {
   @override
   void initState() {
     super.initState();
-    if (!Ads.supported) return;
+    if (Ads.supported) Ads.instance.ready.then((_) => _load());
+  }
+
+  void _load() {
+    if (!mounted) return;
     _ad = BannerAd(
       adUnitId: Ads._bannerUnit,
       size: AdSize.banner,
       request: Ads._request,
       listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _loaded = true),
+        onAdLoaded: (_) {
+          if (mounted) setState(() => _loaded = true);
+        },
         onAdFailedToLoad: (ad, _) => ad.dispose(),
       ),
     )..load();

@@ -10,7 +10,7 @@ listing = json.loads((ROOT / "metadata/listing.json").read_text("utf-8"))
 LIMITS = {"title": 30, "short_description": 80, "full_description": 4000, "release_notes": 500,
           "name": 30, "subtitle": 30, "promotional_text": 170, "description": 4000}
 FORBIDDEN = re.compile(r"\b(IQ|smarter|brain development|best|#1|teacher[- ]approved|guarantee\w*|learn faster)\b"
-                       r"|ATHRIVA|أفضل|الأفضل|ذكاء|تنمية الدماغ|مضمون", re.I)
+                       r"|no ads|ATHRIVA|أفضل|الأفضل|ذكاء|تنمية الدماغ|مضمون|بلا إعلانات|بدون إعلانات", re.I)
 problems = []
 for store in ("android", "ios"):
     for locale, fields in listing[store].items():

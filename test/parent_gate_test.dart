@@ -11,7 +11,18 @@ import 'package:hive/hive.dart';
 
 import 'helpers.dart';
 
-const _words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const _words = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+];
 
 void main() {
   late Box<dynamic> store;
@@ -29,7 +40,8 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => TextButton(
-              onPressed: () => result = passParentGate(context, random: Random(7)),
+              onPressed: () =>
+                  result = passParentGate(context, random: Random(7)),
               child: const Text('open'),
             ),
           ),
@@ -42,11 +54,21 @@ void main() {
   }
 
   List<int> promptedCode(WidgetTester tester) {
-    final prompt = tester.widgetList<Text>(find.byType(Text)).map((t) => t.data ?? '').firstWhere((t) => t.startsWith('Tap these numbers'));
-    return prompt.split(':').last.split(',').map((w) => _words.indexOf(w.trim())).toList();
+    final prompt = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((t) => t.data ?? '')
+        .firstWhere((t) => t.startsWith('Tap these numbers'));
+    return prompt
+        .split(':')
+        .last
+        .split(',')
+        .map((w) => _words.indexOf(w.trim()))
+        .toList();
   }
 
-  testWidgets('the gate opens only for the numbers written as words', (tester) async {
+  testWidgets('the gate opens only for the numbers written as words', (
+    tester,
+  ) async {
     final result = await openGate(tester);
     final code = promptedCode(tester);
     expect(code, hasLength(3));
@@ -66,7 +88,9 @@ void main() {
     expect(await result, isTrue);
   });
 
-  testWidgets('closing the gate does not open the parents area', (tester) async {
+  testWidgets('closing the gate does not open the parents area', (
+    tester,
+  ) async {
     final result = await openGate(tester);
     await tester.tap(find.byType(IconBubble));
     await tester.pumpAndSettle();

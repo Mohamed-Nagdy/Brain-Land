@@ -1,6 +1,6 @@
 # Brain Land marketing — strategy (1.1.0 update)
 
-**Status: BLOCKED FROM PUBLICATION.** Every post in `posts/` is a finished draft. None may be published, scheduled or boosted until the children's-app gate in `../docs/CHILD_POLICY_REVIEW.md` is cleared: the owner must confirm the Google Play target audience, Families ads declaration and Data safety form, and the App Store age rating / App Privacy answers for 1.1.0, and 1.1.0 must be live on both stores. The Company calendar keeps Brain Land on its PRODUCT GROWTH hold until then.
+**Status: BLOCKED FROM PUBLICATION.** Every post in the Brain Land set is finished. None may be published, scheduled or boosted until the children's-app gate in `../docs/CHILD_POLICY_REVIEW.md` is cleared: the owner must confirm the Google Play target audience, Families ads declaration and Data safety form, and the App Store age rating / App Privacy answers for 1.1.0, and 1.1.0 must be live on both stores. The Company calendar keeps Brain Land on its PRODUCT GROWTH hold until then.
 
 ## Who we talk to
 
@@ -15,9 +15,9 @@ Parents and carers of children about 4–9, Arabic first (Egypt, Saudi Arabia, t
 | Lots to play | 10,000 missions per world; hand-made first chapter; later chapters generated and checked | `lib/content/missions.dart`, `test/content_test.dart` |
 | Arabic first | Arabic and English, RTL/LTR, 123 or ١٢٣ digits, voice guide | `lib/l10n/`, `assets/audio/voice/` |
 | Grown-ups in charge | Settings and links behind a grown-up check; no accounts; progress on the device; break reminder | `lib/features/parents/`, `lib/data/store.dart` |
-| Ads, honestly | iOS: no ads or tracking. Android: a few child-directed ads between missions, never during a puzzle | `lib/ads/ads.dart`, `ios/AdsStub/` |
+| Ads, honestly | Free, with a few child-directed ads between missions (Android and iOS), never during a puzzle; no tracking | `lib/ads/ads.dart` |
 
-Never say: "learn", "smarter", "brain development", "IQ", "educational results", "teacher approved", "best", "#1", "safe for kids" as a guarantee, "no ads" on Android, "ad-free" without the platform. Numbers only as above (4 worlds, 10,000 missions per world, 1–3 stars, 10 missions per chapter).
+Never say: "learn", "smarter", "brain development", "IQ", "educational results", "teacher approved", "best", "#1", "safe for kids" as a guarantee, "no ads" or "ad-free" on any platform. Numbers only as above (4 worlds, 10,000 missions per world, 1–3 stars, 10 missions per chapter).
 
 ## Where it goes
 
@@ -26,4 +26,4 @@ Every call to action goes to the Brain Land page on athryza.com (which links to 
 
 ## Set
 
-`posts/CALENDAR.md` lists the drafts. Masters are `creative/posts.jobs.json` (stills, rendered with `Company/tools/render.mjs`) and `creative/reel.comp.json` (video, `Company/tools/render-video.mjs`); footage and captures come only from the tested build (`../marketing-captures/2026-09-25/`, `store-assets/raw/`).
+The six launch/update posts live in the Company marketing system, with the other products' posts: masters and units in `Company/marketing-source/held/brain-land/`, ready-to-post folders (POST.txt + images/video) in `Company/campaigns-held/brain-land/`. They are held, not scheduled. Footage and captures come only from the tested build (`../marketing-captures/2026-09-25/`), built with ads off.

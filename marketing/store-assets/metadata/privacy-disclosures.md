@@ -31,13 +31,16 @@ Also in Play Console: Target audience = ages 5 & under and 6–8 (Families polic
 
 Owner check before submitting: compare these answers with the current guidance page and with AdMob's "Families" page (https://support.google.com/admob/answer/6223431); set the AdMob app to child-directed and the interstitial unit to display-only/skippable.
 
-## App Store — App Privacy (iOS has no ads SDK)
+## App Store — App Privacy (iOS includes the Google Mobile Ads SDK)
 
-The iOS build links no ads, analytics or tracking SDK (`ios/AdsStub/` stands in for the ads plugin; `ios/Podfile.lock` lists no Google-Mobile-Ads, Firebase or GoogleUtilities pods).
+Owner decision 2026-09-25: iOS shows the same child-directed ads as Android. No ATT prompt, no IDFA (child treatment), no analytics SDK. Google's iOS SDK disclosure guidance: https://developers.google.com/admob/ios/privacy/data-disclosure — check it before answering.
 
-| Question | Answer |
-|---|---|
-| Do you or your third-party partners collect data from this app? | **No — Data Not Collected** |
-| Tracking (ATT) | No tracking; no ATT prompt; `NSUserTrackingUsageDescription` removed |
-| Age rating: Advertising | No |
-| Age rating: Parental controls | Yes — settings and links behind a grown-up check |
+| Data type (App Store category) | Collected | Linked to the user | Used for tracking | Purpose |
+|---|---|---|---|---|
+| Location → Coarse location (IP address) | Yes (Google) | No | No | Third-party advertising, analytics |
+| Usage data → Product interaction, Advertising data | Yes (Google) | No | No | Third-party advertising, analytics |
+| Diagnostics → Crash / performance data | Yes (Google) | No | No | Analytics |
+| Identifiers → Device ID | **No** — IDFA not requested (child treatment, no ATT) | — | — | — |
+| Everything else (contact info, health, financial, contacts, user content, browsing, search) | No | — | — | — |
+
+Age rating: Advertising "Yes". App Store category: not Kids (third-party ads are not allowed there).

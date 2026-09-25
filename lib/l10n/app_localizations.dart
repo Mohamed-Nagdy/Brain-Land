@@ -452,17 +452,11 @@ abstract class AppLocalizations {
   /// **'Four worlds of short puzzle missions: counting and adding, patterns, memory and shapes. Each world starts with a 10-mission chapter.'**
   String get aboutGame;
 
-  /// No description provided for @aboutAdsAndroid.
+  /// No description provided for @aboutAds.
   ///
   /// In en, this message translates to:
   /// **'This free version shows a few ads between missions, never during a puzzle. Ads are requested as child-directed: no personalized ads and no advertising ID.'**
-  String get aboutAdsAndroid;
-
-  /// No description provided for @aboutAdsIos.
-  ///
-  /// In en, this message translates to:
-  /// **'No ads, no tracking and no accounts.'**
-  String get aboutAdsIos;
+  String get aboutAds;
 
   /// No description provided for @madeBy.
   ///

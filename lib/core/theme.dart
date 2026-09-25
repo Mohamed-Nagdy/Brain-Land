@@ -5,7 +5,6 @@ abstract final class Palette {
   static const purple = Color(0xFF6B4CE6);
   static const purpleLight = Color(0xFF9B6CE8);
   static const indigo = Color(0xFF667EEA);
-  static const plum = Color(0xFF764BA2);
   static const ink = Color(0xFF2E2240);
   static const inkSoft = Color(0xFF5B4E6E);
   static const cream = Color(0xFFFFF6E6);
@@ -14,7 +13,6 @@ abstract final class Palette {
   static const gold = Color(0xFFFFC83D);
   static const good = Color(0xFF2E9E4F);
   static const oops = Color(0xFFE0673A);
-  static const sky = Color(0xFFDDEBFF);
 
   static const math = Color(0xFF3FAE5A);
   static const logic = Color(0xFF3B8BEB);

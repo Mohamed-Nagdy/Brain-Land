@@ -73,8 +73,7 @@
   "confirm": "Erase",
   "privacyPolicy": "Privacy policy",
   "aboutGame": "Four worlds of short puzzle missions: counting and adding, patterns, memory and shapes. Each world starts with a 10-mission chapter.",
-  "aboutAdsAndroid": "This free version shows a few ads between missions, never during a puzzle. Ads are requested as child-directed: no personalized ads and no advertising ID.",
-  "aboutAdsIos": "No ads, no tracking and no accounts.",
+  "aboutAds": "This free version shows a few ads between missions, never during a puzzle. Ads are requested as child-directed: no personalized ads and no advertising ID.",
   "madeBy": "Made by ATHRYZA Technologies",
   "versionLabel": "Version {version}",
   "@versionLabel": {

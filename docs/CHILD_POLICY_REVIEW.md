@@ -8,18 +8,18 @@ Quotes come from the official pages below; re-read them before quoting in store 
 | Platform | Monetization in 1.1.0 | Why |
 |---|---|---|
 | Android (Google Play) | AdMob only, child-directed: `ageRestrictedTreatment: child`, `maxAdContentRating: G`, `nonPersonalizedAds: true`. One labelled banner on the map and world screens; one interstitial at a mission break, at most every 3 minutes and every 2 missions, never in the first 3 minutes. No rewarded, app-open or in-puzzle ads. | Play Families policy allows ads from Families Self-Certified SDKs (AdMob ≥ 19.0.0/20.6.0) with no personalization, not on launch, closable, one placement per page. |
-| iOS (App Store) | **No ads, no analytics, no tracking.** The ads plugin is replaced by a no-op stub pod (`ios/AdsStub`), so the Google Mobile Ads SDK is not in the binary. | Guideline 5.1.4: "Apps intended primarily for kids should not include third-party analytics or third-party advertising." This applies inside or outside the Kids Category. AdMob does not publish Kids-Category human-review practices (1.3 exception). |
+| iOS (App Store) | **Same ads as Android (owner decision, 2026-09-25):** child-directed AdMob (`AgeRestrictedTreatment.child`, rating G, non-personalized), same placements and pacing. No ATT prompt, no IDFA, no analytics. `GADApplicationIdentifier` and Google's SKAdNetwork ID are in `Info.plist`; `NSUserTrackingUsageDescription` is not. | **Risk accepted by the owner.** Guideline 5.1.4: "Apps intended primarily for kids should not include third-party analytics or third-party advertising", inside or outside the Kids Category; AdMob does not publish Kids-Category human review (1.3 exception). Consequences: the app cannot be in the Kids Category; the listing must not name children as the main audience; App Review may reject 1.1.0. The earlier recommendation (no ads on iOS) was overruled. |
 
 Removed in 1.1.0 (all platforms): app-open ads, rewarded "+100 coins" ads, ad-gated hints (hints are free), interstitials after every level, App Tracking Transparency prompt and IDFA/AAID reads, Firebase Analytics, Firebase Cloud Messaging and the launch notification prompt, `AD_ID` permission (now `tools:node="remove"`), `POST_NOTIFICATIONS`, the stray `magicmind.app` ad `contentUrl`, `google_fonts` runtime font downloads (font is bundled).
 
-First launch now opens straight onto the map: no system dialogs (verified on iOS 26 Simulator and Android emulator, see `docs/TEST_EVIDENCE.md`).
+First launch now opens straight onto the map: no system dialogs (verified on iOS 27.0 Simulator and Android emulator, see `docs/TEST_EVIDENCE.md`).
 
 ## Evidence in code
 
-- `lib/ads/ads.dart` — the only ads code; `Ads.supported` is Android-only; child request configuration; `AdPacing` (tested in `test/ad_pacing_test.dart`).
+- `lib/ads/ads.dart` — the only ads code (Android and iOS); child request configuration; `AdPacing` (tested in `test/ad_pacing_test.dart`).
 - `android/app/src/main/AndroidManifest.xml` — `INTERNET` only; `AD_ID` removed.
-- `ios/Podfile` + `ios/AdsStub/` — iOS links no ads SDK (`ios/Podfile.lock` lists no Google-Mobile-Ads, Firebase or GoogleUtilities pods).
-- `ios/Runner/Info.plist` — no `NSUserTrackingUsageDescription`, `GADApplicationIdentifier` or `SKAdNetworkItems`.
+- `ios/Podfile.lock` — Google-Mobile-Ads-SDK 13.10.0 and GoogleUserMessagingPlatform only; no Firebase or analytics pods.
+- `ios/Runner/Info.plist` — no `NSUserTrackingUsageDescription` (no ATT prompt); AdMob app ID and Google's SKAdNetwork ID only.
 - `test/project_rules_test.dart` — fails if Firebase/ATT/tracking packages, the notification permission, or the ATT string come back.
 
 ## Sources (checked 2026-09-25)
@@ -49,12 +49,15 @@ Google Play Console (for 1.1.0):
 5. AdMob console: mark the app as directed to children, set max ad content rating G, and set the interstitial unit to **display ads only / skippable** so every interstitial is closable within 5 seconds.
 
 App Store Connect (for 1.1.0):
-1. Age rating questionnaire: no ads, no tracking → 4+. Answer the Advertising question "No".
-2. App Privacy: "Data Not Collected".
-3. Category: Education or Games › Educational. Kids Category is now possible (no third-party ads/analytics); choosing it adds the Kids rules on parental gates (the app already gates its only external link and all settings).
-4. Remove the old ATT/advertising answers from 1.0.
+1. Age rating questionnaire: Advertising "Yes"; Parental controls "Yes" → 4+.
+2. App Privacy: the Google Mobile Ads SDK data (see `marketing/store-assets/metadata/privacy-disclosures.md`), none linked to identity, **not used for tracking**.
+3. Category: Games › Educational (primary), Games › Puzzle. **Not** the Kids Category (third-party ads are not allowed there). Listing text avoids naming children as the audience.
+4. Expect App Review questions under 5.1.4; if rejected, the fallback is `Ads.supported` Android-only (one line in `lib/ads/ads.dart`).
 
 ## Remaining risks
+
+- EEA/UK: no consent (UMP/TCF) message is shown. With child-directed treatment AdMob serves non-personalized / limited ads; if the app is distributed in the EEA or UK, the owner should configure the AdMob privacy message (or accept limited ads there).
+- The Google Mobile Ads SDK's Privacy Sandbox permissions (`ACCESS_ADSERVICES_AD_ID`, `_ATTRIBUTION`, `_TOPICS`) are removed in the manifest; confirm the merged manifest after SDK upgrades (a test guards the source manifest).
 
 - The v1.0 builds live on both stores still contain every removed behaviour until 1.1.0 is released.
 - Store listings may still describe 1.0 features (coins, 1000 unlocked levels, avatars); the new metadata package replaces them.

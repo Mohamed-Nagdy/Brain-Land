@@ -21,7 +21,7 @@ dependencies:
   audioplayers: ^6.8.1
   flutter_svg: ^2.3.0
   url_launcher: ^6.3.2
-  # Android only; excluded from the iOS build (see ios/Podfile).
+  # Child-directed ads on Android and iOS (lib/ads/ads.dart).
   google_mobile_ads: ^9.1.0
 
 dev_dependencies:

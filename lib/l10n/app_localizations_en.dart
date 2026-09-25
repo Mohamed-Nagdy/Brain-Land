@@ -191,11 +191,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Four worlds of short puzzle missions: counting and adding, patterns, memory and shapes. Each world starts with a 10-mission chapter.';
 
   @override
-  String get aboutAdsAndroid =>
+  String get aboutAds =>
       'This free version shows a few ads between missions, never during a puzzle. Ads are requested as child-directed: no personalized ads and no advertising ID.';
-
-  @override
-  String get aboutAdsIos => 'No ads, no tracking and no accounts.';
 
   @override
   String get madeBy => 'Made by ATHRYZA Technologies';

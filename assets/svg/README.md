@@ -54,3 +54,5 @@ Flat-vector artwork for Brain Land, written to render with `flutter_svg`.
 ## Provenance
 
 All SVG artwork in this folder is original work authored for Brain Land by ATHRYZA Technologies in 2026-09; no third-party art, fonts, or icon sets were used.
+
+Removed in 1.1.0 because the game never shows them: `ui/trophy.svg`, `ui/break.svg`, `mascot/mascot_think.svg`.

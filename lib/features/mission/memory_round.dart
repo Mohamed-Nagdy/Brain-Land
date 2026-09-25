@@ -18,7 +18,6 @@ class MemoryRound extends ConsumerStatefulWidget {
     required this.task,
     required this.hintLevel,
     required this.onEvent,
-    this.random,
   });
 
   final MemoryTask task;
@@ -26,9 +25,6 @@ class MemoryRound extends ConsumerStatefulWidget {
   /// Each hint shows the hidden cards for a moment.
   final int hintLevel;
   final RoundListener onEvent;
-
-  /// Card order; tests pass a seeded generator.
-  final Random? random;
 
   static const maxHints = 2;
 
@@ -38,7 +34,7 @@ class MemoryRound extends ConsumerStatefulWidget {
 
 class _MemoryRoundState extends ConsumerState<MemoryRound> {
   late final List<String> _cards = [...widget.task.faces, ...widget.task.faces]
-    ..shuffle(widget.random ?? Random());
+    ..shuffle();
   final _matched = <int>{};
   final _open = <int>[];
   bool _peeking = false;

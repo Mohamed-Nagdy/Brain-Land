@@ -15,6 +15,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, features
 
+from brand import pill
+
 ROOT = Path(__file__).resolve().parent.parent
 APP = ROOT.parent.parent
 SVG = APP / "assets/svg"
@@ -82,7 +84,7 @@ def feature_graphic(locale: str) -> Image.Image:
     d = ImageDraw.Draw(canvas)
     title, tagline = TEXT[locale]
     direction = "rtl" if rtl else "ltr"
-    block_w = 380
+    block_w = 380 if rtl else 330
     def put(text, fnt, y, fill, stroke):
         w = d.textlength(text, font=fnt, direction=direction)
         x = 44 if not rtl else W - 44 - w
@@ -102,6 +104,9 @@ def feature_graphic(locale: str) -> Image.Image:
     lines.append(line)
     for k, part in enumerate(lines):
         put(part, gf, 236 + k * 46, PURPLE, 5)
+    mark = pill(locale, 52)
+    y = 236 + len(lines) * 46 + 26
+    canvas.alpha_composite(mark, (44 if not rtl else W - 44 - mark.width, y))
     return canvas.convert("RGB")
 
 
@@ -116,6 +121,8 @@ def cover() -> Image.Image:
     mascot = raster(SVG / "mascot/mascot_cheer.svg", 900)
     mascot = mascot.resize((int(mascot.width * 470 / mascot.height), 470), Image.LANCZOS)
     shadowed(canvas, mascot, ((W - mascot.width) // 2, H - mascot.height - 60), blur=16)
+    mark = pill("en", 56)
+    canvas.alpha_composite(mark, ((W - mark.width) // 2, H - mark.height - 16))
     return canvas.convert("RGB")
 
 

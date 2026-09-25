@@ -25,12 +25,10 @@ enum Ico {
   close,
   motion,
   language,
-  trophy,
   speaker,
   digits,
   trash,
-  info,
-  rest('break');
+  info;
 
   const Ico([this._file]);
   final String? _file;
@@ -57,7 +55,7 @@ class GameIcon extends StatelessWidget {
   }
 }
 
-enum Mood { idle, happy, think, oops, cheer, sleep, point, wave }
+enum Mood { idle, happy, oops, cheer, sleep, point, wave }
 
 class Mascot extends StatelessWidget {
   const Mascot(this.mood, {super.key, this.size = 120});

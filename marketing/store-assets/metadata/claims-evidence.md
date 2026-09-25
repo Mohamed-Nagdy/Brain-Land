@@ -17,9 +17,8 @@ Every factual statement in `listing.json`, `captions.json`, the athryza.com page
 | Voiced lines | `assets/audio/voice/{en,ar}/`; `lib/core/audio.dart`; `assets/audio/voice/check-{en,ar}.json` | CLM-brain-land-013 |
 | Settings and links behind a grown-up check; no accounts; progress on device | `lib/features/parents/parent_gate.dart`, `parents_screen.dart`; `test/parent_gate_test.dart`; `lib/data/store.dart` | CLM-brain-land-010 |
 | Sound, voice and reduced-motion settings | `lib/features/parents/parents_screen.dart`; `lib/core/motion.dart` | CLM-brain-land-010 |
-| iOS: no ads, analytics or tracking | `ios/Podfile` + `ios/AdsStub/`; `ios/Podfile.lock`; `ios/Runner/Info.plist`; `test/project_rules_test.dart` | CLM-brain-land-011 |
-| Android: child-directed ads between missions only, never during a puzzle, no advertising ID | `lib/ads/ads.dart` (`AgeRestrictedTreatment.child`, `AdPacing`, banner only on map/world); `AndroidManifest.xml` (`AD_ID` removed); `test/ad_pacing_test.dart` | CLM-brain-land-011 |
+| Free with child-directed ads between missions only (Android and iOS), never during a puzzle; not personalised; no advertising ID; no tracking or analytics | `lib/ads/ads.dart` (`AgeRestrictedTreatment.child`, `AdPacing`, banner only on map/world); `AndroidManifest.xml` (`AD_ID` removed); `ios/Runner/Info.plist` (no ATT string); `test/ad_pacing_test.dart`, `test/project_rules_test.dart` | CLM-brain-land-011 |
 | Original artwork, sounds and content | `assets/PROVENANCE.md`, `assets/svg/README.md`, `tools/audio/` | — |
 | Available on Google Play and the App Store | `Company/strategy/inventory/destinations.json` (`brain-land.play`, `brain-land.ios`) | CLM-brain-land-006 |
 
-Not claimed anywhere: learning outcomes, "brain development", IQ, age-specific results, ratings, download counts, awards, "no ads" for Android.
+Not claimed anywhere: learning outcomes, "brain development", IQ, age-specific results, ratings, download counts, awards, "no ads" on any platform.

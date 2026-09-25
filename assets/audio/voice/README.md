@@ -1,6 +1,8 @@
 # Voice guide
 
-One clip per mascot line (`lib/core/lines.dart`); the text is the ARB string of the same name. The game plays a clip only if it exists, so any line without a clip simply shows as text.
+One clip per mascot line (`lib/core/lines.dart`); the text is the ARB string of the same name. The game plays a clip only if it exists, so any line without a clip simply shows as text (and has no replay button).
+
+Coverage in 1.1.0: **English 32/32 lines. Arabic 18/32**: Arabic clips had to score ≥ 0.9 on a Whisper-medium round trip (a mispronounced instruction is worse for a young child than reading it); after three takes, 14 lines did not, so they are text-only until a native speaker records them. See `check-ar.json`.
 
 | Language | Engine | Licence | Source |
 |---|---|---|---|
